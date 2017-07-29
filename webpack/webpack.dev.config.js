@@ -90,6 +90,7 @@ const moduleConfig = {
     new HtmlWebpackPlugin({
       template: settings.paths.htmlTemplate,
       inject: true,
+      minify: false,
     }),
     extractProjectStyle,
   ],

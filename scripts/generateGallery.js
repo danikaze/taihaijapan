@@ -85,7 +85,9 @@ function generateJson(imageData) {
 
   return new Promise((resolve, reject) => {
     const tempPath = path.join(PATH_TEMP, 'db.json');
-    fs.writeFile(db.outputJsonPath, JSON.stringify(gallery), (error) => {
+    const str = db.beautifyJson ? JSON.stringify(gallery, null, 2) : JSON.stringify(gallery);
+
+    fs.writeFile(tempPath, str, (error) => {
       if (error) {
         reject(error);
       } else {

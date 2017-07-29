@@ -23,6 +23,7 @@ const options = {
 
 const paths = {
   src: absPath('src/js'),
+  srcHtml: absPath('src/html'),
   public: absPath('build'),
   build: absPath('build'),
   buildJs: 'js', // js route

@@ -15,7 +15,7 @@ module.exports = {
 
   plugins: [
     new CopyWebpackPlugin([{
-      context: settings.paths.public,
+      context: settings.paths.srcHtml,
       from: '**/*',
       to: settings.paths.build,
     }]),
@@ -23,7 +23,7 @@ module.exports = {
 
   module: {
     rules: [
-      // support jsx files
+      // linting
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
@@ -31,6 +31,7 @@ module.exports = {
         include: settings.paths.src,
         use: 'eslint-loader',
       },
+      // transpiling
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,

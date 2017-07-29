@@ -12,6 +12,7 @@ buildInfo
 coverage
 node_modules
 photos/*.jpg
+temp
 
 # =========================
 # Operating System Files

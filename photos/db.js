@@ -1,3 +1,5 @@
+const path = require('path');
+
 // How to resize each photo (fit|cover|resize)
 const resizePolicy = 'fit';
 
@@ -8,7 +10,7 @@ const sizes = [
   { w: 2000, subdir: 'L' },
 ];
 
-// Base url where the photos are stored
+// Base URL (relative to the site domain) where the photos are stored
 const baseUrl = '/photos';
 
 // list of photos
@@ -30,6 +32,9 @@ const outputJsonPath = `${__dirname}/../build/photos/gallery.json`;
 // where the photos will be stored (absolute)
 const outputPhotosPath = `${__dirname}/../build/photos/`;
 
+// if `true`, it will format the JSON file
+const beautifyJson = true;
+
 module.exports = {
   resizePolicy,
   baseUrl,
@@ -37,6 +42,7 @@ module.exports = {
   photos,
   renameFiles,
   renamePattern,
-  outputJsonPath,
-  outputPhotosPath,
+  outputJsonPath: path.normalize(outputJsonPath),
+  outputPhotosPath: path.normalize(outputPhotosPath),
+  beautifyJson,
 };

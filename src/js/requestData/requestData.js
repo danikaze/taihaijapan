@@ -5,6 +5,17 @@ function resolveMockupData(url, options) {
   return data;
 }
 
+function urlAddParam(url, data) {
+  let joiner = url.indexOf('?') === -1 ? '?' : '&';
+
+  Object.keys(data).forEach((key) => {
+    url = `${url}${joiner}${key}=${data[key]}`;
+    joiner = '&';
+  });
+
+  return url;
+}
+
 /**
  * Request a URL via GET and return the content as plain text
  *
@@ -12,6 +23,7 @@ function resolveMockupData(url, options) {
  * @param   {Object}  [options]
  * @param   {*}       [options.mockData]
  * @param   {Number}  [options.timeout]  Timeout in ms.
+ * @param   {Boolean} [options.cache]    If `true`, `_t` won't be appended
  * @returns {Promise}                    Promise resolved to `[xhr.responseText, xhr]`
  */
 function requestData(url, options) {
@@ -22,6 +34,10 @@ function requestData(url, options) {
     if (mock) {
       resolve([mock]);
       return;
+    }
+
+    if (!options.cache) {
+      url = urlAddParam(url, { _t: new Date().getTime() });
     }
 
     const xhr = new XMLHttpRequest();

@@ -172,9 +172,9 @@ class VerticalGallery {
     if (!targetImg) {
       return;
     }
-    if (!force &&
-        targetImg.width < window.innerWidth * this.options.scrollMinCoverage &&
-        targetImg.height < window.innerHeight * this.options.scrollMinCoverage) {
+    if (!force && (
+        targetImg.width < window.innerWidth * this.options.scrollMinCoverage ||
+        targetImg.height < window.innerHeight * this.options.scrollMinCoverage)) {
       return;
     }
 
