@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const glob = require('glob');
 const mkdirp = require('mkdirp');
 const async = require('async-q');
 const Q = require('q');
@@ -14,15 +13,7 @@ const verboseLevel = process.argv.reduce((sum, param) => sum + (param.toLowerCas
 const out = new Output(verboseLevel);
 
 function getFiles() {
-  return new Promise((resolve, reject) => {
-    glob(db.photos, {}, (error, files) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(files);
-      }
-    });
-  });
+  return Promise.resolve(db.photos);
 }
 
 function resizeImages(photoList) {
