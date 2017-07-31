@@ -20,8 +20,7 @@
     "eslint:test": "eslint -c test/.eslintrc.js test --ext .js",
     "prepublish": "npm run build",
     "gallery": "node scripts/generateGallery.js",
-    "gallery:verbose": "node scripts/generateGallery.js -v -v",
-    "deploy": "npm run rebuild && npm run gallery && node scripts/deploy.js"
+    "gallery:verbose": "node scripts/generateGallery.js -v -v"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
