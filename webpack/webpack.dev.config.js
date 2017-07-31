@@ -39,7 +39,7 @@ const moduleConfig = {
     // Listen port
     port: settings.options.port,
     // Match the output.path
-    contentBase: settings.paths.public,
+    contentBase: settings.paths.build,
     // Match the output.publicPath
     publicPath: settings.paths.publicPath
   },
