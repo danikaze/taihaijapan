@@ -13,13 +13,7 @@ const moduleConfig = {
   bail: true,
   cache: false,
   devtool: '#inline-source-map',
-  entry: [
-    // Style sheets entry point
-    settings.paths.mainStyle,
-    // Actual entry point for the source code
-    settings.paths.src,
-    //settings.paths.src + '/index2',
-  ],
+  entry: settings.entries,
 
   // Prod module options
   module: {

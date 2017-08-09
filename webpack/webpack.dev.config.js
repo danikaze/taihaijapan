@@ -6,7 +6,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const baseConfig = require('./webpack.base.config.js');
 const settings = require('./settings');
-//const manifest = require(settings.paths.manifest);
 
 const extractProjectStyle = new ExtractTextPlugin(path.join(
   settings.paths.buildCss,
@@ -16,18 +15,24 @@ const cssNames = settings.options.cssPrefix
                  + '[local]'
                  + (settings.options.cssHash ? '--[hash:base64:8]' : '');
 
+function getHtmlWebpackPlugin(chunk, page) {
+  return new HtmlWebpackPlugin({
+    template: path.join(settings.paths.srcHtml, page),
+    filename: path.join(settings.paths.buildHtml, page),
+    chunks: [chunk],
+    inject: true,
+    minify: false,
+  });
+}
+
 const moduleConfig = {
   // Entry points
-  entry: [
+  entry: Object.assign({
     // Connect client to webserver
-    `webpack-dev-server/client?http://${settings.options.host}:${settings.options.port}`,
+    'webpack-dev-server': `webpack-dev-server/client?http://${settings.options.host}:${settings.options.port}`,
     // "only-" means to only hot reload for successful updates
-    'webpack/hot/only-dev-server',
-    // Style sheets entry point
-    settings.paths.mainStyle,
-    // Actual entry point for the source code
-    settings.paths.src
-  ],
+    'hot': 'webpack/hot/only-dev-server',
+  }, settings.entries),
 
   // Allows app debugging without heavily impacting build time
   devtool: 'inline-source-map',
@@ -87,11 +92,8 @@ const moduleConfig = {
       },
     }),
     // HTML generator
-    new HtmlWebpackPlugin({
-      template: settings.paths.htmlTemplate,
-      inject: true,
-      minify: false,
-    }),
+    getHtmlWebpackPlugin('index', 'index.html'),
+    getHtmlWebpackPlugin('gallery', 'gallery/index.html'),
     extractProjectStyle,
   ],
 };

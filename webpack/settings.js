@@ -8,13 +8,9 @@ function absPath(relPath) {
   return path.resolve(rootDir, relPath);
 }
 
-function getFileName() {
-  return `${packageJson.name}-${packageJson.version}`;
-}
-
 const options = {
-  filename: `${getFileName()}.min.js`,
-  cssName: `${getFileName()}.min.css`,
+  filename: `js/[name]-${packageJson.version}.min.js`,
+  cssName: `${packageJson.name}-${packageJson.version}.min.css`,
   port: process.env.PORT || 8082,
   host: process.env.HOST || 'localhost',
   cssHash: false,
@@ -38,10 +34,17 @@ const paths = {
   publicPath: '/',
 };
 
+const entries = {
+  // css: paths.mainStyle,
+  index: path.join(paths.src, 'index.js'),
+  gallery: path.join(paths.src, 'gallery.js'),
+};
+
 const alias = {};
 
 module.exports = {
   options,
   paths,
   alias,
+  entries,
 };

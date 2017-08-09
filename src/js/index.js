@@ -1,3 +1,5 @@
+import '../styles/index.scss';
+
 // import galleryMockupData from '../../build/photos/gallery.json';
 // import setMockupData from './requestData/setMockupData';
 import dailyBg from './dailyBg';

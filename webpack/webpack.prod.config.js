@@ -10,17 +10,32 @@ const objectAssign = require('object-assign');
 const baseConfig = require('./webpack.base.config.js');
 const settings = require('./settings');
 
+function getHtmlWebpackPlugin(chunk, page) {
+  return new HtmlWebpackPlugin({
+    template: path.join(settings.paths.srcHtml, page),
+    chunks: [chunk],
+    filename: path.join(settings.paths.buildHtml, page),
+    inject: true,
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeRedundantAttributes: true,
+      useShortDoctype: true,
+      removeEmptyAttributes: true,
+      keepClosingSlash: true,
+      minifyJs: true,
+      minifyCSS: true,
+      minifyURLs: true
+    },
+  });
+}
+
 const moduleConfig = {
   // Fail out on the first error instead of tolerating it
   bail: true,
   cache: false,
   devtool: 'source-map',
-  entry: [
-    // Style sheets entry point
-    settings.paths.mainStyle,
-    // Actual entry point for the source code
-    settings.paths.src,
-  ],
+  entry: settings.entries,
 
   // Prod module options
   module: {
@@ -70,7 +85,7 @@ const plugins = [
       warnings: false
     },
     output: {
-      screw_ie8: false,
+      screw_ie8: true,
       comments: false
     },
     sourceMap: moduleConfig.devtool.indexOf('sourcemap') >= 0 || moduleConfig.devtool.indexOf('source-map') >= 0
@@ -82,27 +97,10 @@ const plugins = [
     }
   }),
 
-  new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
+ // new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
 
-  new HtmlWebpackPlugin({
-    template: settings.paths.htmlTemplate,
-    output: {
-      path: settings.paths.buildHtml,
-      filename: path.basename(settings.paths.htmlTemplate),
-    },
-    inject: true,
-    minify: {
-      removeComments: true,
-      collapseWhitespace: true,
-      removeRedundantAttributes: true,
-      useShortDoctype: true,
-      removeEmptyAttributes: true,
-      keepClosingSlash: true,
-      minifyJs: true,
-      minifyCSS: true,
-      minifyURLs: true
-    },
-  }),
+  getHtmlWebpackPlugin('index', 'index.html'),
+  getHtmlWebpackPlugin('gallery', 'gallery/index.html'),
 
   new webpack.optimize.ModuleConcatenationPlugin(),
 
