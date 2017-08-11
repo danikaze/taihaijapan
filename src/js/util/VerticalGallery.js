@@ -1,4 +1,5 @@
 import addEventListener from './addEventListener';
+import getSrcsetTag from './getSrcTag';
 
 class VerticalGallery {
 
@@ -197,30 +198,6 @@ class VerticalGallery {
     // return the img src tag as src="url"
     function getSrcTag(imgs) {
       return imgs.length ? `src="${imgs[0].src}"` : '';
-    }
-
-    // return the img srcset tag as srcset="url1 w h, url2 w h, ..., urln w h"
-    function getSrcsetTag(imgs) {
-      if (imgs.length < 2) {
-        return '';
-      }
-
-      const srcset = [];
-
-      imgs.forEach((img) => {
-        let code = img.src;
-
-        if (img.w) {
-          code += ` ${img.w}w`;
-        }
-        if (img.h) {
-          code += ` ${img.h}h`;
-        }
-
-        srcset.push(code);
-      });
-
-      return `srcset="${srcset.join(', ')}"`;
     }
 
     const photos = this.photos;
