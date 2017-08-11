@@ -5,6 +5,7 @@ const resizePolicy = 'fit';
 
 // Different sizes to resize each photo
 const sizes = [
+  { w: 400, subdir: 'T' },
   { w: 720, subdir: 'S' },
   { w: 1280, subdir: 'M' },
   { w: 2000, subdir: 'L' },

@@ -1,3 +1,7 @@
+$break-s: 400px;
+$break-m: 800px;
+$break-l: 1200px;
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -71,15 +75,71 @@ body {
 }
 
 #thumbnails {
-  margin: 10px;
+  max-width: 2000px;
+  margin: 2em auto;
 }
 
-#thumbnails li {
+#page-index {
+
+  #thumbnails li {
+    text-align: center;
+  }
+
+  #thumbnails li img {
+  /*  cursor: pointer; */
+    width: 100%;
+    margin: 10px auto 0 auto;
+  }
+}
+
+#page-gallery {
+
+  #thumbnails li {
+    display: inline-block;
+    margin: 10px auto 0 auto;
+    text-align: center;
+  }
+
+  #thumbnails li img {
+    cursor: pointer;
+    width: 100%;
+    margin: auto;
+  }
+
+  @media screen and (min-width: $break-s) {
+    #thumbnails li {
+      width: 50%;
+    }
+
+    #thumbnails li img {
+      width: 95%;
+      margin: auto;
+    }
+  }
+
+  @media screen and (min-width: $break-m) {
+    #thumbnails li {
+      width: 33%;
+    }
+  }
+
+  @media screen and (min-width: $break-l) {
+    #thumbnails li {
+      width: 25%;
+    }
+  }
+}
+
+#view-more {
+  width: 10em;
+  background: #E91E63;
+  padding: 0.5em 1em;
+  margin: 1em auto 2em;
+  display: block;
   text-align: center;
-}
-
-#thumbnails li img {
-/*  cursor: pointer; */
-  width: 100%;
-  margin: 10px auto 0 auto;
+  color: #ffffff;
+  border-radius: 0.5em;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-decoration: none;
 }
