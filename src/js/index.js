@@ -11,6 +11,7 @@ import googleAnalytics from './util/GoogleAnalytics';
 const BG_ID = 'bgImg';
 const THUMBNAIL_ID = 'thumbnails';
 const SOCIAL_ID = 'social';
+const VIEW_MORE_ID = 'viewMore';
 
 // setMockupData(settings.galleryDbUrl, galleryMockupData);
 
@@ -21,6 +22,7 @@ function run() {
       const galleryContainer = document.getElementById(THUMBNAIL_ID);
       dailyBg.set(background, data.photos);
       settings.gallery.topDeadElement = document.getElementById(SOCIAL_ID);
+      settings.gallery.bottomDeadElement = document.getElementById(VIEW_MORE_ID);
       // eslint-disable-next-line no-new
       new VerticalGallery(galleryContainer, data.photos, settings.gallery);
     });
