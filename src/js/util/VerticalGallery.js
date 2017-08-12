@@ -93,8 +93,14 @@ class VerticalGallery {
 
     if (this.options.topDeadElement) {
       const topDeadElementBounds = this.options.topDeadElement.getBoundingClientRect();
-      if (topDeadElementBounds.bottom > topDeadElementBounds.height / 2 &&
-          topDeadElementBounds.right > topDeadElementBounds.width / 2) {
+      if (topDeadElementBounds.bottom > topDeadElementBounds.height / 2) {
+        return null;
+      }
+    }
+
+    if (this.options.bottomDeadElement) {
+      const bottomDeadElementBounds = this.options.bottomDeadElement.getBoundingClientRect();
+      if (bottomDeadElementBounds.top < window.innerHeight) {
         return null;
       }
     }
