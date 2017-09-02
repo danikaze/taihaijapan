@@ -29,12 +29,12 @@ const moduleConfig = {
         fallback: 'style-loader',
         use: [
           { loader: 'css-loader', options: { importLoaders: 1, sourceMap: true } },
-          { loader: 'sass-loader' },
           { loader: 'postcss-loader',
             options: {
               plugins: () => [ autoprefixer('>1%', 'not ie < 9') ],
-            }
+            },
           },
+          { loader: 'sass-loader' },
         ],
       }),
     }, {
@@ -44,12 +44,12 @@ const moduleConfig = {
         fallback: 'style-loader',
         use: [
           { loader: 'css-loader', options: { importLoaders: 1, sourceMap: true } },
-          { loader: 'less-loader' },
           { loader: 'postcss-loader',
             options: {
               plugins: () => [ autoprefixer('>1%', 'not ie < 9') ],
-            }
+            },
           },
+          { loader: 'less-loader' },
         ],
       }),
     },

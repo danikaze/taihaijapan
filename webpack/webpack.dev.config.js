@@ -31,7 +31,7 @@ const moduleConfig = {
     // Connect client to webserver
     'webpack-dev-server': `webpack-dev-server/client?http://${settings.options.host}:${settings.options.port}`,
     // "only-" means to only hot reload for successful updates
-    'hot': 'webpack/hot/only-dev-server',
+    hot: 'webpack/hot/only-dev-server',
   }, settings.entries),
 
   // Allows app debugging without heavily impacting build time
@@ -46,7 +46,10 @@ const moduleConfig = {
     // Match the output.path
     contentBase: settings.paths.build,
     // Match the output.publicPath
-    publicPath: settings.paths.publicPath
+    publicPath: settings.paths.publicPath,
+    // following two lines allows to access the dev server from the local network
+    disableHostCheck: true,
+    host: '0.0.0.0',
   },
 
   module: {
@@ -57,14 +60,15 @@ const moduleConfig = {
           fallback: 'style-loader',
           use: ['css-loader', 'postcss-loader', 'sass-loader'],
         }),
-      }, {
+      },
+      {
         test: /\.(less)$/,
         use: extractProjectStyle.extract({
           fallback: 'style-loader',
           use: ['css-loader', 'postcss-loader', 'less-loader'],
         }),
       },
-    ]
+    ],
   },
 
   plugins: [
@@ -78,8 +82,8 @@ const moduleConfig = {
         },
         postcss: [
           autoprefixer(),
-        ]
-      }
+        ],
+      },
     }),
     // Enable HMR globally
     new webpack.HotModuleReplacementPlugin(),
@@ -98,6 +102,6 @@ const moduleConfig = {
   ],
 };
 
-module.exports = function (env) {
+module.exports = (env) => {
   return merge(baseConfig, moduleConfig);
 };
