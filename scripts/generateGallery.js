@@ -24,6 +24,11 @@ function resizeImages(photoList) {
 
   out.log(`Processing ${totalPhotos} images`);
   photoList.forEach((value, index) => funcs.push(((filePath, f) => {
+    if (!fs.existsSync(filePath)) {
+      out.error(` ! file not found: ${filePath}`);
+      return;
+    }
+
     const promises = [];
     out.info(` [${f + 1}/${totalPhotos}] ${path.basename(filePath)}`);
     const currentPhotoInfo = [];
@@ -59,10 +64,18 @@ function resizeImages(photoList) {
 function generateJson(imageData) {
   const gallery = {
     updatedOn: new Date().toISOString(),
+    sizes: [],
     photos: [],
   };
 
   out.info('Generating json');
+
+  db.sizes.forEach((size) => {
+    gallery.sizes.push({
+      w: size.w || 0,
+      h: size.h || 0,
+    });
+  });
 
   imageData.forEach((photo) => {
     const imgs = [];
@@ -95,6 +108,10 @@ function createTempDir() {
   mkdirp(PATH_TEMP);
 }
 
+function orderSizes() {
+  db.sizes.sort((a, b) => ((a.w || 0) - (b.w || 0)) + ((a.h || 0) - (b.h || 0)));
+}
+
 function clearTempDir() {
   return new Promise((resolve, reject) => {
     fs.rmdir(PATH_TEMP, (error) => {
@@ -113,6 +130,7 @@ function end() {
 }
 
 createTempDir();
+orderSizes();
 getFiles()
   .then(resizeImages)
   .then(generateJson)

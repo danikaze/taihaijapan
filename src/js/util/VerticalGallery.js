@@ -1,5 +1,6 @@
 import addEventListener from './addEventListener';
 import getSrcsetTag from './getSrcTag';
+import fitRects from './fitRects';
 
 class VerticalGallery {
 
@@ -127,20 +128,6 @@ class VerticalGallery {
   }
 
   /**
-   * Resize an image to fit in a box
-   */
-  fitImage(img, maxW, maxH) {
-    if (!maxW) {
-      maxW = this.elem.offsetWidth;
-      maxH = window.innerHeight - this.options.marginH;
-    }
-
-    const ratio = Math.min(maxW / img.width, maxH / img.height);
-    img.style.width = `${img.width * ratio}px`;
-    // img.style.height = `${img.height * r}px`;
-  }
-
-  /**
    * Resize photos to fit in the screen
    */
   fitImages() {
@@ -148,7 +135,7 @@ class VerticalGallery {
     const maxH = window.innerHeight - this.options.marginH;
     const currentImg = this.getMostCenteredImage();
 
-    this.imageList.forEach(img => this.fitImage(img, maxW, maxH));
+    this.imageList.forEach(img => fitImage(img, maxW, maxH));
     this.centerImage(currentImg);
   }
 
@@ -218,11 +205,25 @@ class VerticalGallery {
         li = document.createElement('li');
         li.innerHTML = `<img ${getSrcTag(imgs)} ${getSrcsetTag(imgs)} alt="photo">`;
         img = li.children[0];
-        addEventListener(img, 'load', this.fitImage.bind(this, img, null, null));
+        addEventListener(img, 'load', fitImage.bind(this, img, null, null));
         parent.appendChild(li);
       }
     }
   }
+}
+
+/**
+ * Resize an image to fit in a box
+ */
+function fitImage(img, maxW, maxH) {
+  if (!maxW) {
+    maxW = this.elem.offsetWidth;
+    maxH = window.innerHeight - this.options.marginH;
+  }
+
+  const size = fitRects(img.width, img.height, maxW, maxH);
+  img.style.width = `${size.w}px`;
+  // img.style.height = `${img.height * r}px`;
 }
 
 module.exports = VerticalGallery;

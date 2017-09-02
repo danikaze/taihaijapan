@@ -66,7 +66,7 @@ module.exports = {
             outputPath: 'img/',
           },
         }],
-      }
+      },
     ],
   },
 };

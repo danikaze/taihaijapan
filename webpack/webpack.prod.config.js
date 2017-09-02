@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const objectAssign = require('object-assign');
+require('object-assign');
 const baseConfig = require('./webpack.base.config.js');
 const settings = require('./settings');
 
@@ -25,7 +25,7 @@ function getHtmlWebpackPlugin(chunk, page) {
       keepClosingSlash: true,
       minifyJs: true,
       minifyCSS: true,
-      minifyURLs: true
+      minifyURLs: true,
     },
   });
 }
@@ -39,62 +39,75 @@ const moduleConfig = {
 
   // Prod module options
   module: {
-    rules: [{
-      test: /\.(css|scss|sass)$/,
-      exclude: /node_modules/,
-      use: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: [
-          { loader: 'css-loader', options: { importLoaders: 1, sourceMap: true } },
-          { loader: 'sass-loader' },
-          { loader: 'postcss-loader',
-            options: {
-              plugins: () => [ autoprefixer('>1%', 'not ie < 9') ],
-            }
-          },
-        ],
-      }),
-    }, {
-      test: /\.(less)$/,
-      exclude: /node_modules/,
-      use: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: [
-          { loader: 'css-loader', options: { importLoaders: 1, sourceMap: true } },
-          { loader: 'less-loader' },
-          { loader: 'postcss-loader',
-            options: {
-              plugins: () => [ autoprefixer('>1%', 'not ie < 9') ],
-            }
-          },
-        ],
-      }),
-    },
-  ]},
+    rules: [
+      {
+        test: /\.(css|scss|sass)$/,
+        exclude: /node_modules/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+                sourceMap: true,
+                minimize: false,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                plugins: () => [autoprefixer('>1%', 'not ie < 9')],
+              },
+            },
+            {
+              loader: 'sass-loader',
+            },
+          ],
+        }),
+      },
+      {
+        test: /\.(less)$/,
+        exclude: /node_modules/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            { loader: 'css-loader', options: { importLoaders: 1, sourceMap: true } },
+            { loader: 'postcss-loader',
+              options: {
+                plugins: () => [autoprefixer('>1%', 'not ie < 9')],
+              },
+            },
+            { loader: 'less-loader' },
+          ],
+        }),
+      },
+    ],
+  },
 };
 
 // We separate plugins from the general options in order to evaluate the latter
 const plugins = [
-  new webpack.optimize.OccurrenceOrderPlugin,
+  new webpack.optimize.OccurrenceOrderPlugin(),
 
   new webpack.optimize.UglifyJsPlugin({
     beautify: false,
     comments: false,
     compress: {
       screw_ie8: true,
-      warnings: false
+      warnings: false,
     },
     output: {
       screw_ie8: true,
-      comments: false
+      comments: false,
     },
-    sourceMap: moduleConfig.devtool.indexOf('sourcemap') >= 0 || moduleConfig.devtool.indexOf('source-map') >= 0
+    sourceMap: moduleConfig.devtool.indexOf('sourcemap') >= 0 || moduleConfig.devtool.indexOf('source-map') >= 0,
   }),
 
   new webpack.DefinePlugin({
     'process.env': {
-      'NODE_ENV': JSON.stringify('production')
-    }
+      NODE_ENV: JSON.stringify('production'),
+    },
   }),
 
  // new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
@@ -123,9 +136,9 @@ const plugins = [
     openAnalyzer: false,
     reportFilename: '../buildInfo/analyzer.html',
   }),
-]
+];
 
-module.exports = function(env) {
+module.exports = (env) => {
   moduleConfig.plugins = plugins;
   return merge(baseConfig, moduleConfig);
 };
