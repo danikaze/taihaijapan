@@ -12,6 +12,46 @@ const PATH_TEMP = path.normalize('./temp/');
 const verboseLevel = process.argv.reduce((sum, param) => sum + (param.toLowerCase() === '-v' ? 1 : 0), 0);
 const out = new Output(verboseLevel);
 
+function checkDatabase() {
+  function checkDuplicatedIds() {
+    const ids = [];
+    const duplicatedIds = [];
+
+    db.photos.forEach((photo) => {
+      const id = photo.id.toLowerCase();
+      if (ids.indexOf(id) !== -1) {
+        duplicatedIds.push(photo.id);
+      } else {
+        ids.push(photo.id);
+      }
+    });
+
+    return duplicatedIds.length ? duplicatedIds : null;
+  }
+
+  return new Promise((resolve, reject) => {
+    const checks = {
+      duplicatedIds: checkDuplicatedIds,
+    };
+    const errors = {};
+    let failed = false;
+
+    Object.keys(checks).forEach((key) => {
+      const res = checks[key]();
+      if (res) {
+        errors[key] = res;
+        failed = true;
+      }
+    });
+
+    if (failed) {
+      reject(errors);
+    } else {
+      resolve();
+    }
+  });
+}
+
 function getFiles() {
   return Promise.resolve(db.photos);
 }
@@ -23,7 +63,7 @@ function resizeImages(photoList) {
   const generatedRoutes = [];
 
   out.log(`Processing ${totalPhotos} images`);
-  photoList.forEach((value, index) => funcs.push(((filePath, f) => {
+  photoList.forEach((photo, index) => funcs.push(((filePath, photoId, f) => {
     if (!fs.existsSync(filePath)) {
       out.error(` ! file not found: ${filePath}`);
       return;
@@ -31,7 +71,10 @@ function resizeImages(photoList) {
 
     const promises = [];
     out.info(` [${f + 1}/${totalPhotos}] ${path.basename(filePath)}`);
-    const currentPhotoInfo = [];
+    const currentPhotoInfo = {
+      id: photoId,
+      imgs: [],
+    };
     allPhotosInfo.push(currentPhotoInfo);
 
     db.sizes.forEach((size, s) => {
@@ -49,14 +92,15 @@ function resizeImages(photoList) {
               }
               generatedRoutes.push(fileInfo.src);
 
-              currentPhotoInfo[s] = fileInfo;
+              currentPhotoInfo.imgs[s] = fileInfo;
               out.info(`  - ${fileInfo.width}x${fileInfo.height} => ${fileInfo.src}`);
               fs.rename(tempName, newPath, renameResolve);
             }))));
     });
 
+    // eslint-disable-next-line
     return Q.all(promises);
-  }).bind(null, value, index)));
+  }).bind(null, photo.img, photo.id, index)));
 
   return async.series(funcs).then(() => allPhotosInfo);
 }
@@ -79,12 +123,15 @@ function generateJson(imageData) {
 
   imageData.forEach((photo) => {
     const imgs = [];
-    photo.forEach(img => imgs.push({
+    photo.imgs.forEach(img => imgs.push({
       w: img.width,
       h: img.height,
       src: img.src,
     }));
-    gallery.photos.push(imgs);
+    gallery.photos.push({
+      id: photo.id,
+      imgs,
+    });
   });
 
   return new Promise((resolve, reject) => {
@@ -124,15 +171,40 @@ function clearTempDir() {
   });
 }
 
+/**
+ * Outputs a message and exits with an error
+ * @param {string} msg
+ */
+function exitError(msg) {
+  out.error(msg);
+  out.log('Exiting...');
+  process.exit(1);
+}
+
+/**
+ * End the process and exits
+ */
 function end() {
   out.log('Exiting...');
   process.exit(0);
 }
 
-createTempDir();
-orderSizes();
-getFiles()
+/**
+ * Run the main tasks of the script
+ */
+function run() {
+  createTempDir();
+  orderSizes();
+  getFiles()
   .then(resizeImages)
   .then(generateJson)
   .then(clearTempDir)
   .then(end);
+}
+
+/*
+ * Execution after checks
+ */
+checkDatabase()
+  .catch(errors => exitError(`Errors while checking db.js: ${JSON.stringify(errors, null, 2)}`))
+  .then(run);
