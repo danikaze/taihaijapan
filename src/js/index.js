@@ -7,6 +7,7 @@ import requestJson from './util/requestData/requestJson';
 import settings from './util/settings';
 import VerticalGallery from './util/VerticalGallery';
 import googleAnalytics from './util/GoogleAnalytics';
+import addEventListener from './util/addEventListener';
 
 const BG_ID = 'bgImg';
 const THUMBNAIL_ID = 'thumbnails';
@@ -20,11 +21,15 @@ function run() {
     .then((data) => {
       const background = document.getElementById(BG_ID);
       const galleryContainer = document.getElementById(THUMBNAIL_ID);
-      dailyBg.set(background, data.photos);
+      dailyBg.set(background, data.photos, data.sizes);
       settings.gallery.topDeadElement = document.getElementById(SOCIAL_ID);
       settings.gallery.bottomDeadElement = document.getElementById(VIEW_MORE_ID);
       // eslint-disable-next-line no-new
       new VerticalGallery(galleryContainer, data.photos, settings.gallery);
+
+      addEventListener(window, 'resize', () => {
+        dailyBg.set(background, data.photos, data.sizes);
+      });
     });
 
   googleAnalytics.insert();
