@@ -16,26 +16,46 @@ const baseUrl = '/photos';
 
 // list of photos
 const photos = (() => [
-  { img: '_MG_2208-Edit', id: 'goldengai' },   // Golden Gai, Shinjuku / 新宿のゴールデン街
-  { img: '_MG_4439-Edit', id: 'gcans' },   // Proyecto G-Cans / 首都圏外郭放水路
-  { img: '_MG_4624-Edit', id: 'showa' },   // Rincón Showa, Yokohama / 新横浜ラーメン博物館
-  { img: '_MG_6313-Edit', id: 'tsukiji' },   // Tsukiji / 築地市場
-  { img: '_MG_4534-Edit', id: 'chukagai' },   // Barrio Chino de Yokohama / 横浜元町中華街
-  { img: '_MG_5923-Edit', id: 'nakano' },   // Callejones de Nakano / 中野の裏路地
-  { img: '_MG_5304-Edit', id: 'naganogamecenter' },   // Showa Game Center, Nagano / 渋温泉の昭和っぽいゲームセンター
-  { img: '_MG_2768-Edit-2', id: 'dotonbori' }, // Dōtonbori, Ōsaka / 道頓堀、大阪
-  { img: '_MG_4179-Edit', id: 'nikkotera' },   // Templo Abandonado en Nikkō / 四本龍寺
-  { img: '_MG_5941-Edit', id: 'nakamiseshotengai' },   // Distrito Comercial Nakamise / 中野新仲見世商店街
-  { img: '_MG_4657-Edit', id: 'showaba' },   // Bares de la Era Showa / 新横浜ラーメン博物館
-  { img: '_MG_2190-Edit', id: 'shinjukuuraroji' },   // Callejones de Shinjuku / 新宿の裏路地
-  { img: '_MG_4205-Edit', id: 'nikko' },   // Nikkō / 日光
-  { img: '_MG_5540-Edit', id: 'tsumago' },   // Tienda de licor, Tsumago / 妻籠宿の酒屋
-  { img: '_MG_3035-Edit', id: 'tsutengaku' },   // Tsūtengaku, Ōsaka / 通天閣、大阪
-  { img: '_MG_4734-Edit', id: 'nichijo' },   // Vida diaria / 日常生活
-  { img: '_MG_4222-Edit', id: 'nikkoike' },   // Botes de lago abandonados en Nikkō / 中禅寺湖の打ち捨てられたボート
-  { img: '_MG_3111-Edit', id: 'umedabiru' },   // Edificio Umeda / 梅田ビル
-  { img: '_MG_2245-Edit', id: 'goldengairubik' },   // Matando el tiempo en Golden Gai / ゴールデン街の暇つぶし
-  { img: '_MG_4651-Edit', id: 'nukacola' },   // Nuka Cola / ヌカ・コーラ
+  // Golden Gai, Shinjuku / 新宿のゴールデン街
+  { img: '_MG_2208-Edit', id: 'golden-gai-streets' },
+  // Proyecto G-Cans / 首都圏外郭放水路
+  { img: '_MG_4439-Edit', id: 'g-cans-project' },
+  // Rincón Showa, Yokohama / 新横浜ラーメン博物館
+  { img: '_MG_4624-Edit', id: 'showa-corner-in-yokohama' },
+  // Tsukiji / 築地市場
+  { img: '_MG_6313-Edit', id: 'tsukiji' },
+  // Barrio Chino de Yokohama / 横浜元町中華街
+  { img: '_MG_4534-Edit', id: 'motomachi-chukagai-reflexes' },
+  // Callejones de Nakano / 中野の裏路地
+  { img: '_MG_5923-Edit', id: 'nakano-no-uraroji' },
+  // Showa Game Center, Nagano / 渋温泉の昭和っぽいゲームセンター
+  { img: '_MG_5304-Edit', id: 'nagano-showa-gamecenter' },
+  // Dōtonbori, Ōsaka / 道頓堀、大阪
+  { img: '_MG_2768-Edit-2', id: 'osaka-dotonbori' },
+  // Templo Abandonado en Nikkō / 四本龍寺
+  { img: '_MG_4179-Edit', id: 'light-of-the-shrine' },
+  // Distrito Comercial Nakamise / 中野新仲見世商店街
+  { img: '_MG_5941-Edit', id: 'nakamise-shotengai' },
+  // Bares de la Era Showa / 新横浜ラーメン博物館
+  { img: '_MG_4657-Edit', id: 'showa-bars-corner' },
+  // Callejones de Shinjuku / 新宿の裏路地
+  { img: '_MG_2190-Edit', id: 'shinjuku-no-uraroji' },
+  // Nikkō / 日光
+  { img: '_MG_4205-Edit', id: 'misty-nikko' },
+  // Tienda de licor, Tsumago / 妻籠宿の酒屋
+  { img: '_MG_5540-Edit', id: 'tsumago-no-sakaba' },
+  // Tsūtengaku, Ōsaka / 通天閣、大阪
+  { img: '_MG_3035-Edit', id: 'standing-tsutengaku' },
+  // Vida diaria / 日常生活
+  { img: '_MG_4734-Edit', id: 'strange-nichijo' },
+  // Botes de lago abandonados en Nikkō / 中禅寺湖の打ち捨てられたボート
+  { img: '_MG_4222-Edit', id: 'nikko-abandoned-lake' },
+  // Edificio Umeda / 梅田ビル
+  { img: '_MG_3111-Edit', id: 'umeda-building-stairs-to-heaven' },
+  // Matando el tiempo en Golden Gai / ゴールデン街の暇つぶし
+  { img: '_MG_2245-Edit', id: 'golden-gai-hima-tsubushi' },
+  // Nuka Cola / ヌカ・コーラ
+  { img: '_MG_4651-Edit', id: 'nuka-cola' },
 ])().map(photo => ({
   img: `${__dirname}/${photo.img}.jpg`,
   id: photo.id,
