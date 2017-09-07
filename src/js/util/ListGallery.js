@@ -1,11 +1,11 @@
 import Photoswipe from 'photoswipe/';
-// import 'photoswipe/dist/photoswipe.css';
-// import 'photoswipe/dist/default-skin/default-skin.css';
+import './polyfills';
 import PhotoswipeUi from './PhotoswipeUi';
 import photoswipeHtml from './PhotoswipeHtml';
 import '../../styles/photoswipe/index.scss';
 import addEventListener from './addEventListener';
 import getSrcsetTag from './getSrcTag';
+import chooseBestSize from './chooseBestSize';
 
 const sizesMediaTags = [
   '(min-width: 400) 50vw',
@@ -26,22 +26,26 @@ class ListGallery {
     }, options);
     this.photos = galleryPhotos;
     this.thumbnails = [];
+    this.biggestSizesLoaded = {};
 
-    createThumbnails.call(this);
     createPhotoSwipeHtml(this.viewerElem);
+    createThumbnails.call(this);
+    checkUrl.call(this);
   }
 }
 
 /**
- * @param   {Object[]} imgs List of photos as [{ w, h, src }]
- * @returns {DOM}           `<li>` element for one photo, from the list of images
+ * @this    {ListGallery}
+ * @param   {string}      id   Id or slug of the image
+ * @param   {Object[]}    imgs List of photos as [{ w, h, src }]
+ * @returns {DOM}              `<li>` element for one photo, from the list of images
  */
-function createThumbnail(imgs, index) {
+function createThumbnail(id, imgs, index) {
   if (!imgs || !imgs.length) {
     return null;
   }
 
-  const srcTag = `src="${imgs[0].src}"`;
+  const srcTag = `src="${imgs[imgs.length - 1].src}"`;
   const srcsetTag = getSrcsetTag(imgs, sizesMediaTags);
   const li = document.createElement('li');
   li.innerHTML = `<img ${srcTag} ${srcsetTag}>`;
@@ -58,39 +62,23 @@ function createThumbnail(imgs, index) {
 function createThumbnails() {
   const bindedCreateThumbnail = createThumbnail.bind(this);
   const parent = this.indexElem;
-  this.photos.map(imgs => imgs.filter(img => img.w <= this.options.maxWidth
-    && img.h <= this.options.maxHeight)).forEach((photo, index) => {
-      const li = bindedCreateThumbnail(photo, index);
-      parent.appendChild(li);
-      this.thumbnails.push(li.children[0]);
-    });
+  this.photos.forEach((photo, index) => {
+    const imgs = photo.imgs.filter(img => img.w <= this.options.maxWidth
+                                    && img.h <= this.options.maxHeight);
+    const li = bindedCreateThumbnail(photo.id, imgs, index);
+    parent.appendChild(li);
+    this.thumbnails.push(li.children[0]);
+  });
 }
 
 /**
- * Choose the smallest size that fits the specified viewport
+ * Return the bounds of a DOM element in the page
  *
- * @param  {Object} viewport Viewport to fit
- * @param  {Object} options  Percentage of the viewport to fit
- * @return {number}          Best size index to use with this viewport size
+ * @param {DOM[]}  elems thumbnails elements to search into
+ * @param {number} index index of the desired thumbnail
  */
-function chooseBestSize(viewport, options) {
-  const sizes = options.sizes;
-  const w = viewport.x * window.devicePixelRatio * options.fitRatio;
-  const h = viewport.y * window.devicePixelRatio * options.fitRatio;
-  const last = sizes.length - 1;
-
-  for (let i = 0; i < last; i++) {
-    const size = sizes[i];
-    if ((!size.w || size.w > w) && (!size.h || size.h > h)) {
-      return i;
-    }
-  }
-
-  return last;
-}
-
-function getThumbBounds(thumbnails, index) {
-  const bounds = thumbnails[index].getBoundingClientRect();
+function getElemBounds(elems, index) {
+  const bounds = elems[index].getBoundingClientRect();
   const pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
 
   return {
@@ -108,7 +96,10 @@ function createPhotoSwipe(photoIndex) {
   const gallery = new Photoswipe(this.viewerElem, PhotoswipeUi, this.photos, {
     index: photoIndex,
     showHideOpacity: true,
-    getThumbBoundsFn: getThumbBounds.bind(this, this.thumbnails),
+    getThumbBoundsFn: getElemBounds.bind(this, this.thumbnails),
+    history: true,
+    galleryUID: '',
+    galleryPIDs: true,
   });
 
   let bestSize = chooseBestSize(gallery.viewportSize, this.options);
@@ -124,13 +115,58 @@ function createPhotoSwipe(photoIndex) {
   });
 
   gallery.listen('gettingData', (index, item) => {
-    const shownItem = item[bestSize];
+    let biggestImage = this.biggestSizesLoaded[item.id];
+    if (biggestImage) {
+      biggestImage = Math.max(biggestImage, bestSize);
+    } else {
+      biggestImage = bestSize;
+    }
+    this.biggestSizesLoaded[item.id] = biggestImage;
+    const shownItem = item.imgs[biggestImage];
     item.src = shownItem.src;
     item.w = shownItem.w;
     item.h = shownItem.h;
+    item.pid = item.id;
   });
 
   gallery.init();
+}
+
+/**
+ * @return {Object} Parameters of the URL hash (`#p1=v1&p2=v2`) as `{ p1: v1, p2: v2 }`
+ */
+function parseUrlHash() {
+  const hash = window.location.hash.substring(1).split('&');
+  const params = {};
+
+  hash.forEach((chunk) => {
+    if (!chunk) {
+      return;
+    }
+
+    const pair = chunk.split('=');
+    if (pair.length < 2) {
+      return;
+    }
+
+    params[pair[0]] = pair[1];
+  });
+
+  return params;
+}
+
+/**
+ * @this {ListGallery}
+ */
+function checkUrl() {
+  const params = parseUrlHash();
+  const pid = params.pid;
+  if (pid) {
+    const photoIndex = this.photos.findIndex(photo => photo.id === pid);
+    if (photoIndex !== -1) {
+      createPhotoSwipe.call(this, photoIndex);
+    }
+  }
 }
 
 /**

@@ -200,10 +200,11 @@ class VerticalGallery {
     let img;
 
     for (let i = 0; i < n; i++) {
-      const imgs = photos[i];
+      const imgs = photos[i].imgs;
       if (imgs.length) {
         li = document.createElement('li');
-        li.innerHTML = `<img ${getSrcTag(imgs)} ${getSrcsetTag(imgs)} alt="photo">`;
+        li.innerHTML = `<a href="/gallery/#gid=all&pid=${photos[i].id}">`
+          + `<img ${getSrcTag(imgs)} ${getSrcsetTag(imgs)} alt="photo"></a>`;
         img = li.children[0];
         addEventListener(img, 'load', fitImage.bind(this, img, null, null));
         parent.appendChild(li);

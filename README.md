@@ -10,6 +10,7 @@ This code is based on one of his [JavaScript boilerplates](https://github.com/da
 
 ## 0.4.0
 Added an unique id to the photos db, which is added also into the generated `gallery.json`
+Choose a better bg size for the index page, based on the screen size
 
 ## 0.3.0
 webpack-dev-server now is visible in the local network.
