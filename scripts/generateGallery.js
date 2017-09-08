@@ -70,7 +70,7 @@ function resizeImages(photoList) {
     }
 
     const promises = [];
-    out.info(` [${f + 1}/${totalPhotos}] ${path.basename(filePath)}`);
+    out.info(` [${f + 1}/${totalPhotos}] ${path.basename(filePath)} (${photoId})`);
     const currentPhotoInfo = {
       id: photoId,
       imgs: [],
