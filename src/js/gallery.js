@@ -1,3 +1,4 @@
+import 'es6-object-assign/auto';
 import '../styles/index.scss';
 
 import requestJson from './util/requestData/requestJson';

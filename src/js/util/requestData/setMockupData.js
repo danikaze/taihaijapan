@@ -1,3 +1,4 @@
+import 'es6-object-assign/auto';
 import mockupData from './mockupData';
 
 function setMockupData(...args) {

@@ -1,3 +1,4 @@
+import 'es6-object-assign/auto';
 import Photoswipe from 'photoswipe/';
 import '../polyfills/Array.findIndex';
 import PhotoswipeUi from './PhotoswipeUi';
