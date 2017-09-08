@@ -9,10 +9,10 @@ This code is based on one of his [JavaScript boilerplates](https://github.com/da
 # Changelog
 
 ## 0.5.0
+Minor fixes
 Removed support for IE<=8
+Removed auto image centering scroll in the index gallery
 Added twitter card support (static with logo, same as FB preview)
-Fixed tumblr link
-Refactored some html/css
 Added cache on `photos/` via apache `mod_expires`
 
 ## 0.4.0
