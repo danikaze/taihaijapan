@@ -1,4 +1,3 @@
-import '../../polyfills/Promise';
 import mockupData from './mockupData';
 
 function resolveMockupData(url, options) {

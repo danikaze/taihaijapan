@@ -1,3 +1,7 @@
+import 'es6-object-assign/auto';
+import 'es6-promise/auto';
+import './polyfills/Array.findIndex';
+
 import '../styles/index.scss';
 
 import dailyBg from './util/dailyBg';
