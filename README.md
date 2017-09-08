@@ -8,6 +8,12 @@ This code is based on one of his [JavaScript boilerplates](https://github.com/da
 
 # Changelog
 
+## 0.5.0
+Removed support for IE<=8
+Added twitter card support (static with logo, same as FB preview)
+Fixed tumblr link
+Refactored some html/css
+
 ## 0.4.0
 Added an unique id to the photos db, which is added also into the generated `gallery.json`
 Choose a better bg size for the index page, based on the screen size
