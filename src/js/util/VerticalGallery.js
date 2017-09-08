@@ -1,4 +1,3 @@
-import 'es6-object-assign/auto';
 import addEventListener from './addEventListener';
 import getSrcsetTag from './getSrcTag';
 import fitRects from './fitRects';
