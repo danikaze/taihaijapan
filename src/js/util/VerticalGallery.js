@@ -206,7 +206,11 @@ class VerticalGallery {
         li.innerHTML = `<a href="/gallery/#gid=all&pid=${photos[i].id}">`
           + `<img ${getSrcTag(imgs)} ${getSrcsetTag(imgs)} alt="photo"></a>`;
         img = li.children[0];
-        addEventListener(img, 'load', fitImage.bind(this, img, null, null));
+        if (img.width) {
+          fitImage.call(this, img, null, null);
+        } else {
+          addEventListener(img, 'load', fitImage.bind(this, img, null, null));
+        }
         parent.appendChild(li);
       }
     }
