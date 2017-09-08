@@ -13,11 +13,9 @@ function run() {
     .then((data) => {
       const galleryContainer = document.getElementById(THUMBNAIL_ID);
       const galleryViewer = document.getElementById(GALLERY_ID);
-
+      const galleryOptions = Object.assign(settings.gallery, { sizes: data.sizes });
       // eslint-disable-next-line no-new
-      new ListGallery(galleryContainer, galleryViewer, data.photos, {
-        sizes: data.sizes,
-      });
+      new ListGallery(galleryContainer, galleryViewer, data.photos, galleryOptions);
     });
 
   googleAnalytics.insert();

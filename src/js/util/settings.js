@@ -4,11 +4,13 @@ const ajax = {
   timeout: 5000,
 };
 
-const gallery = {
-};
+const index = {};
+
+const gallery = {};
 
 export default {
   galleryDbUrl,
   ajax,
+  index,
   gallery,
 };

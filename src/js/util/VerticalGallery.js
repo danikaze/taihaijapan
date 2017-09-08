@@ -20,6 +20,7 @@ class VerticalGallery {
       imgSelector: 'img',
       marginH: 20,
       initialPhotos: 5,
+      scrollHelperActive: false,
       scrollDelay: 150,
       scrollDuration: 150,
       scrollMinCoverage: 0.75,
@@ -38,7 +39,9 @@ class VerticalGallery {
     this.cacheImageList();
 
     addEventListener(window, 'resize', this.bindedFitImages);
-    addEventListener(window, 'scroll', this.bindedScrollHandler);
+    if (this.options.scrollHelperActive) {
+      addEventListener(window, 'scroll', this.bindedScrollHandler);
+    }
   }
 
   /**
@@ -150,8 +153,8 @@ class VerticalGallery {
     const dX = (window.innerWidth / 2) - bounds.left - (bounds.width / 2);
     const dY = (window.innerHeight / 2) - bounds.top - (bounds.height / 2);
 
-    if (Math.abs(dX) > this.options.scrollDeadZone ||
-        Math.abs(dY) > this.options.scrollDeadZone) {
+    if (this.options.scrollHelperActive &&
+        (Math.abs(dX) > this.options.scrollDeadZone || Math.abs(dY) > this.options.scrollDeadZone)) {
       this.animateScroll(dX, dY, time || this.options.scrollDuration);
     }
   }
@@ -205,7 +208,7 @@ class VerticalGallery {
         li = document.createElement('li');
         li.innerHTML = `<a href="/gallery/#gid=all&pid=${photos[i].id}">`
           + `<img ${getSrcTag(imgs)} ${getSrcsetTag(imgs)} alt="photo"></a>`;
-        img = li.children[0];
+        img = li.children[0].children[0];
         if (img.width) {
           fitImage.call(this, img, null, null);
         } else {

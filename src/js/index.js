@@ -25,7 +25,7 @@ function run() {
       settings.gallery.topDeadElement = document.getElementById(SOCIAL_ID);
       settings.gallery.bottomDeadElement = document.getElementById(VIEW_MORE_ID);
       // eslint-disable-next-line no-new
-      new VerticalGallery(galleryContainer, data.photos, settings.gallery);
+      new VerticalGallery(galleryContainer, data.photos, settings.index);
 
       addEventListener(window, 'resize', () => {
         dailyBg.set(background, data.photos, data.sizes);
