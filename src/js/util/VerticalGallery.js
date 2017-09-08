@@ -205,10 +205,11 @@ class VerticalGallery {
 
     for (let i = 0; i < n; i++) {
       const imgs = photos[i].imgs;
+      const photoId = photos[i].id;
       if (imgs.length) {
         li = document.createElement('li');
-        li.innerHTML = `<a href="/gallery/#gid=all&pid=${photos[i].id}">`
-          + `<img ${getSrcTag(imgs)} ${getSrcsetTag(imgs)} alt="photo"></a>`;
+        li.innerHTML = `<a href="/gallery/#gid=all&pid=${photoId}">`
+          + `<img ${getSrcTag(imgs)} ${getSrcsetTag(imgs)} alt="${photoId}"></a>`;
         img = li.children[0].children[0];
         if (img.width) {
           fitImage.call(this, img, null, null);
