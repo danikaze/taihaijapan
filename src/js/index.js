@@ -1,7 +1,5 @@
 import '../styles/index.scss';
 
-// import galleryMockupData from '../../build/photos/gallery.json';
-// import setMockupData from './util/requestData/setMockupData';
 import dailyBg from './util/dailyBg';
 import requestJson from './util/requestData/requestJson';
 import settings from './util/settings';

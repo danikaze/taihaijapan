@@ -1,5 +1,5 @@
 import Photoswipe from 'photoswipe/';
-import './polyfills';
+import '../polyfills/Array.findIndex';
 import PhotoswipeUi from './PhotoswipeUi';
 import photoswipeHtml from './PhotoswipeHtml';
 import '../../styles/photoswipe/index.scss';
