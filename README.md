@@ -13,6 +13,7 @@ Removed support for IE<=8
 Added twitter card support (static with logo, same as FB preview)
 Fixed tumblr link
 Refactored some html/css
+Added cache on `photos/` via apache `mod_expires`
 
 ## 0.4.0
 Added an unique id to the photos db, which is added also into the generated `gallery.json`

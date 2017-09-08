@@ -1,0 +1,2 @@
+ExpiresActive On
+ExpiresByType image/jpeg "modification plus 1 month"
