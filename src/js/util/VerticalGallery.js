@@ -30,7 +30,7 @@ class VerticalGallery {
       scrollDeadZone: 2,
       logo: null,
     }, options);
-    this.srcSetEmu = new SrcSetEmu(this.options.sizes, { auto: false });
+    this.srcSetEmu = new SrcSetEmu(this.options.sizes, null, { auto: false });
     this.imageList = [];
 
     this.bindedCenterImage = this.centerImage.bind(this);
