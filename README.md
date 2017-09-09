@@ -14,6 +14,7 @@ Removed support for IE<=8
 Removed auto image centering scroll in the index gallery
 Added twitter card support (static with logo, same as FB preview)
 Added cache on `photos/` via apache `mod_expires`
+Simulate `srcset` img behavior for IE browsers via `SrcSetEmu`
 
 ## 0.4.0
 Added an unique id to the photos db, which is added also into the generated `gallery.json`
