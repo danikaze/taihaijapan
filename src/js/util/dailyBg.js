@@ -13,7 +13,7 @@ function setDailyBg(bgElem, galleryPhotos, sizes) {
     x: window.innerWidth,
     y: window.innerHeight,
   };
-  const bestSize = chooseBestSize(viewport, { sizes });
+  const bestSize = chooseBestSize(viewport, sizes);
   if (biggestSizeIndex > bestSize) {
     return;
   }

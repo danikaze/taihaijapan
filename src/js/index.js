@@ -26,8 +26,9 @@ function run() {
       dailyBg.set(background, data.photos, data.sizes);
       settings.gallery.topDeadElement = document.getElementById(SOCIAL_ID);
       settings.gallery.bottomDeadElement = document.getElementById(VIEW_MORE_ID);
+      const galleryOptions = Object.assign({}, settings.index, { sizes: data.sizes });
       // eslint-disable-next-line no-new
-      new VerticalGallery(galleryContainer, data.photos, settings.index);
+      new VerticalGallery(galleryContainer, data.photos, galleryOptions);
 
       addEventListener(window, 'resize', () => {
         dailyBg.set(background, data.photos, data.sizes);
