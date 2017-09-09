@@ -16,7 +16,7 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin([{
       context: settings.paths.srcHtml,
-      from: '**/*',
+      from: { glob: '**/*', dot: true },
       to: settings.paths.build,
     }]),
   ],

@@ -44,6 +44,8 @@ body {
 
 #header {
   position: relative;
+  max-width: 2000px;
+  margin: auto;
 }
 
 #logo {
@@ -55,24 +57,10 @@ body {
   margin: auto;
 }
 
-.social {
+.icons {
   text-align: center;
   width: 100%;
   margin-bottom: 2em;
-}
-
-#texts {
-  display: none;
-}
-
-.text {
-  color: #fff;
-  opacity: 0;
-  transition: opacity 2s ease-in;
-}
-
-.showText {
-  opacity: 1;
 }
 
 #thumbnails {

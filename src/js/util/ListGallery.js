@@ -1,5 +1,5 @@
 import Photoswipe from 'photoswipe/';
-import './polyfills';
+import '../polyfills/Array.findIndex';
 import PhotoswipeUi from './PhotoswipeUi';
 import photoswipeHtml from './PhotoswipeHtml';
 import '../../styles/photoswipe/index.scss';
@@ -102,12 +102,12 @@ function createPhotoSwipe(photoIndex) {
     galleryPIDs: true,
   });
 
-  let bestSize = chooseBestSize(gallery.viewportSize, this.options);
+  let bestSize = chooseBestSize(gallery.viewportSize, this.options.sizes);
 
   // beforeResize + gettingData listeners, allows to load the correct size depending on the gallery viewport (as srcset)
   // http://photoswipe.com/documentation/responsive-images.html
   gallery.listen('beforeResize', () => {
-    const newSize = chooseBestSize(gallery.viewportSize, this.options);
+    const newSize = chooseBestSize(gallery.viewportSize, this.options.sizes);
     if (bestSize !== newSize) {
       gallery.invalidateCurrItems();
       bestSize = newSize;

@@ -1,6 +1,7 @@
 import addEventListener from './addEventListener';
 import getSrcsetTag from './getSrcTag';
 import fitRects from './fitRects';
+import SrcSetEmu from './SrcSetEmu';
 
 class VerticalGallery {
 
@@ -17,9 +18,10 @@ class VerticalGallery {
     this.elem = elem;
     this.photos = galleryPhotos;
     this.options = Object.assign({
-      imgSelector: 'img',
+      sizes: null,
       marginH: 20,
       initialPhotos: 5,
+      scrollHelperActive: false,
       scrollDelay: 150,
       scrollDuration: 150,
       scrollMinCoverage: 0.75,
@@ -28,6 +30,8 @@ class VerticalGallery {
       scrollDeadZone: 2,
       logo: null,
     }, options);
+    this.srcSetEmu = new SrcSetEmu(this.options.sizes, null, { auto: false });
+    this.imageList = [];
 
     this.bindedCenterImage = this.centerImage.bind(this);
     this.bindedFitImages = this.fitImages.bind(this);
@@ -35,17 +39,11 @@ class VerticalGallery {
     this.bindedScrollHandler = this.scrollHandler.bind(this);
 
     this.createThumbnails();
-    this.cacheImageList();
 
     addEventListener(window, 'resize', this.bindedFitImages);
-    addEventListener(window, 'scroll', this.bindedScrollHandler);
-  }
-
-  /**
-   * Cache the list of <img> of the gallery
-   */
-  cacheImageList() {
-    this.imageList = this.elem.querySelectorAll(this.options.imgSelector);
+    if (this.options.scrollHelperActive) {
+      addEventListener(window, 'scroll', this.bindedScrollHandler);
+    }
   }
 
   /**
@@ -88,7 +86,7 @@ class VerticalGallery {
    * @returns {<img>} Most centered `<img>` element or `null` if none
    */
   getMostCenteredImage() {
-    if (!this.imageList || !this.imageList.length || window.scrollY === 0) {
+    if (!this.imageList.length || window.scrollY === 0) {
       return null;
     }
 
@@ -114,11 +112,12 @@ class VerticalGallery {
     let dist;
 
     for (let i = 0; i < this.imageList.length; i++) {
-      bounds = this.imageList[i].getBoundingClientRect();
+      const img = this.imageList[i].elem;
+      bounds = img.getBoundingClientRect();
       dist = Math.abs(((bounds.left + bounds.width) / 2) - screenCenterX)
           + Math.abs(((bounds.top + bounds.bottom) / 2) - screenCenterY);
       if (dist < minDistance) {
-        targetImage = this.imageList[i];
+        targetImage = img;
         minDistance = dist;
       } else {
         return targetImage;
@@ -150,8 +149,8 @@ class VerticalGallery {
     const dX = (window.innerWidth / 2) - bounds.left - (bounds.width / 2);
     const dY = (window.innerHeight / 2) - bounds.top - (bounds.height / 2);
 
-    if (Math.abs(dX) > this.options.scrollDeadZone ||
-        Math.abs(dY) > this.options.scrollDeadZone) {
+    if (this.options.scrollHelperActive &&
+        (Math.abs(dX) > this.options.scrollDeadZone || Math.abs(dY) > this.options.scrollDeadZone)) {
       this.animateScroll(dX, dY, time || this.options.scrollDuration);
     }
   }
@@ -201,12 +200,23 @@ class VerticalGallery {
 
     for (let i = 0; i < n; i++) {
       const imgs = photos[i].imgs;
+      const photoId = photos[i].id;
       if (imgs.length) {
         li = document.createElement('li');
-        li.innerHTML = `<a href="/gallery/#gid=all&pid=${photos[i].id}">`
-          + `<img ${getSrcTag(imgs)} ${getSrcsetTag(imgs)} alt="photo"></a>`;
-        img = li.children[0];
-        addEventListener(img, 'load', fitImage.bind(this, img, null, null));
+        li.innerHTML = `<a href="/gallery/#gid=all&pid=${photoId}">`
+          + `<img ${getSrcTag(imgs)} ${getSrcsetTag(imgs)} alt="${photoId}"></a>`;
+        img = li.children[0].children[0];
+        const imageListElem = {
+          id: photoId,
+          elem: img,
+        };
+        this.imageList.push(imageListElem);
+        this.srcSetEmu.addImage(img, imgs, photoId);
+        if (img.width) {
+          fitImage.call(this, imageListElem, null, null);
+        } else {
+          addEventListener(img, 'load', fitImage.bind(this, imageListElem, null, null));
+        }
         parent.appendChild(li);
       }
     }
@@ -222,9 +232,11 @@ function fitImage(img, maxW, maxH) {
     maxH = window.innerHeight - this.options.marginH;
   }
 
-  const size = fitRects(img.width, img.height, maxW, maxH);
-  img.style.width = `${size.w}px`;
-  // img.style.height = `${img.height * r}px`;
+  const elem = img.elem;
+  const size = fitRects(elem.width, elem.height, maxW, maxH);
+  elem.style.width = `${size.w}px`;
+
+  this.srcSetEmu.updateImage(img.id);
 }
 
 module.exports = VerticalGallery;

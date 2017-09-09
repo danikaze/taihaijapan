@@ -1,7 +1,9 @@
+import 'es6-object-assign/auto';
+import 'es6-promise/auto';
+import './polyfills/Array.findIndex';
+
 import '../styles/index.scss';
 
-// import galleryMockupData from '../../build/photos/gallery.json';
-// import setMockupData from './util/requestData/setMockupData';
 import dailyBg from './util/dailyBg';
 import requestJson from './util/requestData/requestJson';
 import settings from './util/settings';
@@ -24,8 +26,9 @@ function run() {
       dailyBg.set(background, data.photos, data.sizes);
       settings.gallery.topDeadElement = document.getElementById(SOCIAL_ID);
       settings.gallery.bottomDeadElement = document.getElementById(VIEW_MORE_ID);
+      const galleryOptions = Object.assign({}, settings.index, { sizes: data.sizes });
       // eslint-disable-next-line no-new
-      new VerticalGallery(galleryContainer, data.photos, settings.gallery);
+      new VerticalGallery(galleryContainer, data.photos, galleryOptions);
 
       addEventListener(window, 'resize', () => {
         dailyBg.set(background, data.photos, data.sizes);
