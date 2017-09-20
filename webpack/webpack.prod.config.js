@@ -127,7 +127,7 @@ const plugins = [
 
   // Allows to see building stats (radial one)
   new Visualizer({
-    filename: path.join(settings.paths.buildInfo, 'visualizer.html'),
+    filename: path.relative(settings.paths.build, path.join(settings.paths.buildInfo, 'visualizer.html')),
   }),
 
   // Allows to see building stats (squared one)

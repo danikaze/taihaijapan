@@ -25,7 +25,7 @@ const paths = {
   buildJs: 'js', // js route
   buildHtml: '',  // relative to js route
   buildCss: 'css', // relative to js route
-  buildInfo: path.join(__dirname, '..', 'buildInfo'),
+  buildInfo: absPath('buildInfo'),
   test: absPath('test'),
   style: absPath('frontend/styles'),
   imgs: absPath('frontend/img'),
