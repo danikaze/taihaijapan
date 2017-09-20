@@ -10,7 +10,7 @@
   "scripts": {
     "build": "webpack --env=prod",
     "rebuild": "npm run clean && npm run build",
-    "clean": "rimraf buildInfo && rimraf build",
+    "clean": "rimraf buildInfo && rimraf backend/public",
     "start": "webpack-dev-server --env=dev",
     "test": "karma start",
     "test:watch": "karma start --no-single-run --auto-watch",
@@ -89,12 +89,17 @@
   "dependencies": {
     "async-q": "^0.3.1",
     "colors": "^1.1.2",
+    "compression": "^1.7.0",
     "cross-env": "^5.0.1",
     "es6-object-assign": "^1.1.0",
     "es6-promise": "^4.1.1",
+    "express": "^4.15.4",
+    "handlebars": "^4.0.10",
+    "hbs": "^4.0.1",
     "mkdirp": "^0.5.1",
     "photoswipe": "^4.1.2",
     "q": "^1.5.0",
-    "sharp": "^0.18.2"
+    "require-all": "^2.2.0",
+    "sharp": "^0.18.4"
   }
 }

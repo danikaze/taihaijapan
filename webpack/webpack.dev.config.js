@@ -96,8 +96,8 @@ const moduleConfig = {
       },
     }),
     // HTML generator
-    getHtmlWebpackPlugin('index', 'index.html'),
-    getHtmlWebpackPlugin('gallery', 'gallery/index.html'),
+    // getHtmlWebpackPlugin('index', 'index.html'),
+    // getHtmlWebpackPlugin('gallery', 'gallery/index.html'),
     extractProjectStyle,
   ],
 };
