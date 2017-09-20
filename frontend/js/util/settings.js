@@ -1,4 +1,4 @@
-const galleryDbUrl = '/photos/gallery.json';
+const galleryDbUrl = '/public/photos/gallery.json';
 
 const ajax = {
   timeout: 5000,
