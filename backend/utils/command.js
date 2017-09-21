@@ -1,12 +1,16 @@
 const yargs = require('yargs')
   .usage('Usage: $0 [options]')
-  .alias('p', 'port')
-  .nargs('p', 1)
-  .describe('p', 'port where the http server will listen to')
   .help('h')
   .alias('h', 'help')
-  .argv;
 
+  .nargs('p', 1)
+  .describe('p', 'port where the http server will listen to')
+  .alias('p', 'port')
+
+  .describe('logLevel', '[silly|verbose|info|http|warn|error]')
+  .nargs('logLevel', 1)
+
+  .argv;
 
 module.exports = yargs;
 

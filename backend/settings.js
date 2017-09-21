@@ -1,26 +1,27 @@
 const path = require('path');
+const command = require('./utils/command');
 
-const settings = {
-  server: {
-    port: 9999,
-    hostname: 'localhost',
-    controllersPath: path.join(__dirname, 'controllers'),
-    viewsPath: path.join(__dirname, 'views'),
-    partialsPath: path.join(__dirname, 'views', 'partials'),
-    publicFolder: path.join(__dirname, 'public'),
-    publicPath: '/public',
-  },
-};
+const settings = (() => {
+  const s = {
+    server: {
+      port: 9999,
+      host: 'localhost',
+      controllersPath: path.join(__dirname, 'controllers'),
+      viewsPath: path.join(__dirname, 'views'),
+      partialsPath: path.join(__dirname, 'views', 'partials'),
+      publicFolder: path.join(__dirname, 'public'),
+      publicPath: '/public',
+      logLevel: 'error',
+    },
+  };
 
-function get() {
-  return settings;
-}
+  set(s.server, command);
+  return s;
+})();
 
-function set(options) {
-  const serverSettings = settings.server;
-
-  Object.keys(serverSettings).forEach((key) => {
-    setIfDefined(serverSettings, key, options[key]);
+function set(base, options) {
+  Object.keys(base).forEach((key) => {
+    setIfDefined(base, key, options[key]);
   });
 }
 
@@ -30,7 +31,4 @@ function setIfDefined(container, prop, value) {
   }
 }
 
-module.exports = {
-  set,
-  get,
-};
+module.exports = settings;
