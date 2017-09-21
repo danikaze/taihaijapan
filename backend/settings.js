@@ -12,6 +12,7 @@ const settings = (() => {
       publicFolder: path.join(__dirname, 'public'),
       publicPath: '/public',
       logLevel: 'error',
+      logDate: true,
     },
   };
 

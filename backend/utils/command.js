@@ -10,6 +10,10 @@ const yargs = require('yargs')
   .describe('logLevel', '[silly|verbose|info|http|warn|error]')
   .nargs('logLevel', 1)
 
+  .describe('logDate', '[true|false]')
+  .default('logDate', 'true')
+  .boolean('logDate')
+
   .argv;
 
 module.exports = yargs;
