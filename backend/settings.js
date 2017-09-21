@@ -13,6 +13,8 @@ const settings = (() => {
       publicPath: '/public',
       logLevel: 'error',
       logDate: true,
+      logRequests: false,
+      logRequestsFormat: 'combined',
     },
   };
 

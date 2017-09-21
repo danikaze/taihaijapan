@@ -3,18 +3,35 @@ const yargs = require('yargs')
   .help('h')
   .alias('h', 'help')
 
-  .nargs('p', 1)
-  .describe('p', 'port where the http server will listen to')
-  .alias('p', 'port')
+  .option('port', {
+    describe: 'port where the http server will listen to',
+    alias: 'p',
+    nargs: 1,
+  })
 
-  .describe('logLevel', '[silly|verbose|info|http|warn|error]')
-  .nargs('logLevel', 1)
+  .option('logLevel', {
+    describe: 'Minimum type of messages to log',
+    choices: ['silly', 'verbose', 'info', 'http', 'warn', 'error'],
+    nargs: 1,
+  })
 
-  .describe('logDate', '[true|false]')
-  .default('logDate', 'true')
-  .boolean('logDate')
+  .option('logDate', {
+    describe: 'Add date in logs?',
+    default: true,
+    boolean: true,
+  })
 
-  .argv;
+  .option('logRequests', {
+    describe: 'Log http requests?',
+    boolean: true,
+  })
 
-module.exports = yargs;
+  .option('logRequestsFormat', {
+    describe: 'Format of the http requests log',
+    choices: ['combined', 'common', 'dev', 'short', 'tiny'],
+    default: 'tiny',
+    nargs: 1,
+  });
+
+module.exports = yargs.argv;
 

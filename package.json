@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "server": "node backend/ -p 9090 --logLevel silly",
+    "server": "node backend/ -p 9090 --logLevel silly --logRequests --logRequestsFormat dev",
     "start": "webpack-dev-server --env=dev",
     "build": "webpack --env=prod",
     "rebuild": "npm run clean && npm run build",
