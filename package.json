@@ -8,10 +8,11 @@
   },
   "license": "MIT",
   "scripts": {
+    "server": "node backend/",
+    "start": "webpack-dev-server --env=dev",
     "build": "webpack --env=prod",
     "rebuild": "npm run clean && npm run build",
     "clean": "rimraf buildInfo && rimraf backend/public",
-    "start": "webpack-dev-server --env=dev",
     "test": "karma start",
     "test:watch": "karma start --no-single-run --auto-watch",
     "cover": "open coverage/lcov-report/index.html",
@@ -100,6 +101,7 @@
     "photoswipe": "^4.1.2",
     "q": "^1.5.0",
     "require-all": "^2.2.0",
-    "sharp": "^0.18.4"
+    "sharp": "^0.18.4",
+    "yargs": "^9.0.1"
   }
 }

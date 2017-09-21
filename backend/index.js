@@ -1,7 +1,10 @@
+const command = require('./utils/command');
 const Server = require('./Server');
 const settings = require('./settings');
 
-const server = new Server(settings.server);
+
+settings.set(command);
+const server = new Server(settings.get().server);
 
 server.on('ready', () => {
   console.log('server ready');
