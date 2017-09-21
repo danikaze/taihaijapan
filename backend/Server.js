@@ -3,6 +3,7 @@ const compress = require('compression');
 const requireAll = require('require-all');
 const EventEmitter = require('events');
 const hbs = require('hbs');
+const log = require('./utils/log');
 
 class Server extends EventEmitter {
   constructor(settings) {
@@ -25,7 +26,8 @@ class Server extends EventEmitter {
       this.loadEndPoints(this.settings.controllersPath);
       this.app.use(error404handler);
 
-      this.app.listen(this.settings.port, this.settings.hostname, () => {
+      this.app.listen(this.settings.port, this.settings.host, () => {
+        log.info('Server', `Ready on ${this.settings.host}:${this.settings.port}`);
         this.emit('ready');
       });
     });
@@ -43,7 +45,7 @@ class Server extends EventEmitter {
 
       apis.forEach((api) => {
         this.app[api.method](api.path, api.callback);
-        console.log('Setting endpoint:', `${api.method} ${api.path}`);
+        log.verbose('Server', `Setting endpoint: ${api.method} ${api.path}`);
       });
     });
   }
