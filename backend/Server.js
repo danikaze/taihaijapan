@@ -1,5 +1,6 @@
 const express = require('express');
 const compress = require('compression');
+const morgan = require('morgan');
 const requireAll = require('require-all');
 const EventEmitter = require('events');
 const hbs = require('hbs');
@@ -19,6 +20,11 @@ class Server extends EventEmitter {
     this.app.disable('x-powered-by');
     this.app.use(this.settings.publicPath, express.static(this.settings.publicFolder));
     this.app.use(compress());
+
+    if (this.settings.logRequests) {
+      this.app.use(morgan(this.settings.logRequestsFormat));
+    }
+
     this.app.set('view engine', 'hbs');
     this.app.set('views', this.settings.viewsPath);
 
