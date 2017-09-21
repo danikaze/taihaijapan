@@ -1,6 +1,6 @@
 const path = require('path');
 
-module.exports = {
+const settings = {
   server: {
     port: 9999,
     hostname: 'localhost',
@@ -10,4 +10,27 @@ module.exports = {
     publicFolder: path.join(__dirname, 'public'),
     publicPath: '/public',
   },
+};
+
+function get() {
+  return settings;
+}
+
+function set(options) {
+  const serverSettings = settings.server;
+
+  Object.keys(serverSettings).forEach((key) => {
+    setIfDefined(serverSettings, key, options[key]);
+  });
+}
+
+function setIfDefined(container, prop, value) {
+  if (value !== undefined) {
+    container[prop] = value;
+  }
+}
+
+module.exports = {
+  set,
+  get,
 };
