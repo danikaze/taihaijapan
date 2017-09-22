@@ -1,0 +1,20 @@
+{
+  "server": {
+    "port": 9999,
+    "host": "localhost",
+    "controllersPath": "./controllers",
+    "viewsPath": "./views",
+    "helpersPath": "./views/helpers",
+    "partialsPath": "./views/partials",
+    "publicFolder": "./public",
+    "publicPath": "/public"
+  },
+  "log": {
+    "logLevel": "error",
+    "logDate": true,
+    "logRequests": "combined"
+  },
+  "index": {
+    "maxImages": 5
+  }
+}

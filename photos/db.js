@@ -76,7 +76,7 @@ const renamePattern = '{hash:16}{ext}';
 // where the gallery json will be generated (absolute)
 // available values:
 // random#|hash#|basename|ext|timestamp|size
-const outputJsonPath = `${__dirname}/../backend/public/photos/gallery.json`;
+const outputJsonPath = `${__dirname}/../backend/gallery.json`;
 
 // where the photos will be stored (absolute)
 const outputPhotosPath = `${__dirname}/../backend/public/photos/`;

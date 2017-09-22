@@ -1,5 +1,5 @@
 const npmlog = require('npmlog');
-const settings = require('../settings');
+const settings = require('./settings').values.log;
 
 function getDateString() {
   const d = new Date();
@@ -14,17 +14,20 @@ function getDateString() {
 }
 
 /*
- * log levels:
- *  silly
- *  verbose
- *  info
- *  http
- *  warn
- *  error
+ * log levels (and their numeric levels)
+ *  silly   => -Infinity
+ *  verbose => 1000,
+ *  info    => 2000,
+ *  timing  => 2500,
+ *  http    => 3000,
+ *  notice  => 3500,
+ *  warn    => 4000,
+ *  error   => 5000,
+ *  silent  => Infinity
  */
-npmlog.level = settings.server.logLevel;
+npmlog.level = settings.logLevel;
 
-if (settings.server.logDate) {
+if (settings.logDate) {
   npmlog.on('log', (data) => {
     data.message = `[${getDateString()}] ${data.message}`;
   });
