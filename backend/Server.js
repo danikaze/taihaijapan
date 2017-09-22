@@ -9,7 +9,8 @@ const log = require('./utils/log');
 class Server extends EventEmitter {
   constructor(settings) {
     super();
-    this.settings = settings;
+    this.serverSettings = settings.server;
+    this.logSettings = settings.log;
   }
 
   /**
@@ -18,24 +19,41 @@ class Server extends EventEmitter {
   start() {
     this.app = express();
     this.app.disable('x-powered-by');
-    this.app.use(this.settings.publicPath, express.static(this.settings.publicFolder));
-    this.app.use(compress());
+    this.app.use(this.serverSettings.publicPath, express.static(this.serverSettings.publicFolder));
 
-    if (this.settings.logRequests) {
-      this.app.use(morgan(this.settings.logRequestsFormat));
-    }
+    this.app.use(compress());
+    this.app.use(morgan(this.logSettings.logRequests));
 
     this.app.set('view engine', 'hbs');
-    this.app.set('views', this.settings.viewsPath);
+    this.app.set('views', this.serverSettings.viewsPath);
 
-    hbs.registerPartials(this.settings.partialsPath, () => {
-      this.loadEndPoints(this.settings.controllersPath);
-      this.app.use(error404handler);
+    this.loadEndPoints(this.serverSettings.controllersPath);
+    this.app.use(error404handler);
 
-      this.app.listen(this.settings.port, this.settings.host, () => {
-        log.info('Server', `Ready on ${this.settings.host}:${this.settings.port}`);
+    this.setHbs().then(() => {
+      this.app.listen(this.serverSettings.port, this.serverSettings.host, () => {
+        log.info('Server', `Ready on ${this.serverSettings.host}:${this.serverSettings.port}`);
         this.emit('ready');
       });
+    });
+  }
+
+  setHbs() {
+    return new Promise((resolve, reject) => {
+      // register helpers
+      const helpers = requireAll({ dirname: this.serverSettings.helpersPath });
+
+      Object.keys(helpers).forEach((fileName) => {
+        const helper = helpers[fileName];
+        if (helper.async) {
+          hbs.registerAsyncHelper(helper.fn.name, helper.fn);
+        } else {
+          hbs.registerHelper(helper.fn.name, helper.fn);
+        }
+      });
+
+      // register partials
+      hbs.registerPartials(this.serverSettings.partialsPath, resolve);
     });
   }
 

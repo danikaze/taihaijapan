@@ -1,37 +1,51 @@
-const yargs = require('yargs')
-  .usage('Usage: $0 [options]')
-  .help('h')
-  .alias('h', 'help')
+const yargs = require('yargs');
 
-  .option('port', {
+const options = {
+  host: {
+    group: 'Server:',
+    describe: 'host option for the server',
+    nargs: 1,
+    type: 'string',
+  },
+  port: {
+    group: 'Server:',
     describe: 'port where the http server will listen to',
     alias: 'p',
     nargs: 1,
-  })
-
-  .option('logLevel', {
+    type: 'number',
+  },
+  logLevel: {
+    group: 'Log:',
     describe: 'Minimum type of messages to log',
     choices: ['silly', 'verbose', 'info', 'http', 'warn', 'error'],
     nargs: 1,
-  })
-
-  .option('logDate', {
+    type: 'string',
+  },
+  logDate: {
+    group: 'Log:',
     describe: 'Add date in logs?',
     default: true,
-    boolean: true,
-  })
-
-  .option('logRequests', {
-    describe: 'Log http requests?',
-    boolean: true,
-  })
-
-  .option('logRequestsFormat', {
-    describe: 'Format of the http requests log',
-    choices: ['combined', 'common', 'dev', 'short', 'tiny'],
+    type: 'boolean',
+  },
+  logRequests: {
+    group: 'Log:',
+    describe: 'Format of the http requests log (or "skip" to disable)',
+    choices: ['combined', 'common', 'dev', 'short', 'tiny', 'skip'],
     default: 'tiny',
     nargs: 1,
-  });
+    type: 'string',
+  },
+};
 
-module.exports = yargs.argv;
+yargs
+.usage('Usage: $0 [options] [settingsFile]')
+.help('h')
+.alias('h', 'help')
+.alias('v', 'version')
+.options(options);
+
+module.exports = {
+  parse: yargs.parse,
+  options,
+};
 
