@@ -16,8 +16,8 @@ const options = {
   },
   logLevel: {
     group: 'Log:',
-    describe: 'Minimum type of messages to log',
-    choices: ['silly', 'verbose', 'info', 'http', 'warn', 'error'],
+    describe: 'Minimum level of messages to log',
+    choices: ['silly', 'verbose', 'info', 'warn', 'error', 'silent'],
     nargs: 1,
     type: 'string',
   },

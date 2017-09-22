@@ -7,8 +7,12 @@ const hbs = require('hbs');
 const log = require('./utils/log');
 
 class Server extends EventEmitter {
+  /**
+   * @param {object} settings Settings object as `{ server, log }`
+   */
   constructor(settings) {
     super();
+
     this.serverSettings = settings.server;
     this.logSettings = settings.log;
   }

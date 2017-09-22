@@ -1,5 +1,5 @@
 const npmlog = require('npmlog');
-const settings = require('./settings').values.log;
+const ctlEmitter = require('../ctl/ctlEmitter');
 
 function getDateString() {
   const d = new Date();
@@ -14,23 +14,30 @@ function getDateString() {
 }
 
 /*
- * log levels (and their numeric levels)
- *  silly   => -Infinity
- *  verbose => 1000,
- *  info    => 2000,
- *  timing  => 2500,
- *  http    => 3000,
- *  notice  => 3500,
- *  warn    => 4000,
- *  error   => 5000,
- *  silent  => Infinity
+ * Which level to use when logging?
+ *
+ *  method  | priority  | usage
+ * ---------+-----------+--------------------------------------------
+ *  silly   | -Infinity | blabbery, detailed processes information
+ *  verbose | 1000,     | things happening, but not-so-important info
+ *  info    | 2000,     | processes taking place (start, stop, etc.)
+ *  warn    | 4000,     | recuperable error or unexpected things
+ *  error   | 5000,     | errors affecting the operation/service
+ *  silent  | Infinity  |
  */
-npmlog.level = settings.logLevel;
 
-if (settings.logDate) {
-  npmlog.on('log', (data) => {
-    data.message = `[${getDateString()}] ${data.message}`;
-  });
-}
+
+npmlog.setLogDate = function setLogDate(format) {
+  if (format) {
+    npmlog.on('log', (data) => {
+      data.message = `[${getDateString()}] ${data.message}`;
+    });
+  }
+};
+
+ctlEmitter.on('option.log.logLevel', (logLevel) => {
+  npmlog.level = logLevel;
+});
+ctlEmitter.on('option.log.logDate', npmlog.setLogDate);
 
 module.exports = npmlog;

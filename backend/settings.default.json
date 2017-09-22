@@ -15,6 +15,7 @@
     "logRequests": "combined"
   },
   "ctl": {
+    "enabled": true,
     "host": "localhost",
     "port": 5000,
     "unixSocket": ""
