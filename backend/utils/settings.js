@@ -1,6 +1,8 @@
 const path = require('path');
 const command = require('./command');
 const readJsonSync = require('./readJsonSync');
+const ctlEmitter = require('../ctl/ctlEmitter');
+const log = require('./log');
 
 // list of variables as { section: [keys] } to apply `fixPath` to
 const settingsPath = {
@@ -20,7 +22,12 @@ const settingsPath = {
  * - commands options (if any)
  */
 const settings = {};
-(() => {
+init();
+
+/**
+ * Initialize the settings object
+ */
+function init() {
   const args = command.parse();
   const settingsFile = args._[0];
 
@@ -31,7 +38,12 @@ const settings = {};
   }
 
   setCommandOptions(args);
-})();
+
+  log.level = settings.log.logLevel;
+  log.setLogDate(settings.log.logDate);
+
+  ctlEmitter.on('options', set);
+}
 
 /**
  * Fix the options of type "path" (specified in `settingsPath`) so the paths can be declared as relative
