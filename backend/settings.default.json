@@ -14,6 +14,11 @@
     "logDate": true,
     "logRequests": "combined"
   },
+  "ctl": {
+    "host": "localhost",
+    "port": 5000,
+    "unixSocket": ""
+  },
   "index": {
     "maxImages": 5
   }
