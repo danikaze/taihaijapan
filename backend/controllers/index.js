@@ -1,9 +1,14 @@
+const db = require('../utils/db');
+const settings = require('../utils/settings').values.index;
+
+const photos = db.photos.slice(0, settings.maxImages);
 
 function index(request, response) {
   response.render('index', {
     bodyId: 'page-index',
     title: 'taihaijapan | 退廃ジャパン',
-    includeGallery: true,
+    sizes: db.sizes,
+    photos,
   });
 }
 
