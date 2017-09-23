@@ -7,8 +7,9 @@
 *.log
 *.SUBLIME-PROJECT
 *.SUBLIME-WORKSPACE
-build
 buildInfo
+backend/public
+backend/gallery.json
 coverage
 node_modules
 photos/*.jpg

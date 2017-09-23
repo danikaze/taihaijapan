@@ -18,19 +18,19 @@ const options = {
 };
 
 const paths = {
-  src: absPath('src/js'),
-  srcHtml: absPath('src/html'),
-  public: absPath('build'),
-  build: absPath('build'),
+  src: absPath('frontend/js'),
+  srcHtml: absPath('frontend/public'),
+  public: absPath('backend/public'),
+  build: absPath('backend/public'),
   buildJs: 'js', // js route
   buildHtml: '',  // relative to js route
   buildCss: 'css', // relative to js route
+  buildInfo: absPath('buildInfo'),
   test: absPath('test'),
-  style: absPath('src/styles'),
-  imgs: absPath('src/img'),
-  htmlTemplate: absPath('src/html/index.html'),
-  mainStyle: absPath('src/styles/index.scss'),
-  manifest: absPath('build/vendor.manifest.json'),
+  style: absPath('frontend/styles'),
+  imgs: absPath('frontend/img'),
+  htmlTemplate: absPath('frontend/html/index.html'),
+  mainStyle: absPath('frontend/styles/index.scss'),
   publicPath: '/',
 };
 

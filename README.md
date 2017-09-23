@@ -8,6 +8,12 @@ This code is based on one of his [JavaScript boilerplates](https://github.com/da
 
 # Changelog
 
+## 0.6.0
+* Moved rendering logic to server side via express
+* Folder structure changed to build the frontend elements inside the `public` folder in `backend`
+* Index page don't have JS anymore
+* `/gallery` is generated from server side and photoswipe gallery feature is added in JS after loaded
+
 ## 0.5.0
 * Minor fixes
 * Removed support for IE<=8
@@ -25,7 +31,7 @@ This code is based on one of his [JavaScript boilerplates](https://github.com/da
 * Added `photoswipe` to the `/gallery` page.
 
 ## 0.2.0
-* Added a **See more** button linked to the `/gallery/`, where a list of all the photos is presented.
+* Added a **See more** button linked to the `/gallery`, where a list of all the photos is presented.
 
 ## 0.1.0
 * First version showing the index with the latest 5 photos, retrieved via ajax.

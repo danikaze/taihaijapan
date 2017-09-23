@@ -112,8 +112,8 @@ const plugins = [
 
  // new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
 
-  getHtmlWebpackPlugin('index', 'index.html'),
-  getHtmlWebpackPlugin('gallery', 'gallery/index.html'),
+  // getHtmlWebpackPlugin('index', 'index.html'),
+  // getHtmlWebpackPlugin('gallery', 'gallery/index.html'),
 
   new webpack.optimize.ModuleConcatenationPlugin(),
 
@@ -127,14 +127,14 @@ const plugins = [
 
   // Allows to see building stats (radial one)
   new Visualizer({
-    filename: '../buildInfo/visualizer.html',
+    filename: path.relative(settings.paths.build, path.join(settings.paths.buildInfo, 'visualizer.html')),
   }),
 
   // Allows to see building stats (squared one)
   new BundleAnalyzerPlugin({
     analyzerMode: 'static',
     openAnalyzer: false,
-    reportFilename: '../buildInfo/analyzer.html',
+    reportFilename: path.join(settings.paths.buildInfo, 'analyzer.html'),
   }),
 ];
 

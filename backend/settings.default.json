@@ -1,0 +1,29 @@
+{
+  "server": {
+    "port": 9999,
+    "host": "localhost",
+    "controllersPath": "./controllers",
+    "viewsPath": "./views",
+    "helpersPath": "./views/helpers",
+    "partialsPath": "./views/partials",
+    "publicFolder": "./public",
+    "publicPath": "/public"
+  },
+  "log": {
+    "logLevel": "error",
+    "logDate": true,
+    "logRequests": "combined"
+  },
+  "ctl": {
+    "enabled": true,
+    "host": "localhost",
+    "port": 5000,
+    "unixSocket": ""
+  },
+  "index": {
+    "maxImages": 5
+  },
+  "gallery": {
+    "maxImages": 0
+  }
+}

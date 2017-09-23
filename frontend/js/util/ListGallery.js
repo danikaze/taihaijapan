@@ -4,70 +4,35 @@ import PhotoswipeUi from './PhotoswipeUi';
 import photoswipeHtml from './PhotoswipeHtml';
 import '../../styles/photoswipe/index.scss';
 import addEventListener from './addEventListener';
-import getSrcsetTag from './getSrcTag';
 import chooseBestSize from './chooseBestSize';
 
-const sizesMediaTags = [
-  '(min-width: 400) 50vw',
-  '(min-width: 800) 33vw',
-  '(min-width: 1200) 25vw',
-  '100vw',
-];
+const asArray = Array.prototype.slice;
 
 class ListGallery {
-  constructor(indexElem, viewerElem, galleryPhotos, options) {
+  constructor(indexElem, viewerElem, sizes, galleryPhotos, options) {
     this.indexElem = indexElem;
     this.viewerElem = viewerElem;
     this.options = Object.assign({
-      sizes: null,    // image sizes for calculation
-      maxWidth: 400,  // for thumbnails
-      maxHeight: 400, // for thumbnails
-      fitRatio: 1.0,  // % of viewport required to fit while choosing an image to display
+      thumbnailSelector: '#thumbnails > li',
+      fitRatio: 0.75,  // % of viewport required to fit while choosing an image to display
     }, options);
     this.photos = galleryPhotos;
-    this.thumbnails = [];
+    this.sizes = sizes;
+    this.thumbnails = asArray.call(document.querySelectorAll(this.options.thumbnailSelector));
     this.biggestSizesLoaded = {};
 
     createPhotoSwipeHtml(this.viewerElem);
-    createThumbnails.call(this);
+    addThumbnailsLogic.call(this);
     checkUrl.call(this);
   }
 }
 
-/**
- * @this    {ListGallery}
- * @param   {string}      id   Id or slug of the image
- * @param   {Object[]}    imgs List of photos as [{ w, h, src }]
- * @returns {DOM}              `<li>` element for one photo, from the list of images
- */
-function createThumbnail(id, imgs, index) {
-  if (!imgs || !imgs.length) {
-    return null;
-  }
-
-  const srcTag = `src="${imgs[imgs.length - 1].src}"`;
-  const srcsetTag = getSrcsetTag(imgs, sizesMediaTags);
-  const li = document.createElement('li');
-  li.innerHTML = `<img ${srcTag} ${srcsetTag}>`;
-  addEventListener(li, 'click', () => {
-    createPhotoSwipe.call(this, index);
-  });
-
-  return li;
-}
-
-/**
- * @this {ListGallery}
- */
-function createThumbnails() {
-  const bindedCreateThumbnail = createThumbnail.bind(this);
-  const parent = this.indexElem;
-  this.photos.forEach((photo, index) => {
-    const imgs = photo.imgs.filter(img => img.w <= this.options.maxWidth
-                                    && img.h <= this.options.maxHeight);
-    const li = bindedCreateThumbnail(photo.id, imgs, index);
-    parent.appendChild(li);
-    this.thumbnails.push(li.children[0]);
+function addThumbnailsLogic() {
+  const bindedCreatePhotoSwipe = createPhotoSwipe.bind(this);
+  this.thumbnails.forEach((thumbnail, index) => {
+    addEventListener(thumbnail, 'click', () => {
+      bindedCreatePhotoSwipe(index);
+    });
   });
 }
 
@@ -102,12 +67,12 @@ function createPhotoSwipe(photoIndex) {
     galleryPIDs: true,
   });
 
-  let bestSize = chooseBestSize(gallery.viewportSize, this.options.sizes);
+  let bestSize = 0;
 
   // beforeResize + gettingData listeners, allows to load the correct size depending on the gallery viewport (as srcset)
   // http://photoswipe.com/documentation/responsive-images.html
   gallery.listen('beforeResize', () => {
-    const newSize = chooseBestSize(gallery.viewportSize, this.options.sizes);
+    const newSize = chooseBestSize(gallery.viewportSize, this.sizes, this.options);
     if (bestSize !== newSize) {
       gallery.invalidateCurrItems();
       bestSize = newSize;

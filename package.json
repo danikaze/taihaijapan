@@ -1,6 +1,6 @@
 {
   "name": "taihaijapan",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "JavaScript photo gallery",
   "author": {
     "name": "danikaze",
@@ -8,10 +8,11 @@
   },
   "license": "MIT",
   "scripts": {
+    "server": "node backend/ settings.dev.json",
+    "start": "webpack-dev-server --env=dev",
     "build": "webpack --env=prod",
     "rebuild": "npm run clean && npm run build",
-    "clean": "rimraf buildInfo && rimraf build",
-    "start": "webpack-dev-server --env=dev",
+    "clean": "rimraf buildInfo && rimraf backend/public",
     "test": "karma start",
     "test:watch": "karma start --no-single-run --auto-watch",
     "cover": "open coverage/lcov-report/index.html",
@@ -89,12 +90,20 @@
   "dependencies": {
     "async-q": "^0.3.1",
     "colors": "^1.1.2",
+    "compression": "^1.7.0",
     "cross-env": "^5.0.1",
     "es6-object-assign": "^1.1.0",
     "es6-promise": "^4.1.1",
+    "express": "^4.15.4",
+    "handlebars": "^4.0.10",
+    "hbs": "^4.0.1",
     "mkdirp": "^0.5.1",
+    "morgan": "^1.8.2",
+    "npmlog": "^4.1.2",
     "photoswipe": "^4.1.2",
     "q": "^1.5.0",
-    "sharp": "^0.18.2"
+    "require-all": "^2.2.0",
+    "sharp": "^0.18.4",
+    "yargs": "^9.0.1"
   }
 }

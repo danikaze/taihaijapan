@@ -12,7 +12,7 @@ const sizes = [
 ];
 
 // Base URL (relative to the site domain) where the photos are stored
-const baseUrl = '/photos';
+const baseUrl = '/public/photos';
 
 // list of photos
 const photos = (() => [
@@ -56,6 +56,10 @@ const photos = (() => [
   { img: '_MG_2245-Edit', id: 'golden-gai-hima-tsubushi' },
   // Nuka Cola / ヌカ・コーラ
   { img: '_MG_4651-Edit', id: 'nuka-cola' },
+  // Pachinko / パチンコ
+  { img: '_MG_9267-Edit', id: 'pachinko' },
+  // Sancha en la lluvia
+  { img: '_MG_9324', id: 'sancha-in-the-rain' },
 ])().map(photo => ({
   img: `${__dirname}/${photo.img}.jpg`,
   id: photo.id,
@@ -72,10 +76,10 @@ const renamePattern = '{hash:16}{ext}';
 // where the gallery json will be generated (absolute)
 // available values:
 // random#|hash#|basename|ext|timestamp|size
-const outputJsonPath = `${__dirname}/../build/photos/gallery.json`;
+const outputJsonPath = `${__dirname}/../backend/gallery.json`;
 
 // where the photos will be stored (absolute)
-const outputPhotosPath = `${__dirname}/../build/photos/`;
+const outputPhotosPath = `${__dirname}/../backend/public/photos/`;
 
 // if `true`, it will format the JSON file
 const beautifyJson = true;

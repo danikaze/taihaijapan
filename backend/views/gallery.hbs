@@ -1,0 +1,23 @@
+{{> pageHeader}}
+
+    <div id="header">
+      <a href="/">
+        <img id="logo" src="/public/img/logo-h-s.png"
+          srcset="/public/img/logo-h-xl.png 2000w,
+                  /public/img/logo-h-l.png 1024w,
+                  /public/img/logo-h-m.png 667w,
+                  /public/img/logo-h-s.png 480w">
+      </a>
+
+      {{> icons}}
+    </div>
+
+    {{> galleryPhotos}}
+
+    {{> icons}}
+
+    <div id="gallery"></div>
+    <script src="/public/js/gallery-{{version}}.min.js" type="text/javascript"></script>
+    <script type="text/javascript">start({{{stringify sizes}}}, {{{stringify photos}}})</script>
+
+{{> pageFooter}}
