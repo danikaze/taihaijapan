@@ -40,6 +40,10 @@ class Server extends EventEmitter {
         this.emit('ready');
       });
     });
+
+    /*
+     * TODO: Define listeners for Express events
+     */
   }
 
   setHbs() {

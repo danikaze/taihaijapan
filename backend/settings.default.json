@@ -22,5 +22,8 @@
   },
   "index": {
     "maxImages": 5
+  },
+  "gallery": {
+    "maxImages": 0
   }
 }

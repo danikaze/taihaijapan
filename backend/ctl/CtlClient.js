@@ -16,6 +16,7 @@ class CtlClient {
 
     client.connect(port, settings.host, () => {
       const msg = JSON.stringify({
+        basePath: process.cwd(),
         options: constructOptions(),
         commands: constructCommands(),
       });

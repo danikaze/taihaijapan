@@ -5,15 +5,22 @@ const log = require('../utils/log');
 const ctlEmitter = require('./ctlEmitter');
 
 class CtlServer {
+  /**
+   *
+   * @param {object} settings
+   */
   constructor(settings) {
     this.settings = settings;
     this.ctlServer = null;
   }
 
+  /**
+   * Basic TCP server based on the settings
+   */
   start() {
     const ctlServer = net.createServer(connectionListener.bind(this));
-    const unixSocket = this.settings.unixSocket;
     this.ctlServer = ctlServer;
+    const unixSocket = this.settings.unixSocket;
 
     if (unixSocket) {
       mkdirp(path.dirname(unixSocket));
@@ -39,6 +46,11 @@ class CtlServer {
   }
 }
 
+/**
+ * Handler for the incoming TCP connection
+ *
+ * @param {net.Socket} socket incoming connection
+ */
 function connectionListener(socket) {
   socket.on('data', (data) => {
     // data is a Buffer object
