@@ -9,6 +9,7 @@
 *.SUBLIME-WORKSPACE
 buildInfo
 backend/public
+backend/gallery.json
 coverage
 node_modules
 photos/*.jpg
