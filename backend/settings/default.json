@@ -10,7 +10,7 @@
     "publicPath": "/public"
   },
   "log": {
-    "logLevel": "error",
+    "logLevel": "warn",
     "logDate": true,
     "logRequests": "combined"
   },
