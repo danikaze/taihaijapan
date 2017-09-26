@@ -1,12 +1,12 @@
 {
   "server": {
-    "port": 9999,
+    "port": 9090,
     "host": "localhost",
-    "controllersPath": "./controllers",
-    "viewsPath": "./views",
-    "helpersPath": "./views/helpers",
-    "partialsPath": "./views/partials",
-    "publicFolder": "./public",
+    "controllersPath": "../controllers",
+    "viewsPath": "../views",
+    "helpersPath": "../views/helpers",
+    "partialsPath": "../views/partials",
+    "publicFolder": "../public",
     "publicPath": "/public"
   },
   "log": {

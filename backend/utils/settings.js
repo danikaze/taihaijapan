@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const command = require('./command');
 const readJsonSync = require('./readJsonSync');
@@ -24,17 +25,38 @@ const settingsPath = {
 const settings = {};
 init();
 
+function locateSettingsFile(file) {
+  let res = file;
+
+  // test for absolute path
+  if (!fs.existsSync(res)) {
+    res = path.join(process.cwd(), file);
+
+    // test for relative path
+    if (!fs.existsSync(res)) {
+      res = path.join(__dirname, '../settings', file);
+
+      // test for file located in setings folder
+      if (!fs.existsSync(res)) {
+        return null;
+      }
+    }
+  }
+
+  return res;
+}
+
 /**
  * Initialize the settings object
  */
 function init() {
-  const args = command.parse();
-  const settingsFile = args._[0];
-
   reset();
 
+  const args = command.parse();
+  const settingsFile = args._[0] || process.env.SETTINGS_FILE;
+
   if (settingsFile) {
-    setFile(path.join(process.cwd(), settingsFile));
+    setFile(settingsFile);
   }
 
   setCommandOptions(args);
@@ -73,10 +95,18 @@ function fixPaths(values, relativeTo) {
  * Set all options to the default ones
  */
 function reset() {
+  const settingsFile = locateSettingsFile('default.json');
+
+  if (!settingsFile) {
+    log.error('Settings', 'Can\'t find default settings. Exiting...');
+    process.exit(-1);
+  }
+
   Object.keys(settings, (key) => {
     delete settings[key];
   });
-  setFile(path.join(__dirname, '../settings.default.json'));
+
+  setFile(settingsFile);
 }
 
 /**
@@ -99,6 +129,13 @@ function set(options) {
  * @param {string} filePath path of the json file with the options
  */
 function setFile(filePath) {
+  filePath = locateSettingsFile(filePath);
+
+  if (!filePath) {
+    log.warn('Settings', `Couldn't find settings file in ${filePath}`);
+    return;
+  }
+
   const options = readJsonSync(filePath);
   fixPaths(options, path.dirname(filePath));
   set(options);
