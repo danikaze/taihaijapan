@@ -7,6 +7,9 @@
     "email": "danikaze@gmail.com"
   },
   "license": "MIT",
+  "engines": {
+    "node": ">=8.2.1"
+  },
   "scripts": {
     "server": "node backend/ settings.dev.json",
     "start": "webpack-dev-server --env=dev",
