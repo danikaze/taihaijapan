@@ -86,7 +86,10 @@ var PhotoSwipeUI_Default =
 				// {id:'download', label:'Download image', url:'{{raw_image_url}}', download:true}
 			],
 			getImageURLForShare: function(item /* shareButtonData */ ) {
-				return item.src || '';
+				if (!item || !item.src) {
+					return '';
+				}
+				return `${window.location.origin.replace('http:', 'https:')}${item.src}`;
 			},
 			getPageURLForShare: function(item /* shareButtonData */ ) {
 				const optionsUi = _options && _options.ui;

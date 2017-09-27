@@ -8,5 +8,5 @@ function indexThumbnail(options) {
 
 module.exports = {
   fn: indexThumbnail,
-  asnyc: false,
+  async: false,
 };
