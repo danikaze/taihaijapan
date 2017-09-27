@@ -9,7 +9,7 @@ This code is based on one of his [JavaScript boilerplates](https://github.com/da
 # Changelog
 
 ## 0.7.0
-* Added `/photo` end point, to serve as permalink for a photo and modified `PhotoswipeUI` acording to properly generate share links
+* Added `/photo` end point, to serve as permalink for a photo and modified `PhotoswipeUI` acording to properly generate share links. It also displays the proper photo for SNS cards meta-data.
 
 ## 0.6.0
 * Moved rendering logic to server side via express

@@ -14,12 +14,16 @@ function gallery(request, response) {
 }
 
 function photo(request, response) {
+  const currentPhoto = request.params.id
+    && db.photos.filter(item => item.id === request.params.id)[0];
+
   response.render('gallery', {
     bodyId: 'page-gallery',
     title: 'taihaijapan | 退廃ジャパン > Gallery',
     sizes: db.sizes,
+    photo: currentPhoto,
+    photoId: currentPhoto && currentPhoto.id,
     photos,
-    photoId: request.params.id,
   });
 }
 
