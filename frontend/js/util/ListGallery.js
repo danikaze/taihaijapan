@@ -23,7 +23,14 @@ class ListGallery {
 
     createPhotoSwipeHtml(this.viewerElem);
     addThumbnailsLogic.call(this);
-    checkUrl.call(this);
+
+    const openFromHash = checkUrlHash.call(this);
+    if (!openFromHash && options.activeId) {
+      const photoIndex = galleryPhotos.findIndex(photo => photo.id === options.activeId);
+      if (photoIndex !== -1) {
+        createPhotoSwipe.call(this, photoIndex);
+      }
+    }
   }
 }
 
@@ -65,6 +72,11 @@ function createPhotoSwipe(photoIndex) {
     history: true,
     galleryUID: '',
     galleryPIDs: true,
+    ui: {
+      shareUrlReplaceRegExp: /^http(s?)(.*)\/photo\/(.*)pid=([^&]+)$/,
+      shareUrlReplaceBy: 'https$2/photo/$4/',
+      defaultShareText: 'taihaijapan | 退廃ジャパン',
+    },
   });
 
   let bestSize = 0;
@@ -122,16 +134,20 @@ function parseUrlHash() {
 
 /**
  * @this {ListGallery}
+ * @returns {boolean} If the gallery was opened from the url hash parameters.
  */
-function checkUrl() {
+function checkUrlHash() {
   const params = parseUrlHash();
   const pid = params.pid;
   if (pid) {
     const photoIndex = this.photos.findIndex(photo => photo.id === pid);
     if (photoIndex !== -1) {
       createPhotoSwipe.call(this, photoIndex);
+      return true;
     }
   }
+
+  return false;
 }
 
 /**

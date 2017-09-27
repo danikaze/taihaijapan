@@ -18,8 +18,10 @@ function index(request, response) {
   });
 }
 
-module.exports = app => [{
-  method: 'get',
-  path: '/',
-  callback: index,
-}];
+module.exports = app => [
+  {
+    method: 'get',
+    path: '/',
+    callback: index,
+  },
+];

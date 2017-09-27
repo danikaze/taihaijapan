@@ -8,11 +8,18 @@ This code is based on one of his [JavaScript boilerplates](https://github.com/da
 
 # Changelog
 
+## 0.7.0
+* Added `/photo` end point, to serve as permalink for a photo and modified `PhotoswipeUI` acording to properly generate share links
+
 ## 0.6.0
 * Moved rendering logic to server side via express
 * Folder structure changed to build the frontend elements inside the `public` folder in `backend`
 * Index page don't have JS anymore
 * `/gallery` is generated from server side and photoswipe gallery feature is added in JS after loaded
+* Improved path specification for setting files
+* Added requirement of min node version
+* Show last photos instead of the first ones in the index page
+* Change default settings for stg and prod
 
 ## 0.5.0
 * Minor fixes
