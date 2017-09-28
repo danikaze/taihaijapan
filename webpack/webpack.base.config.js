@@ -13,6 +13,10 @@ module.exports = {
     publicPath: settings.paths.publicPath,
   },
 
+  stats: {
+    children: false,
+  },
+
   plugins: [
     new CopyWebpackPlugin([{
       context: settings.paths.srcHtml,
