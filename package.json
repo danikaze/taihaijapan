@@ -1,6 +1,6 @@
 {
   "name": "taihaijapan",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "JavaScript photo gallery",
   "author": {
     "name": "danikaze",
@@ -11,7 +11,7 @@
     "node": ">=8.2.1"
   },
   "scripts": {
-    "server": "node backend/ settings.dev.json",
+    "server": "node backend/ dev.json",
     "start": "webpack-dev-server --env=dev",
     "build": "webpack --env=prod",
     "rebuild": "npm run clean && npm run build",

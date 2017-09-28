@@ -85,14 +85,27 @@ var PhotoSwipeUI_Default =
 													'?url={{url}}&media={{image_url}}&description={{text}}'},
 				// {id:'download', label:'Download image', url:'{{raw_image_url}}', download:true}
 			],
-			getImageURLForShare: function( /* shareButtonData */ ) {
-				return pswp.currItem.src || '';
+			getImageURLForShare: function(item /* shareButtonData */ ) {
+				if (!item || !item.src) {
+					return '';
+				}
+				return `${window.location.origin.replace('http:', 'https:')}${item.src}`;
 			},
-			getPageURLForShare: function( /* shareButtonData */ ) {
-				return window.location.href;
+			getPageURLForShare: function(item /* shareButtonData */ ) {
+				const optionsUi = _options && _options.ui;
+				const url = window.location.href;
+
+				if (optionsUi && optionsUi.shareUrlReplaceRegExp && optionsUi.shareUrlReplaceBy) {
+					if (optionsUi.shareUrlReplaceRegExp.test(url)) {
+						return url.replace(optionsUi.shareUrlReplaceRegExp, optionsUi.shareUrlReplaceBy);
+					}
+				}
+
+				return url;
 			},
-			getTextForShare: function( /* shareButtonData */ ) {
-				return pswp.currItem.title || '';
+			getTextForShare: function(item /* shareButtonData */ ) {
+				const defaultText = _options && _options.ui && _options.ui.defaultShareText;
+				return item.title || defaultText || '';
 			},
 
 			indexIndicatorSep: ' / ',
@@ -223,7 +236,8 @@ var PhotoSwipeUI_Default =
 			return false;
 		},
 		_updateShareURLs = function() {
-			var shareButtonOut = '',
+			var currentItem = pswp.currItem,
+			  shareButtonOut = '',
 				shareButtonData,
 				shareURL,
 				image_url,
@@ -233,9 +247,9 @@ var PhotoSwipeUI_Default =
 			for(var i = 0; i < _options.shareButtons.length; i++) {
 				shareButtonData = _options.shareButtons[i];
 
-				image_url = _options.getImageURLForShare(shareButtonData);
-				page_url = _options.getPageURLForShare(shareButtonData);
-				share_text = _options.getTextForShare(shareButtonData);
+				image_url = _options.getImageURLForShare(currentItem, shareButtonData);
+				page_url = _options.getPageURLForShare(currentItem, shareButtonData);
+				share_text = _options.getTextForShare(currentItem, shareButtonData);
 
 				shareURL = shareButtonData.url.replace('{{url}}', encodeURIComponent(page_url) )
 									.replace('{{image_url}}', encodeURIComponent(image_url) )

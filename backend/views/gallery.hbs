@@ -11,13 +11,17 @@
 
       {{> icons}}
     </div>
-
+{{!--
+    {{#unless photo}}
+      <div class="warning">The specified photo could not be found. Why don't you browse the gallery?</div>
+    {{/unless}}
+--}}
     {{> galleryPhotos}}
 
     {{> icons}}
 
     <div id="gallery"></div>
     <script src="/public/js/gallery-{{version}}.min.js" type="text/javascript"></script>
-    <script type="text/javascript">start({{{stringify sizes}}}, {{{stringify photos}}})</script>
+    <script type="text/javascript">start({{{stringify sizes}}}, {{{stringify photos}}}, '{{photoId}}')</script>
 
 {{> pageFooter}}
