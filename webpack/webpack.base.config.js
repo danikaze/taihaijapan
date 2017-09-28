@@ -51,8 +51,9 @@ module.exports = {
         test: /\.(ttf|otf|eot|svg|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         exclude: /node_modules/,
         use: [{
-          loader: 'file-loader',
+          loader: 'url-loader',
           options: {
+            limit: 5000,
             name: '[hash].[ext]',
             outputPath: 'fonts/',
           },
