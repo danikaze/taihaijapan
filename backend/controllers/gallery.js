@@ -6,6 +6,7 @@ const photos = settings.maxImages ? db.photos.slice(0, settings.maxImages)
 
 function gallery(request, response) {
   response.render('gallery', {
+    fullUrl: 'https://taihaijapan.com/gallery/',
     bodyId: 'page-gallery',
     title: 'taihaijapan | 退廃ジャパン > Gallery',
     sizes: db.sizes,
@@ -18,6 +19,7 @@ function photo(request, response) {
     && db.photos.filter(item => item.id === request.params.id)[0];
 
   response.render('gallery', {
+    fullUrl: `https://taihaijapan.com${request.originalUrl}`,
     bodyId: 'page-gallery',
     title: 'taihaijapan | 退廃ジャパン > Gallery',
     sizes: db.sizes,

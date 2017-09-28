@@ -11,6 +11,7 @@ const photos = (() => {
 
 function index(request, response) {
   response.render('index', {
+    fullUrl: 'https://taihaijapan.com',
     bodyId: 'page-index',
     title: 'taihaijapan | 退廃ジャパン',
     sizes: db.sizes,
