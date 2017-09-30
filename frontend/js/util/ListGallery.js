@@ -73,8 +73,8 @@ function createPhotoSwipe(photoIndex) {
     galleryUID: '',
     galleryPIDs: true,
     ui: {
-      shareUrlReplaceRegExp: /^http(s?)(.*)\/photo\/(.*)pid=([^&]+)$/,
-      shareUrlReplaceBy: 'https$2/photo/$4/',
+      shareUrlReplaceRegExp: /^http(s?)(.*)\/(photo|gallery)\/(.*)pid=([^&]+)$/,
+      shareUrlReplaceBy: 'https$2/photo/$5/',
       defaultShareText: 'taihaijapan | 退廃ジャパン',
     },
   });
