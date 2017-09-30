@@ -8,6 +8,9 @@ This code is based on one of his [JavaScript boilerplates](https://github.com/da
 
 # Changelog
 
+## 0.7.1
+* Fix generated url when sharing from `/gallery` (regex was only working for `/photo` page)
+
 ## 0.7.0
 * Added `/photo` end point, to serve as permalink for a photo and modified `PhotoswipeUI` acording to properly generate share links. It also displays the proper photo for SNS cards meta-data.
 
