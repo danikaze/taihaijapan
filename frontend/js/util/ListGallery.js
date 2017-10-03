@@ -26,7 +26,7 @@ class ListGallery {
 
     const openFromHash = checkUrlHash.call(this);
     if (!openFromHash && options.activeId) {
-      const photoIndex = galleryPhotos.findIndex(photo => photo.id === options.activeId);
+      const photoIndex = galleryPhotos.findIndex((photo) => photo.id === options.activeId);
       if (photoIndex !== -1) {
         createPhotoSwipe.call(this, photoIndex);
       }
@@ -140,7 +140,7 @@ function checkUrlHash() {
   const params = parseUrlHash();
   const pid = params.pid;
   if (pid) {
-    const photoIndex = this.photos.findIndex(photo => photo.id === pid);
+    const photoIndex = this.photos.findIndex((photo) => photo.id === pid);
     if (photoIndex !== -1) {
       createPhotoSwipe.call(this, photoIndex);
       return true;

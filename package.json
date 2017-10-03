@@ -12,16 +12,12 @@
   },
   "scripts": {
     "server": "node backend/ dev.json",
-    "start": "webpack-dev-server --env=dev",
+    "start": "webpack --env=dev",
     "build": "webpack --env=prod",
     "rebuild": "npm run clean && npm run build",
     "clean": "rimraf buildInfo && rimraf backend/public",
-    "test": "karma start",
-    "test:watch": "karma start --no-single-run --auto-watch",
-    "cover": "open coverage/lcov-report/index.html",
-    "eslint": "eslint src --ext .js",
-    "eslint:fix": "eslint src .js --fix",
-    "eslint:test": "eslint test --ext .js",
+    "lint": "eslint src --ext .js",
+    "lint:fix": "eslint src .js --fix",
     "prepublish": "npm run build",
     "gallery": "node scripts/generateGallery.js",
     "gallery:verbose": "node scripts/generateGallery.js -v -v"
@@ -87,8 +83,7 @@
     "webpack-visualizer-plugin": "^0.1.11"
   },
   "pre-commit": [
-    "eslint",
-    "eslint:test"
+    "lint"
   ],
   "dependencies": {
     "async-q": "^0.3.1",
