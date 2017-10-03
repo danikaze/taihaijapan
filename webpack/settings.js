@@ -11,10 +11,6 @@ function absPath(relPath) {
 const options = {
   filename: `js/[name]-${packageJson.version}.min.js`,
   cssName: `${packageJson.name}-${packageJson.version}.min.css`,
-  port: process.env.PORT || 8082,
-  host: process.env.HOST || 'localhost',
-  cssHash: false,
-  cssPrefix: '', // [name]--',
 };
 
 const paths = {
@@ -40,11 +36,8 @@ const entries = {
   gallery: path.join(paths.src, 'gallery.js'),
 };
 
-const alias = {};
-
 module.exports = {
   options,
   paths,
-  alias,
   entries,
 };

@@ -35,5 +35,6 @@ module.exports = {
     'no-empty': ['error', {
       allowEmptyCatch: true,
     }],
+    'arrow-parens': ['warn', 'always'],
   },
 };
