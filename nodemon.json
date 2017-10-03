@@ -1,0 +1,13 @@
+{
+  "restartable": "rs",
+  "verbose": true,
+  "watch": [
+    "backend"
+  ],
+  "ignore": [
+    "public",
+    "ctl",
+    "appctl"
+  ],
+  "ext": "js json hbs"
+}
