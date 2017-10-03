@@ -64,6 +64,10 @@ function init() {
   log.level = settings.log.logLevel;
   log.setLogDate(settings.log.logDate);
 
+  if (settingsFile) {
+    log.verbose('Settings', `Loaded settings file: ${settingsFile}.`);
+  }
+
   ctlEmitter.on('options', set);
 }
 
