@@ -20,11 +20,11 @@
     "build": "webpack --env=prod",
     "rebuild": "yarn clean && yarn build",
     "clean": "rimraf buildInfo && rimraf backend/public",
-    "lint": "eslint src --ext .js",
-    "lint:fix": "eslint src .js --fix",
+    "lint": "eslint frontend backend scripts --ext .js",
+    "lint:fix": "eslint frontend backend scripts .js --fix",
     "prepublish": "yarn build",
     "gallery": "node scripts/generateGallery.js",
-    "gallery:verbose": "node scripts/generateGallery.js -v -v"
+    "gallery:quiet": "node scripts/generateGallery.js -q"
   },
   "pre-commit": [
     "lint"

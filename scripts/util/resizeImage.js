@@ -2,6 +2,10 @@ const sharp = require('sharp');
 
 const DEFAULT_OPTIONS = {
   resizePolicy: 'fit',  // fit|cover
+  format: 'jpeg',
+  formatOptions: {
+    quality: 80,
+  },
 };
 
 const resizePolicyMap = {
@@ -16,13 +20,10 @@ function resizeImage(inputPath, outputPath, width, height, options) {
       .resize(width, height);
 
     const ops = resizePolicyMap[opt.resizePolicy];
-    ops.forEach(op => resizeProcess[op]());
+    ops.forEach((op) => resizeProcess[op]());
 
     resizeProcess
-      .toFormat('jpeg')
-      .jpeg({
-        quality: 100,
-      })
+      .toFormat(opt.format, opt.formatOptions)
       .toFile(outputPath, (error, info) => {
         info.input = inputPath;
         info.path = outputPath;
