@@ -25,8 +25,8 @@ class CtlClient {
       client.write(msg);
     });
 
-    client.on('data', data => log.verbose('CtlClient', `Data recieved: ${data.toString()}`));
-    client.on('error', error => log.error('CtlClient', `Error (${error})`));
+    client.on('data', (data) => log.verbose('CtlClient', `Data recieved: ${data.toString()}`));
+    client.on('error', (error) => log.error('CtlClient', `Error (${error})`));
   }
 }
 

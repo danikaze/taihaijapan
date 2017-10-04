@@ -9,8 +9,15 @@ const resizeImage = require('./util/resizeImage');
 const Output = require('./util/Output');
 
 const PATH_TEMP = path.normalize('./temp/');
-const verboseLevel = process.argv.reduce((sum, param) => sum + (param.toLowerCase() === '-v' ? 1 : 0), 0);
+const verboseLevel = process.argv.indexOf('-q') !== -1 ? 0 : 2;
 const out = new Output(verboseLevel);
+
+const FORMAT_EXT = {
+  jpeg: 'jpg',
+  png: 'png',
+  webp: 'webp',
+  tiff: 'tiff',
+};
 
 function checkDatabase() {
   function checkDuplicatedIds() {
@@ -61,8 +68,20 @@ function resizeImages(photoList) {
   const totalPhotos = photoList.length;
   const funcs = [];
   const generatedRoutes = [];
+  const fileExtension = FORMAT_EXT[db.output.format];
+  const resizeOptions = {
+    format: db.output.format,
+    formatOptions: db.output.formatOptions,
+  };
+
+  if (!fileExtension) {
+    throw new Error(`db.output.format not accepted (${db.output.format})`);
+  }
 
   out.log(`Processing ${totalPhotos} images`);
+  out.info(`Output folder: ${db.output.photosPath}`);
+  out.info(`Quality: ${db.output.format} ${db.output.formatOptions.quality}%`);
+
   photoList.forEach((photo, index) => funcs.push(((filePath, photoId, f) => {
     if (!fs.existsSync(filePath)) {
       out.error(` ! file not found: ${filePath}`);
@@ -70,7 +89,7 @@ function resizeImages(photoList) {
     }
 
     const promises = [];
-    out.info(` [${f + 1}/${totalPhotos}] ${path.basename(filePath)} (${photoId})`);
+    out.log(` [${f + 1}/${totalPhotos}] ${path.basename(filePath)} (${photoId})`);
     const currentPhotoInfo = {
       id: photoId,
       imgs: [],
@@ -78,14 +97,14 @@ function resizeImages(photoList) {
     allPhotosInfo.push(currentPhotoInfo);
 
     db.sizes.forEach((size, s) => {
-      const tempName = path.join(PATH_TEMP, `${f}-${s}.jpg`);
-      promises.push(resizeImage(filePath, tempName, size.w, size.h)
-        .then(fileInfo => generateFileName(db.renamePattern, tempName, fileInfo)
-            .then(fileName => new Promise((renameResolve, renameReject) => {
-              const newPath = path.join(db.outputPhotosPath, size.subdir, fileName);
+      const tempName = path.join(PATH_TEMP, `${f}-${s}.${fileExtension}`);
+      promises.push(resizeImage(filePath, tempName, size.w, size.h, resizeOptions)
+        .then((fileInfo) => generateFileName(db.renamePattern, tempName, fileInfo)
+            .then((fileName) => new Promise((renameResolve, renameReject) => {
+              const newPath = path.join(db.output.photosPath, size.subdir, fileName);
               mkdirp(path.dirname(newPath));
               fileInfo.path = newPath;
-              fileInfo.src = path.join(db.baseUrl, path.relative(db.outputPhotosPath, newPath));
+              fileInfo.src = path.join(db.baseUrl, path.relative(db.output.photosPath, newPath));
 
               if (generatedRoutes.indexOf(fileInfo.src) !== -1) {
                 out.error(`  ! Duplicated filename: ${fileInfo.src}`);
@@ -93,7 +112,8 @@ function resizeImages(photoList) {
               generatedRoutes.push(fileInfo.src);
 
               currentPhotoInfo.imgs[s] = fileInfo;
-              out.info(`  - ${fileInfo.width}x${fileInfo.height} => ${fileInfo.src}`);
+              out.info(`  - ${fileInfo.width}x${fileInfo.height} => `
+                + `${fileInfo.src} (${parseInt(fileInfo.size / 1024, 10)}kb.)`);
               fs.rename(tempName, newPath, renameResolve);
             }))));
     });
@@ -123,7 +143,7 @@ function generateJson(imageData) {
 
   imageData.forEach((photo) => {
     const imgs = [];
-    photo.imgs.forEach(img => imgs.push({
+    photo.imgs.forEach((img) => imgs.push({
       w: img.width,
       h: img.height,
       src: img.src,
@@ -142,7 +162,7 @@ function generateJson(imageData) {
       if (error) {
         reject(error);
       } else {
-        generateFileName(db.outputJsonPath, tempPath).then((fileName) => {
+        generateFileName(db.output.jsonPath, tempPath).then((fileName) => {
           fs.rename(tempPath, fileName, resolve);
         });
       }
@@ -151,7 +171,7 @@ function generateJson(imageData) {
 }
 
 function createTempDir() {
-  out.info('Creating temporal folder');
+  out.info(`Creating temporal folder (${PATH_TEMP})`);
   mkdirp(PATH_TEMP);
 }
 
@@ -160,6 +180,10 @@ function orderSizes() {
 }
 
 function clearTempDir() {
+  if (!fs.existsSync(PATH_TEMP)) {
+    return Promise.resolve();
+  }
+
   return new Promise((resolve, reject) => {
     fs.rmdir(PATH_TEMP, (error) => {
       out.info('Cleaning temporal folder');
@@ -178,7 +202,9 @@ function clearTempDir() {
 function exitError(msg) {
   out.error(msg);
   out.log('Exiting...');
-  process.exit(1);
+  return clearTempDir().then(() => {
+    process.exit(1);
+  });
 }
 
 /**
@@ -199,12 +225,13 @@ function run() {
   .then(resizeImages)
   .then(generateJson)
   .then(clearTempDir)
-  .then(end);
+  .then(end)
+  .catch(exitError);
 }
 
 /*
  * Execution after checks
  */
 checkDatabase()
-  .catch(errors => exitError(`Errors while checking db.js: ${JSON.stringify(errors, null, 2)}`))
+  .catch((errors) => exitError(`Errors while checking db.js: ${JSON.stringify(errors, null, 2)}`))
   .then(run);

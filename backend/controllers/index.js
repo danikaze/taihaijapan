@@ -19,7 +19,7 @@ function index(request, response) {
   });
 }
 
-module.exports = app => [
+module.exports = (app) => [
   {
     method: 'get',
     path: '/',

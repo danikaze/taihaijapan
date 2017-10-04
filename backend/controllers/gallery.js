@@ -16,7 +16,7 @@ function gallery(request, response) {
 
 function photo(request, response) {
   const currentPhoto = request.params.id
-    && db.photos.filter(item => item.id === request.params.id)[0];
+    && db.photos.filter((item) => item.id === request.params.id)[0];
 
   response.render('gallery', {
     fullUrl: `https://taihaijapan.com${request.originalUrl}`,
@@ -29,7 +29,7 @@ function photo(request, response) {
   });
 }
 
-module.exports = app => [
+module.exports = (app) => [
   {
     method: 'get',
     path: '/gallery',

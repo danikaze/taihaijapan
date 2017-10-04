@@ -60,7 +60,7 @@ const photos = (() => [
   { img: '_MG_9267-Edit', id: 'pachinko' },
   // Sancha en la lluvia
   { img: '_MG_9324', id: 'sancha-in-the-rain' },
-])().map(photo => ({
+])().map((photo) => ({
   img: `${__dirname}/${photo.img}.jpg`,
   id: photo.id,
 }));
@@ -81,6 +81,14 @@ const outputJsonPath = `${__dirname}/../backend/gallery.json`;
 // where the photos will be stored (absolute)
 const outputPhotosPath = `${__dirname}/../backend/public/photos/`;
 
+// format (jpeg|png|tiff|webp)
+const outputFormat = 'jpeg';
+
+// quality
+const outputOptions = {
+  quality: 80,
+};
+
 // if `true`, it will format the JSON file
 const beautifyJson = true;
 
@@ -91,7 +99,11 @@ module.exports = {
   photos,
   renameFiles,
   renamePattern,
-  outputJsonPath: path.normalize(outputJsonPath),
-  outputPhotosPath: path.normalize(outputPhotosPath),
   beautifyJson,
+  output: {
+    jsonPath: path.normalize(outputJsonPath),
+    photosPath: path.normalize(outputPhotosPath),
+    format: outputFormat,
+    formatOptions: outputOptions,
+  },
 };
