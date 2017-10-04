@@ -134,7 +134,7 @@ class VerticalGallery {
     const maxH = window.innerHeight - this.options.marginH;
     const currentImg = this.getMostCenteredImage();
 
-    this.imageList.forEach(img => fitImage(img, maxW, maxH));
+    this.imageList.forEach((img) => fitImage(img, maxW, maxH));
     this.centerImage(currentImg);
   }
 

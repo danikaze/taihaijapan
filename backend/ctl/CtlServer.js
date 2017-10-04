@@ -82,7 +82,7 @@ function connectionListener(socket) {
   });
 
   socket.on('timeout', () => log.warn('CtlServer', 'socket.timeout'));
-  socket.on('error', error => log.warn('CtlServer', `socket.error (${error})`));
+  socket.on('error', (error) => log.warn('CtlServer', `socket.error (${error})`));
 }
 
 module.exports = CtlServer;
