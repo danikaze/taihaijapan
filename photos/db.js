@@ -58,9 +58,11 @@ const photos = (() => [
   { img: '_MG_4651-Edit', id: 'nuka-cola' },
   // Pachinko / パチンコ
   { img: '_MG_9267-Edit', id: 'pachinko' },
-  // Sancha en la lluvia
-  { img: '_MG_9324', id: 'sancha-in-the-rain' },
-])().map((photo) => ({
+  // Koenji en la lluvia
+  { img: '_MG_9324', id: 'koenji-in-the-rain' },
+  // Parking al lado de casa en Nakano
+  { img: '_MG_0034', id: 'lonely-parking' },
+])().map(photo => ({
   img: `${__dirname}/${photo.img}.jpg`,
   id: photo.id,
 }));
