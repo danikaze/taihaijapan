@@ -1,4 +1,3 @@
-import addEventListener from './addEventListener';
 import chooseBestSize from './chooseBestSize';
 
 /**
@@ -25,8 +24,8 @@ class SrcSetEmu {
     }
 
     if (this.options.auto) {
-      addEventListener(window, 'load', this.updateImages.bind(this));
-      addEventListener(window, 'resize', this.updateImages.bind(this));
+      window.addEventListener('load', this.updateImages.bind(this));
+      window.addEventListener('resize', this.updateImages.bind(this));
     }
   }
 

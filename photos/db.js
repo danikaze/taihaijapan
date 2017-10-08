@@ -62,7 +62,7 @@ const photos = (() => [
   { img: '_MG_9324', id: 'koenji-in-the-rain' },
   // Parking al lado de casa en Nakano
   { img: '_MG_0034', id: 'lonely-parking' },
-])().map(photo => ({
+])().map((photo) => ({
   img: `${__dirname}/${photo.img}.jpg`,
   id: photo.id,
 }));

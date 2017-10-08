@@ -3,7 +3,6 @@ import '../polyfills/Array.findIndex';
 import PhotoswipeUi from './PhotoswipeUi';
 import photoswipeHtml from './PhotoswipeHtml';
 import '../../styles/photoswipe/index.scss';
-import addEventListener from './addEventListener';
 import chooseBestSize from './chooseBestSize';
 
 const asArray = Array.prototype.slice;
@@ -37,7 +36,7 @@ class ListGallery {
 function addThumbnailsLogic() {
   const bindedCreatePhotoSwipe = createPhotoSwipe.bind(this);
   this.thumbnails.forEach((thumbnail, index) => {
-    addEventListener(thumbnail, 'click', () => {
+    thumbnail.addEventListener('click', () => {
       bindedCreatePhotoSwipe(index);
     });
   });

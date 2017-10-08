@@ -1,4 +1,3 @@
-import addEventListener from './addEventListener';
 import getSrcsetTag from './getSrcTag';
 import fitRects from './fitRects';
 import SrcSetEmu from './SrcSetEmu';
@@ -40,9 +39,9 @@ class VerticalGallery {
 
     this.createThumbnails();
 
-    addEventListener(window, 'resize', this.bindedFitImages);
+    window.addEventListener('resize', this.bindedFitImages);
     if (this.options.scrollHelperActive) {
-      addEventListener(window, 'scroll', this.bindedScrollHandler);
+      window.addEventListener('scroll', this.bindedScrollHandler);
     }
   }
 
@@ -65,7 +64,7 @@ class VerticalGallery {
         if (steps < 1) {
           window.scroll(targetX, targetY);
           clearTimeout(this.animatedScrollTimeout);
-          setTimeout(() => addEventListener(window, 'scroll', this.bindedScrollHandler),
+          setTimeout(() => window.addEventListener('scroll', this.bindedScrollHandler),
             this.options.scrollCooldown);
           resolve(true);
         } else {
@@ -215,7 +214,7 @@ class VerticalGallery {
         if (img.width) {
           fitImage.call(this, imageListElem, null, null);
         } else {
-          addEventListener(img, 'load', fitImage.bind(this, imageListElem, null, null));
+          img.addEventListener('load', fitImage.bind(this, imageListElem, null, null));
         }
         parent.appendChild(li);
       }
