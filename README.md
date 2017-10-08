@@ -8,6 +8,9 @@ This code is based on one of his [JavaScript boilerplates](https://github.com/da
 
 # Changelog
 
+## 0.7.2
+* Re-included the _fit image_ script in the `/index` page.
+
 ## 0.7.1
 * Fix generated url when sharing from `/gallery` (regex was only working for `/photo` page)
 
