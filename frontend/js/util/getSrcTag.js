@@ -31,4 +31,4 @@ function getSrcSetTag(imgs, sizes) {
   return html;
 }
 
-export default getSrcSetTag;
+module.exports = getSrcSetTag;

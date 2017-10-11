@@ -3,6 +3,7 @@ const path = require('path');
 const mkdirp = require('mkdirp');
 const async = require('async-q');
 const Q = require('q');
+const checkDatabase = require('./util/checkDatabase');
 const db = require('../photos/db');
 const generateFileName = require('./util/generateFileName');
 const resizeImage = require('./util/resizeImage');
@@ -18,46 +19,6 @@ const FORMAT_EXT = {
   webp: 'webp',
   tiff: 'tiff',
 };
-
-function checkDatabase() {
-  function checkDuplicatedIds() {
-    const ids = [];
-    const duplicatedIds = [];
-
-    db.photos.forEach((photo) => {
-      const id = photo.id.toLowerCase();
-      if (ids.indexOf(id) !== -1) {
-        duplicatedIds.push(photo.id);
-      } else {
-        ids.push(photo.id);
-      }
-    });
-
-    return duplicatedIds.length ? duplicatedIds : null;
-  }
-
-  return new Promise((resolve, reject) => {
-    const checks = {
-      duplicatedIds: checkDuplicatedIds,
-    };
-    const errors = {};
-    let failed = false;
-
-    Object.keys(checks).forEach((key) => {
-      const res = checks[key]();
-      if (res) {
-        errors[key] = res;
-        failed = true;
-      }
-    });
-
-    if (failed) {
-      reject(errors);
-    } else {
-      resolve();
-    }
-  });
-}
 
 function getFiles() {
   return Promise.resolve(db.photos);
@@ -175,10 +136,6 @@ function createTempDir() {
   mkdirp(PATH_TEMP);
 }
 
-function orderSizes() {
-  db.sizes.sort((a, b) => ((a.w || 0) - (b.w || 0)) + ((a.h || 0) - (b.h || 0)));
-}
-
 function clearTempDir() {
   if (!fs.existsSync(PATH_TEMP)) {
     return Promise.resolve();
@@ -220,13 +177,12 @@ function end() {
  */
 function run() {
   createTempDir();
-  orderSizes();
   getFiles()
-  .then(resizeImages)
-  .then(generateJson)
-  .then(clearTempDir)
-  .then(end)
-  .catch(exitError);
+    .then(resizeImages)
+    .then(generateJson)
+    .then(clearTempDir)
+    .then(end)
+    .catch(exitError);
 }
 
 /*
