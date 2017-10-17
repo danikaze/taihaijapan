@@ -53,10 +53,11 @@ function generateAmpPages(gallery) {
     helpers: HBS_HELPERS_PATH,
   }).then((views) => {
     const sizes = gallery.sizes;
+    const utcDate = new Date().toUTCString();
     gallery.photos.forEach((photo) => {
       out.info(`Generating AMP for ${photo.id}`);
       const outputPath = path.join(AMP_PATH, `${photo.id}.html`);
-      views.renderToFileSync('photo', outputPath, { photo, sizes });
+      views.renderToFileSync('photo', outputPath, { photo, sizes, utcDate });
     });
   });
 }

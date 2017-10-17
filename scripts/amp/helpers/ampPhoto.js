@@ -17,7 +17,7 @@ function imgPhoto(sizes, photo) {
       src="${img.src}"
       width="${img.w}"
       height="${img.h}"
-      ${getSrcsetTag(photo.imgs, sizesMediaTags)}
+      ${getSrcsetTag(photo.imgs)}
     >`;
 }
 

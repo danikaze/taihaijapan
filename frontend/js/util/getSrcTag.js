@@ -1,6 +1,6 @@
 /**
  * @param   {Object[]} imgs List of images as { w, h, src }
- * @returns {String}        <img> srcset tag as `srcset="url1 w h, ..., urln w h"`
+ * @returns {String}        <img> srcset tag as `srcset="url1 w, ..., urln w"`
  */
 function getSrcSetTag(imgs, sizes) {
   if (imgs.length < 2) {
@@ -14,9 +14,6 @@ function getSrcSetTag(imgs, sizes) {
 
     if (img.w) {
       code += ` ${img.w}w`;
-    }
-    if (img.h) {
-      code += ` ${img.h}h`;
     }
 
     srcset.push(code);
