@@ -188,6 +188,6 @@ function run() {
 /*
  * Execution after checks
  */
-checkDatabase()
+checkDatabase(db)
   .catch((errors) => exitError(`Errors while checking db.js: ${JSON.stringify(errors, null, 2)}`))
   .then(run);
