@@ -1,4 +1,5 @@
 const path = require('path');
+const mkdirp = require('mkdirp');
 const Output = require('./util/Output');
 const readJsonSync = require('../backend/utils/readJsonSync');
 const Handlebars = require('./util/Handlebars');
@@ -10,6 +11,18 @@ const HBS_PARTIALS_PATH = path.resolve(__dirname, './amp/partials');
 const HBS_VIEWS_PATH = path.resolve(__dirname, './amp');
 const verboseLevel = process.argv.indexOf('-q') !== -1 ? 0 : 2;
 const out = new Output(verboseLevel);
+
+function createOutputFolder() {
+  return new Promise((resolve, reject) => {
+    mkdirp(AMP_PATH, (error) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
 
 /**
  * Read the gallery json
@@ -69,7 +82,8 @@ function end() {
  * Run the main tasks of the script
  */
 function run() {
-  getGallery()
+  createOutputFolder()
+    .then(getGallery)
     .then(generateAmpPages)
     .then(end)
     .catch(exitError);
