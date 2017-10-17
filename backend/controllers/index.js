@@ -1,13 +1,8 @@
 const db = require('../utils/db');
 const settings = require('../utils/settings').values.index;
 
-const photos = (() => {
-  const reversedPhotos = db.photos.slice();
-  reversedPhotos.reverse();
-
-  return settings.maxImages ? reversedPhotos.slice(0, settings.maxImages)
-                            : reversedPhotos;
-})();
+const photos = (() => (settings.maxImages ? db.photos.slice(0, settings.maxImages)
+                                         : db.photos))();
 
 function index(request, response) {
   response.render('index', {

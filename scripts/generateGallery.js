@@ -154,6 +154,8 @@ function generateJson(imageData) {
     });
   });
 
+  gallery.photos.reverse();
+
   return new Promise((resolve, reject) => {
     const tempPath = path.join(PATH_TEMP, 'db.json');
     const str = db.beautifyJson ? JSON.stringify(gallery, null, 2) : JSON.stringify(gallery);
