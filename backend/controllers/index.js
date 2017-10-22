@@ -1,8 +1,11 @@
 const db = require('../utils/db');
 const settings = require('../utils/settings').values.index;
 
-const photos = (() => (settings.maxImages ? db.photos.slice(0, settings.maxImages)
-                                         : db.photos))();
+const newPhotos = getN(db.photos, settings.newImages);
+
+function getN(arr, n) {
+  return n ? arr.slice(0, n) : arr;
+}
 
 function index(request, response) {
   response.render('index', {
@@ -10,7 +13,7 @@ function index(request, response) {
     bodyId: 'page-index',
     title: 'taihaijapan | 退廃ジャパン',
     sizes: db.sizes,
-    photos,
+    newPhotos,
   });
 }
 

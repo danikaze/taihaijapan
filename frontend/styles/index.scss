@@ -1,6 +1,8 @@
+$page-max-width: 2000px;
 $break-s: 300px;
 $break-m: 600px;
 $break-l: 1200px;
+$img-highlight-opacity: 0.85;
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -44,7 +46,7 @@ body {
 
 #header {
   position: relative;
-  max-width: 2000px;
+  max-width: $page-max-width;
   margin: auto;
 }
 
@@ -64,20 +66,47 @@ body {
 }
 
 #thumbnails {
-  max-width: 2000px;
+  max-width: $page-max-width;
   margin: 2em auto;
 }
 
 #page-index {
 
-  #thumbnails li {
-    text-align: center;
-  }
+  #thumbnails {
+    li {
+      text-align: center;
+      width: 25%;
+      display: inline-block;
 
-  #thumbnails li img {
-  /*  cursor: pointer; */
-    width: 100%;
-    margin: 10px auto 0 auto;
+      div {
+        width: 90%;
+        margin: 20px auto 0 auto;
+        background: #000000;
+
+        &:hover {
+          background: #ffffff;
+        }
+
+        img {
+          cursor: pointer;
+          vertical-align: middle;
+          width: 100%;
+          background: #000000;
+
+          &:hover {
+            opacity: $img-highlight-opacity;
+          }
+        }
+      }
+    }
+
+    li.img-0 {
+      width: 100%;
+
+      div {
+        width: 100%;
+      }
+    }
   }
 }
 
@@ -96,25 +125,36 @@ body {
   }
 
   @media screen and (min-width: $break-s) {
-    #thumbnails li {
-      width: 50%;
-    }
+    #thumbnails {
+      li {
+        width: 50%;
 
-    #thumbnails li img {
-      width: 95%;
-      margin: auto;
-    }
-  }
+        div {
+          width: 95%;
+          margin: auto;
+          background: #000000;
 
-  @media screen and (min-width: $break-m) {
-    #thumbnails li {
-      width: 33%;
-    }
-  }
+          &:hover {
+            background: #ffffff;
+          }
 
-  @media screen and (min-width: $break-l) {
-    #thumbnails li {
-      width: 25%;
+          img {
+            vertical-align: middle;
+
+            &:hover {
+              opacity: $img-highlight-opacity;
+            }
+          }
+        }
+
+        @media screen and (min-width: $break-m) {
+          width: 33%;
+        }
+
+        @media screen and (min-width: $break-l) {
+          width: 25%;
+        }
+      }
     }
   }
 }

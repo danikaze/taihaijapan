@@ -8,7 +8,7 @@ const sizesMediaTags = [
 ];
 
 function galleryThumbnail() {
-  return `<img src="${this.imgs[0].src}" ${getSrcsetTag([this.imgs[0]], sizesMediaTags)} alt="${this.id}">`;
+  return `<div><img src="${this.imgs[0].src}" ${getSrcsetTag([this.imgs[0]], sizesMediaTags)} alt="${this.id}"></div>`;
 }
 
 module.exports = {

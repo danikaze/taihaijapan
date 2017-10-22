@@ -21,7 +21,8 @@
     "unixSocket": ""
   },
   "index": {
-    "maxImages": 5
+    "randomImages": 5,
+    "newImages": 5
   },
   "gallery": {
     "maxImages": 0

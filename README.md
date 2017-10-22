@@ -8,6 +8,10 @@ This code is based on one of his [JavaScript boilerplates](https://github.com/da
 
 # Changelog
 
+##
+* `index/` is displayed now with one big photo and some thumbnails.
+* Thumbnails are highlighted on mouse over.
+
 ## 0.7.2
 * Re-included the _fit image_ script in the `/index` page.
 
