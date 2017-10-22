@@ -8,7 +8,7 @@ This code is based on one of his [JavaScript boilerplates](https://github.com/da
 
 # Changelog
 
-##
+## 0.8.0
 * `index/` is displayed now with one big photo and some thumbnails.
 * Thumbnails are highlighted on mouse over.
 
