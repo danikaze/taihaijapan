@@ -105,6 +105,13 @@ body {
 
       div {
         width: 100%;
+        &:hover {
+          background: inherit;
+        }
+
+        img:hover {
+          opacity: 1;
+        }
       }
     }
   }

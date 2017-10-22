@@ -30,11 +30,11 @@ function fitImage(photo, maxW, maxH) {
 /**
  * Resize photos to fit in the screen
  */
-function fitImages(center) {
+function fitImages() {
   const maxW = thumbnails.offsetWidth;
   const maxH = window.innerHeight - (options.marginH * 2);
 
-  photoList.forEach((img) => fitImage(img, maxW, maxH));
+  fitImage(photoList[0], maxW, maxH);
 }
 
 function start(sizes, photos) {
