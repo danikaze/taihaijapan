@@ -8,6 +8,30 @@ require('object-assign');
 const settings = require('./settings');
 
 const postCssPlugins = () => [autoprefixer('>1%', 'not ie < 9')];
+const extractCssIndex = new ExtractTextPlugin(path.join(settings.paths.buildCss, settings.options.cssNameIndex));
+const extractCssAdmin = new ExtractTextPlugin(path.join(settings.paths.buildCss, settings.options.cssNameAdmin));
+
+function getExtractTextConfig(env, extraLoaders) {
+  return {
+    fallback: 'style-loader',
+    use: [
+      {
+        loader: 'css-loader',
+        options: {
+          importLoaders: 1,
+          sourceMap: true,
+          minimize: env === 'prod',
+        },
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          plugins: postCssPlugins,
+        },
+      },
+    ].concat(extraLoaders.map((item) => ({ loader: item }))),
+  };
+}
 
 module.exports = (env) => ({
   entry: settings.entries,
@@ -36,7 +60,8 @@ module.exports = (env) => ({
     }]),
 
     // css
-    new ExtractTextPlugin(path.join(settings.paths.buildCss, settings.options.cssName)),
+    extractCssIndex,
+    extractCssAdmin,
 
     // Allows to see building stats (radial one)
     new Visualizer({
@@ -54,56 +79,19 @@ module.exports = (env) => ({
     rules: [
       // styles
       {
-        test: /\.(css|scss|sass)$/,
+        test: /^(?!.*?admin).*\.(css|scss|sass)$/,
         exclude: /node_modules/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-                sourceMap: true,
-                minimize: env === 'prod',
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                plugins: postCssPlugins,
-              },
-            },
-            {
-              loader: 'sass-loader',
-            },
-          ],
-        }),
+        use: extractCssIndex.extract(getExtractTextConfig(env, ['sass-loader'])),
       },
       {
-        test: /\.(less)$/,
+        test: /^(?!.*?admin).*\.(less)$/,
         exclude: /node_modules/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-                sourceMap: true,
-                minimize: env === 'prod',
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                plugins: postCssPlugins,
-              },
-            },
-            {
-              loader: 'less-loader',
-            },
-          ],
-        }),
+        use: extractCssIndex.extract(getExtractTextConfig(env, ['less-loader'])),
+      },
+      {
+        test: /admin\.(css|scss|sass)$/,
+        exclude: /node_modules/,
+        use: extractCssAdmin.extract(getExtractTextConfig(env, ['sass-loader'])),
       },
       // linting
       {

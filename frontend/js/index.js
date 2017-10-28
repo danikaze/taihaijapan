@@ -1,6 +1,8 @@
 import fitRects from './util/fitRects';
 import SrcSetEmu from './util/SrcSetEmu';
 
+import '../styles/index.scss';
+
 const thumbnails = document.getElementById('thumbnails');
 const options = {
   scrollFrequency: 1000 / 60,
