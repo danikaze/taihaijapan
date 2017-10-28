@@ -9,6 +9,10 @@
       "imagesPerPage": 0,
       "sortBy": "added",
       "reverse": true
+    },
+    "admin": {
+      "route": "/admin",
+      "imagesPerPage": 0
     }
   },
   "images": {

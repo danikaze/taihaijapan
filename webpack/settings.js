@@ -10,12 +10,14 @@ function absPath(relPath) {
 
 const options = {
   filename: `js/[name]-${packageJson.version}.min.js`,
-  cssName: `${packageJson.name}-${packageJson.version}.min.css`,
+  cssNameIndex: `${packageJson.name}-${packageJson.version}.min.css`,
+  cssNameAdmin: `admin-${packageJson.version}.min.css`,
 };
 
 const paths = {
   src: absPath('frontend/js'),
   srcHtml: absPath('frontend/public'),
+  srcStyle: absPath('frontend/styles'),
   public: absPath('backend/public'),
   build: absPath('backend/public'),
   buildJs: 'js', // js route
@@ -34,6 +36,7 @@ const entries = {
   // css: paths.mainStyle,
   index: path.join(paths.src, 'index.js'),
   gallery: path.join(paths.src, 'gallery.js'),
+  admin: path.join(paths.src, 'admin.js'),
 };
 
 module.exports = {
