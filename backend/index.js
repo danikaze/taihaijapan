@@ -1,5 +1,5 @@
 #!/usr/bin/node
-const settings = require('./utils/settings');
+const settings = require('./utils/serverSettings');
 const Server = require('./Server');
 const CtlServer = require('./ctl/CtlServer');
 const ctlEmitter = require('./ctl/ctlEmitter');

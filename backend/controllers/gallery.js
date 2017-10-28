@@ -1,8 +1,14 @@
 const db = require('../utils/db');
-const settings = require('../utils/settings').values.gallery;
+const settingsModel = require('../models/settings');
 
-const photos = settings.maxImages ? db.photos.slice(0, settings.maxImages)
-                                  : db.photos;
+let settings;
+let photos;
+
+function updateData() {
+  settings = settingsModel.data.controllers.gallery;
+  photos = settings.maxImages ? db.photos.slice(0, settings.maxImages)
+                              : db.photos;
+}
 
 function gallery(request, response) {
   response.render('gallery', {
@@ -28,6 +34,10 @@ function photo(request, response) {
     photos,
   });
 }
+
+
+settingsModel.on('update', updateData);
+updateData();
 
 module.exports = (app) => [
   {

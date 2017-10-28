@@ -19,12 +19,5 @@
     "host": "localhost",
     "port": 5000,
     "unixSocket": ""
-  },
-  "index": {
-    "randomImages": 5,
-    "newImages": 5
-  },
-  "gallery": {
-    "maxImages": 0
   }
 }

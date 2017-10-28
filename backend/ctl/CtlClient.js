@@ -1,8 +1,10 @@
 const net = require('net');
 const path = require('path');
 const mkdirp = require('mkdirp').sync;
-const settings = require('../utils/settings').values.ctl;
+const settings = require('../utils/serverSettings').values.ctl;
 const log = require('../utils/log');
+
+const autorun = process.argv.indexOf('autorun') !== -1;
 
 class CtlClient {
   start() {
@@ -15,14 +17,23 @@ class CtlClient {
     }
 
     client.connect(port, settings.host, () => {
-      const msg = JSON.stringify({
+      const msg = {
         basePath: process.cwd(),
-        options: constructOptions(),
-        commands: constructCommands(),
-      });
+      };
+      const options = constructOptions();
+      const commands = constructCommands();
 
-      log.verbose('CtlClient', `Sending msg: ${msg}`);
-      client.write(msg);
+      if (options) {
+        msg.options = options;
+      }
+
+      if (commands) {
+        msg.commands = commands;
+      }
+
+      const msgStr = JSON.stringify(msg);
+      log.verbose('CtlClient', `Sending msg: ${msgStr}`);
+      client.write(msgStr);
     });
 
     client.on('data', (data) => log.verbose('CtlClient', `Data recieved: ${data.toString()}`));
@@ -31,13 +42,23 @@ class CtlClient {
 }
 
 function constructOptions() {
-  return {
-    log: { logLevel: 'silly' },
-  };
+  return undefined;
+  // {
+  //   log: { logLevel: 'silly' },
+  // };
 }
 
 function constructCommands() {
-  return undefined;
+  return {
+    reloadSettings: {},
+  };
+}
+
+if (autorun) {
+  (function runOnce() {
+    const client = new CtlClient();
+    client.start();
+  }());
 }
 
 module.exports = CtlClient;

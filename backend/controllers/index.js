@@ -1,7 +1,13 @@
 const db = require('../utils/db');
-const settings = require('../utils/settings').values.index;
+const settingsModel = require('../models/settings');
 
-const newPhotos = getN(db.photos, settings.newImages);
+let settings;
+let newPhotos;
+
+function updateData() {
+  settings = settingsModel.data.controllers.index;
+  newPhotos = getN(db.photos, settings.maxImages);
+}
 
 function getN(arr, n) {
   return n ? arr.slice(0, n) : arr;
@@ -16,6 +22,9 @@ function index(request, response) {
     newPhotos,
   });
 }
+
+settingsModel.on('update', updateData);
+updateData();
 
 module.exports = (app) => [
   {

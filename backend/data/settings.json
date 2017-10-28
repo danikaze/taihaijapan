@@ -1,0 +1,49 @@
+{
+  "controllers": {
+    "index": {
+      "maxImages": 5,
+      "sortBy": "added",
+      "reverse": true
+    },
+    "gallery": {
+      "imagesPerPage": 0,
+      "sortBy": "added",
+      "reverse": true
+    }
+  },
+  "images": {
+    "originalPath": "data/photos",
+    "path": "public/photos",
+    "baseUrl": "/public/photos",
+    "resize": {
+      "resizePolicy": "fit",
+      "outputFile": "{subdir}/{hash:32}.jpg",
+      "format": "jpeg",
+      "formatOptions": {
+        "quality": 80
+      }
+    },
+    "sizes": [
+      {
+        "w": 400,
+        "h": 0,
+        "subdir": "T"
+      },
+      {
+        "w": 720,
+        "h": 0,
+        "subdir": "S"
+      },
+      {
+        "w": 1280,
+        "h": 0,
+        "subdir": "M"
+      },
+      {
+        "w": 2000,
+        "h": 0,
+        "subdir": "L"
+      }
+    ]
+  }
+}
