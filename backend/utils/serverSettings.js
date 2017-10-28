@@ -34,7 +34,7 @@ function locateSettingsFile(file) {
 
     // test for relative path
     if (!fs.existsSync(res)) {
-      res = path.join(__dirname, '../settings', file);
+      res = path.join(__dirname, '../serverSettings', file);
 
       // test for file located in setings folder
       if (!fs.existsSync(res)) {
@@ -65,7 +65,7 @@ function init() {
   log.setLogDate(settings.log.logDate);
 
   if (settingsFile) {
-    log.verbose('Settings', `Loaded settings file: ${settingsFile}.`);
+    log.verbose('ServerSettings', `Loaded settings file: ${settingsFile}.`);
   }
 
   ctlEmitter.on('options', set);
@@ -102,7 +102,7 @@ function reset() {
   const settingsFile = locateSettingsFile('default.json');
 
   if (!settingsFile) {
-    log.error('Settings', 'Can\'t find default settings. Exiting...');
+    log.error('ServerSettings', 'Can\'t find default settings. Exiting...');
     process.exit(-1);
   }
 
@@ -136,7 +136,7 @@ function setFile(filePath) {
   filePath = locateSettingsFile(filePath);
 
   if (!filePath) {
-    log.warn('Settings', `Couldn't find settings file in ${filePath}`);
+    log.warn('ServerSettings', `Couldn't find settings file in ${filePath}`);
     return;
   }
 
