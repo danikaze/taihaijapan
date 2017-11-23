@@ -4,7 +4,7 @@ const getFileHash = require('./getFileHash');
 const REGEXP_RANDOM = /{random(:(\d+))?}/gi;
 const REGEXP_HASH = /{hash(:(\d+))?}/gi;
 const FILE_NAME_HASH_SIZE = 32;
-const FILE_NAME_RANDOM_SIZE = 8;
+const FILE_NAME_RANDOM_SIZE = 32;
 
 const generatedRandoms = [];
 
@@ -75,17 +75,22 @@ function getRandomString(size) {
 /**
  * Generate a file name based on a pattern and a file
  * The accepted placeholders are:
- * {random}|{hash}|{basename}|{ext}|{size}|{timestamp}
+ * `{random}|{hash}|{basename}|{ext}|{size}|{timestamp}`
+ * {hash} won't be available if `filePath` is not provided.
+ * Custom values `{key}` can be padded with '0' if specified as `{key:N}`, being `N` the total size,
+ * or with a custom character `C` if specified as `{key:N,C}`
  *
- * @param {String} pattern  Pattern for the new name, with the accepted placeholders
- * @param {String} filePath Path to the original file
- * @param {Object} values   Extra values to use in the pattern as `{ key: value }`
- * @returns {Promise}       Promise resolved to the file name
+ * @param {String} pattern    Pattern for the new name, with the accepted placeholders
+ * @param {String} [filePath] Path to the original file
+ * @param {Object} values     Extra values to use in the pattern as `{ key: value }`
+ * @returns {Promise}         Promise resolved to the file name
  */
 function generateFileName(pattern, filePath, values) {
   return new Promise((resolve, reject) => {
     let newFileName = pattern;
-    const hashPromise = pattern.search(new RegExp(REGEXP_HASH)) === -1 ? Promise.resolve() : getFileHash(filePath);
+    const hashPromise = !filePath
+      || pattern.search(new RegExp(REGEXP_HASH)) === -1 ? Promise.resolve()
+                                                        : getFileHash(filePath);
 
     hashPromise.then((fileHash) => {
       // replace basic generators
@@ -102,8 +107,15 @@ function generateFileName(pattern, filePath, values) {
       }
       // replace custom values
       if (values) {
-        generatorKeys.forEach((key) => {
-          newFileName = newFileName.replace(new RegExp(`{${key}}`, 'gi'), values[key]);
+        Object.keys(values).forEach((key) => {
+          newFileName = newFileName.replace(new RegExp(`{${key}(:((\\d+)(,(.))?))?}`, 'gi'), (...match) => {
+            const value = values[key];
+            const padStr = match[5] || '0';
+            if (match[3]) {
+              return String(value).padStart(match[3], padStr);
+            }
+            return value;
+          });
         });
       }
 

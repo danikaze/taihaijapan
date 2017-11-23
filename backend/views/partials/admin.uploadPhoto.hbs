@@ -1,0 +1,10 @@
+<section id="upload-photo">
+  <h2>Upload new photo</h2>
+  <form action="/admin/photos" method="post" enctype="multipart/form-data">
+    <div class="photo"><label><span>Photo:</span> <input name="photo" type="file"></label></div>
+    <div class="slug"><label><span>Slug:</span> <input name="slug"></label></div>
+    <div class="tags"><label><span>Tags:</span> <input name="tags"></label></div>
+    <div class="keywords"><label><span>Keywords:</span> <input name="keywords"></label></div>
+    <input type="submit" value="Upload new photo">
+  </form>
+</section>

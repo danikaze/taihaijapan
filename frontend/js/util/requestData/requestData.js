@@ -5,11 +5,15 @@ function resolveMockupData(url, options) {
   return data;
 }
 
-function urlAddParam(url, data) {
+function urlAddParams(url, data) {
   let joiner = url.indexOf('?') === -1 ? '?' : '&';
 
   Object.keys(data).forEach((key) => {
-    url = `${url}${joiner}${key}=${data[key]}`;
+    let value = data[key];
+    if (typeof value === 'object') {
+      value = JSON.stringify(value);
+    }
+    url = `${url}${joiner}${key}=${encodeURIComponent(value)}`;
     joiner = '&';
   });
 
@@ -19,32 +23,45 @@ function urlAddParam(url, data) {
 /**
  * Request a URL via GET and return the content as plain text
  *
- * @param   {String}  url                url to open
+ * @param   {String}  url                    url to open
  * @param   {Object}  [options]
- * @param   {*}       [options.mockData]
- * @param   {Number}  [options.timeout]  Timeout in ms.
- * @param   {Boolean} [options.cache]    If `true`, `_t` won't be appended
- * @returns {Promise}                    Promise resolved to `[xhr.responseText, xhr]`
+ * @param   {Object}  [options.data]         Data to send
+ * @param   {string}  [options.method='GET'] Method of the request (`GET`|`POST`|`PUT`|`DELETE`)
+ * @param   {*}       [options.mockData]     If specified this will be the value resolved, instead of doing the request
+ * @param   {Number}  [options.timeout]      Timeout in ms.
+ * @param   {Boolean} [options.cache]        If `true`, `_t` won't be appended
+ * @returns {Promise}                        Promise resolved to `[xhr.responseText, xhr]`
  */
 function requestData(url, options) {
-  options = options || {};
+  const opt = Object.assign({
+    method: 'GET',
+  }, options);
+  opt.method = opt.method.toUpperCase();
 
   return new Promise((resolve, reject) => {
-    const mock = options.mockData || resolveMockupData(url, options);
+    const mock = opt.mockData || resolveMockupData(url, opt);
     if (mock) {
       resolve([mock]);
       return;
     }
 
-    if (!options.cache) {
-      url = urlAddParam(url, { _t: new Date().getTime() });
+    if (typeof opt.data === 'object') {
+      if (opt.method === 'POST') {
+        //
+      } else {
+        url = urlAddParams(url, opt.data);
+      }
+    }
+
+    if (!opt.cache) {
+      url = urlAddParams(url, { _t: new Date().getTime() });
     }
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
+    xhr.open(opt.method, url, true);
 
-    if (options.timeout) {
-      xhr.timeout = options.timeout;
+    if (opt.timeout) {
+      xhr.timeout = opt.timeout;
     }
 
     xhr.onreadystatechange = () => {
