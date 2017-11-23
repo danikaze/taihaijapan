@@ -77,11 +77,15 @@ class Server extends EventEmitter {
         const apis = files[fileName](this.app);
 
         apis.forEach((api) => {
-          this.app[api.method](api.path, api.callback);
+          if (api.middleware) {
+            this.app[api.method](api.path, api.middleware, api.callback);
+          } else {
+            this.app[api.method](api.path, api.callback);
+          }
           log.verbose('Server', `Setting endpoint: ${api.method} ${api.path}`);
         });
       } catch (e) {
-        log.warn('Server', `No valid endpoint for "${fileName}". Ignoring it...`);
+        log.warn('Server', `No valid endpoint for "${fileName}" (${e}). Ignoring it...`);
       }
     });
   }

@@ -13,5 +13,5 @@ function galleryThumbnail() {
 
 module.exports = {
   fn: galleryThumbnail,
-  asnyc: false,
+  async: false,
 };

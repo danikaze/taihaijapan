@@ -1,0 +1,56 @@
+{
+  "controllers": {
+    "admin": {
+      "route": "/admin",
+      "imagesPerPage": 0,
+      "sortBy": "added",
+      "reverse": true
+    },
+    "index": {
+      "maxImages": 5,
+      "sortBy": "added",
+      "reverse": true
+    },
+    "gallery": {
+      "imagesPerPage": 0,
+      "sortBy": "added",
+      "reverse": true
+    }
+  },
+  "images": {
+    "originalPath": "data/photos",
+    "temporalPath": "data/temp",
+    "path": "public/photos",
+    "baseUrl": "/public/photos",
+    "resize": {
+      "resizePolicy": "fit",
+      "outputFile": "{id:3}/{sizeId}-{hash:16}.jpg",
+      "format": "jpeg",
+      "formatOptions": {
+        "quality": 80
+      }
+    },
+    "sizes": [
+      {
+        "id": "T",
+        "w": 400,
+        "h": 0
+      },
+      {
+        "id": "S",
+        "w": 720,
+        "h": 0
+      },
+      {
+        "id": "M",
+        "w": 1280,
+        "h": 0
+      },
+      {
+        "id": "L",
+        "w": 2000,
+        "h": 0
+      }
+    ]
+  }
+}

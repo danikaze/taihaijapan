@@ -1,11 +1,175 @@
 const path = require('path');
+const fs = require('fs');
 const EventEmitter = require('events');
+const mkdirp = require('mkdirp').sync;
+const Validator = require('bulk-validator').Validator;
 const readJsonSync = require('../utils/readJsonSync');
 const ctlEmitter = require('../ctl/ctlEmitter');
+const settingsModel = require('../models/settings');
+const log = require('../utils/log');
+const generateFileName = require('../utils/generateFileName');
+const resizeImage = require('../utils/resizeImage');
+
+let settings;
+
+function updateSettings() {
+  settings = settingsModel.data.images;
+}
 
 const GALLERY_PATH = path.resolve(__dirname, '../data/gallery.json');
+const validator = (() => {
+  const v = new Validator();
+  v.addAlias('date', 'str', { regExp: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/ });
+  v.addAlias('slug', 'str', { regExp: /[-A-Za-z0-9]+/ });
+  v.addAlias('tag', 'str', { regExp: /[-A-Za-z0-9]+/ });
 
-class Settings extends EventEmitter {
+  v.addSchema('new', {
+    title: {
+      validator: 'str',
+      options: { defaultValue: '' },
+    },
+    original: {
+      validator: 'str',
+      options: { optional: false },
+    },
+    slug: {
+      validator: 'slug',
+      options: { optional: false },
+    },
+    tags: {
+      validator: 'tagArray',
+      options: { defaultValue: [] },
+    },
+    keywords: {
+      validator: 'str',
+      options: { defaultValue: '' },
+    },
+    deleted: {
+      validator: 'bool',
+      options: { defaultValue: false },
+    },
+  }, {
+    optional: true,
+  });
+
+  v.addSchema('update', {
+    title: {
+      validator: 'str',
+    },
+    original: {
+      validator: 'str',
+    },
+    slug: {
+      validator: 'slug',
+    },
+    tags: {
+      validator: 'tagArray',
+    },
+    keywords: {
+      validator: 'str',
+    },
+    deleted: {
+      validator: 'bool',
+    },
+  }, {
+    optional: true,
+    returnUndefined: false,
+  });
+
+  return v;
+})();
+
+function getSorterFunction(sortBy, reverse) {
+  return function sorter(a, b) {
+    const fieldA = a[sortBy];
+    const fieldB = b[sortBy];
+    let res;
+
+    if (typeof fieldA === 'string') {
+      res = fieldA.localeCompare(fieldB);
+    } else {
+      res = b[sortBy] - a[sortBy];
+    }
+
+    if (reverse) {
+      res *= -1;
+    }
+
+    return res;
+  };
+}
+
+/**
+ * Sanitices the data of a photo that can come from user entry
+ *
+ * @param {object} data
+ * @return {object} copy of the saniticed object, with only the used properties
+ */
+function saniticePublicData(data, schema) {
+  if (typeof data.tags === 'string') {
+    data.tags = data.tags.split(',')
+                         .map((tag) => tag.trim())
+                         .filter((str) => str.length);
+  }
+
+  if (data.keywords) {
+    data.keywords = data.keywords.split(',')
+                                 .map((keyword) => keyword.trim())
+                                 .filter((str) => str.length)
+                                 .join(', ');
+  }
+
+  return validator.schema(schema, data);
+}
+
+/**
+ * Get a photo data with the path to the original image, and create thumbnails resizing and
+ * storing them in the adecuate folders, returning a Promise resolved to an array of thumbnail data
+ * @param {object} data
+ * @returns {Promise<Array<object>>}
+ */
+function createThumbnails(data) {
+  return new Promise((resolve, reject) => {
+    const thumbs = [];
+    let remainingSizes = settings.sizes.length;
+
+    settings.sizes.forEach((size, sizeIndex) => {
+      const tempNameTemplate = `${settings.temporalPath}/{random}${path.extname(data.original)}`;
+      generateFileName(tempNameTemplate, data.original).then((resizeTargetPath) => {
+        resizeImage(data.original, resizeTargetPath, size.w, size.h, settings.resize)
+          .then((thumbInfo) => {
+            const replaceValues = {
+              id: data.id,
+              slug: data.slug,
+              sizeId: size.id,
+            };
+            generateFileName(settings.resize.outputFile, thumbInfo.path, replaceValues)
+            .then((outputFile) => {
+              const outputPath = path.join(settings.path, outputFile);
+              const outputFolder = path.dirname(outputPath);
+              if (!fs.existsSync(outputFolder)) {
+                mkdirp(outputFolder);
+              }
+
+              fs.renameSync(resizeTargetPath, outputPath);
+              thumbs[sizeIndex] = {
+                w: thumbInfo.width,
+                h: thumbInfo.height,
+                src: path.join(settings.baseUrl, outputFile),
+              };
+
+              remainingSizes--;
+              if (remainingSizes === 0) {
+                resolve(thumbs);
+              }
+            });
+          });
+      });
+    });
+  });
+}
+
+class Gallery extends EventEmitter {
   constructor() {
     super();
 
@@ -17,9 +181,161 @@ class Settings extends EventEmitter {
   }
 
   load() {
-    this.data = readJsonSync(GALLERY_PATH);
+    try {
+      this.data = readJsonSync(GALLERY_PATH);
+    } catch (error) {
+      log.error('GalleryModel', 'Error reading gallery data. Initializating with default one.');
+      const now = new Date().toISOString();
+      this.data = {
+        created: now,
+        updated: now,
+        nextId: 1,
+        photos: [],
+      };
+      this.save(now);
+    }
     this.emit('update');
+  }
+
+  save(now) {
+    this.data.updated = now || new Date().toISOString();
+    return new Promise((resolve, reject) => {
+      fs.writeFile(GALLERY_PATH, JSON.stringify(this.data, null, 2), 'utf8', (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  /**
+   *
+   * @param {object} options `{ n, sortBy, reverse, filter, deleted }`
+   */
+  getPhotos(options = {}) {
+    let res;
+
+    if (!options.deleted && !options.filter) {
+      res = this.data.photos.filter((item) => !item.deleted);
+    } else if (!options.deleted && options.filter) {
+      res = this.data.photos.filter((item) => !item.deleted && options.filter(item));
+    } else if (options.deleted && !options.filter) {
+      res = this.data.photos;
+    } else {
+      res = this.data.photos.filter((item) => options.filter(item));
+    }
+
+    if (options.n) {
+      res = res.slice(0, options.n);
+    }
+
+    if (options.sortBy) {
+      res.sort(getSorterFunction(options.sortBy, options.reverse));
+    }
+
+    return res;
+  }
+
+  /**
+   *
+   * @param {object} photo
+   */
+  add(photo) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      const now = new Date().toISOString();
+      const validation = saniticePublicData(photo, 'new');
+
+      if (validation.errors()) {
+        reject(validation.errors());
+        return;
+      }
+
+      const data = Object.assign({
+        id: self.data.nextId,
+        keywords: '',
+        tags: [],
+        added: now,
+        updated: now,
+      }, validation.valid());
+
+      self.data.nextId++;
+
+      createThumbnails(data).then((imageData) => {
+        data.imgs = imageData;
+        self.data.photos.unshift(data);
+        self.save(now)
+          .then(() => {
+            this.emit('update');
+            resolve();
+          })
+          .catch(reject);
+      });
+    });
+  }
+
+  /**
+   *
+   *
+   * @param {object} newData Data as `{ id: data }`
+   */
+  update(newData) {
+    return new Promise((resolve, reject) => {
+      const now = new Date().toISOString();
+      const updatedData = {};
+
+      Object.keys(newData).forEach((id) => {
+        const validation = saniticePublicData(newData[id], 'update');
+
+        if (validation.errors()) {
+          reject(validation.errors());
+          return;
+        }
+
+        const photo = this.get(id);
+        if (!photo) {
+          reject('id not found');
+          return;
+        }
+
+        const data = validation.valid();
+        data.updated = now;
+        updatedData[id] = data;
+
+        Object.assign(photo, data);
+      });
+
+      this.save(now).then(() => {
+        this.emit('update');
+        resolve(updatedData);
+      });
+    });
+  }
+
+  /**
+   *
+   * @param {number[]} ids list of ids of the photos to mark as removed
+   */
+  remove(ids) {
+    return new Promise((resolve, reject) => {
+      ids.forEach((id) => {
+        const photo = this.get(id);
+        photo.deleted = !photo.deleted;
+      });
+      resolve();
+    });
+  }
+
+  get(id) {
+    id = parseInt(id, 10);
+    const index = this.data.photos.findIndex((item) => item.id === id);
+    return this.data.photos[index];
   }
 }
 
-module.exports = new Settings();
+settingsModel.on('update', updateSettings);
+updateSettings();
+
+module.exports = new Gallery();
