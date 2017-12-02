@@ -17,11 +17,20 @@ function updateSettings() {
 }
 
 const GALLERY_PATH = path.resolve(__dirname, '../data/gallery.json');
-const validator = (() => {
+
+function getValidator(instance) {
   const v = new Validator();
   v.addAlias('date', 'str', { regExp: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/ });
-  v.addAlias('slug', 'str', { regExp: /[-A-Za-z0-9]+/ });
   v.addAlias('tag', 'str', { regExp: /[-A-Za-z0-9]+/ });
+
+  v.addValidator('slug', (data, options) => {
+    const n = instance.data.photos.filter((p) => p.slug === data).length;
+
+    return {
+      data,
+      valid: n === 0 && /[-A-Za-z0-9]+/.test(data),
+    };
+  });
 
   v.addSchema('new', {
     title: {
@@ -77,7 +86,7 @@ const validator = (() => {
   });
 
   return v;
-})();
+}
 
 function getSorterFunction(sortBy, reverse) {
   return function sorter(a, b) {
@@ -100,26 +109,17 @@ function getSorterFunction(sortBy, reverse) {
 }
 
 /**
- * Sanitices the data of a photo that can come from user entry
- *
- * @param {object} data
- * @return {object} copy of the saniticed object, with only the used properties
+ * Get the minimum data necesary for the gallery model
  */
-function saniticePublicData(data, schema) {
-  if (typeof data.tags === 'string') {
-    data.tags = data.tags.split(',')
-                         .map((tag) => tag.trim())
-                         .filter((str) => str.length);
-  }
+function getBaseData() {
+  const now = new Date().toISOString();
 
-  if (data.keywords) {
-    data.keywords = data.keywords.split(',')
-                                 .map((keyword) => keyword.trim())
-                                 .filter((str) => str.length)
-                                 .join(', ');
-  }
-
-  return validator.schema(schema, data);
+  return {
+    created: now,
+    updated: now,
+    nextId: 1,
+    photos: [],
+  };
 }
 
 /**
@@ -178,21 +178,39 @@ class Gallery extends EventEmitter {
     });
 
     this.load();
+    this.validator = getValidator(this);
+  }
+
+  /**
+   * Sanitices the data of a photo that can come from user entry
+   *
+   * @param {object} data
+   * @return {object} copy of the saniticed object, with only the used properties
+   */
+  saniticePublicData(data, schema) {
+    if (typeof data.tags === 'string') {
+      data.tags = data.tags.split(',')
+                          .map((tag) => tag.trim())
+                          .filter((str) => str.length);
+    }
+
+    if (data.keywords) {
+      data.keywords = data.keywords.split(',')
+                                  .map((keyword) => keyword.trim())
+                                  .filter((str) => str.length)
+                                  .join(', ');
+    }
+
+    return this.validator.schema(schema, data);
   }
 
   load() {
+    this.data = getBaseData();
     try {
-      this.data = readJsonSync(GALLERY_PATH);
+      this.data = Object.assign(this.data, readJsonSync(GALLERY_PATH));
     } catch (error) {
       log.error('GalleryModel', 'Error reading gallery data. Initializating with default one.');
-      const now = new Date().toISOString();
-      this.data = {
-        created: now,
-        updated: now,
-        nextId: 1,
-        photos: [],
-      };
-      this.save(now);
+      this.save(this.data.created);
     }
     this.emit('update');
   }
@@ -246,7 +264,7 @@ class Gallery extends EventEmitter {
     const self = this;
     return new Promise((resolve, reject) => {
       const now = new Date().toISOString();
-      const validation = saniticePublicData(photo, 'new');
+      const validation = this.saniticePublicData(photo, 'new');
 
       if (validation.errors()) {
         reject(validation.errors());
@@ -287,7 +305,7 @@ class Gallery extends EventEmitter {
       const updatedData = {};
 
       Object.keys(newData).forEach((id) => {
-        const validation = saniticePublicData(newData[id], 'update');
+        const validation = this.saniticePublicData(newData[id], 'update');
 
         if (validation.errors()) {
           reject(validation.errors());
