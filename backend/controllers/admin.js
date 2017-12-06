@@ -6,6 +6,7 @@ let photos;
 
 function updateSettings() {
   settings = settingsModel.data.controllers.admin;
+  updateGallery();
 }
 
 function updateGallery() {
@@ -40,7 +41,6 @@ function getGalleryData(request, response) {
 settingsModel.on('update', updateSettings);
 galleryModel.on('update', updateGallery);
 updateSettings();
-updateGallery();
 
 module.exports = (app) => [
   {
