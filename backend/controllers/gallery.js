@@ -1,13 +1,23 @@
-const db = require('../utils/db');
 const settingsModel = require('../models/settings');
+const galleryModel = require('../models/gallery');
 
 let settings;
+let sizes;
 let photos;
 
 function updateData() {
   settings = settingsModel.data.controllers.gallery;
-  photos = settings.maxImages ? db.photos.slice(0, settings.maxImages)
-                              : db.photos;
+  sizes = settingsModel.data.images.sizes;
+  updateGallery();
+}
+
+function updateGallery() {
+  photos = galleryModel.getPhotos({
+    n: settings.maxImages,
+    sortBy: settings.sortBy,
+    reverse: settings.reverse,
+    deleted: false,
+  });
 }
 
 function gallery(request, response) {
@@ -15,28 +25,29 @@ function gallery(request, response) {
     fullUrl: 'https://taihaijapan.com/gallery/',
     bodyId: 'page-gallery',
     title: 'taihaijapan | 退廃ジャパン > Gallery',
-    sizes: db.sizes,
+    sizes,
     photos,
   });
 }
 
 function photo(request, response) {
-  const currentPhoto = request.params.id
-    && db.photos.filter((item) => item.id === request.params.id)[0];
+  const currentPhoto = request.params.slug
+    && photos.filter((item) => item.slug === request.params.slug)[0];
 
   response.render('gallery', {
     fullUrl: `https://taihaijapan.com${request.originalUrl}`,
     bodyId: 'page-gallery',
     title: 'taihaijapan | 退廃ジャパン > Gallery',
-    sizes: db.sizes,
     photo: currentPhoto,
-    photoId: currentPhoto && currentPhoto.id,
+    photoSlug: currentPhoto && currentPhoto.slug,
     photos,
+    sizes,
   });
 }
 
 
 settingsModel.on('update', updateData);
+galleryModel.on('update', updateGallery);
 updateData();
 
 module.exports = (app) => [
@@ -47,7 +58,7 @@ module.exports = (app) => [
   },
   {
     method: 'get',
-    path: '/photo/:id',
+    path: '/photo/:slug',
     callback: photo,
   },
 ];

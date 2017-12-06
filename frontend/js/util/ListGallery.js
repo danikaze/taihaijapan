@@ -24,8 +24,8 @@ class ListGallery {
     addThumbnailsLogic.call(this);
 
     const openFromHash = checkUrlHash.call(this);
-    if (!openFromHash && options.activeId) {
-      const photoIndex = galleryPhotos.findIndex((photo) => photo.id === options.activeId);
+    if (!openFromHash && options.activeSlug) {
+      const photoIndex = galleryPhotos.findIndex((photo) => photo.slug === options.activeSlug);
       if (photoIndex !== -1) {
         createPhotoSwipe.call(this, photoIndex);
       }
@@ -102,7 +102,7 @@ function createPhotoSwipe(photoIndex) {
     item.src = shownItem.src;
     item.w = shownItem.w;
     item.h = shownItem.h;
-    item.pid = item.id;
+    item.pid = item.slug;
   });
 
   gallery.init();
@@ -139,7 +139,7 @@ function checkUrlHash() {
   const params = parseUrlHash();
   const pid = params.pid;
   if (pid) {
-    const photoIndex = this.photos.findIndex((photo) => photo.id === pid);
+    const photoIndex = this.photos.findIndex((photo) => photo.slug === pid);
     if (photoIndex !== -1) {
       createPhotoSwipe.call(this, photoIndex);
       return true;
