@@ -1,16 +1,22 @@
 const db = require('../utils/db');
 const settingsModel = require('../models/settings');
+const galleryModel = require('../models/gallery');
 
 let settings;
 let newPhotos;
 
-function updateData() {
+function updateSettings() {
   settings = settingsModel.data.controllers.index;
-  newPhotos = getN(db.photos, settings.maxImages);
+  updateGallery();
 }
 
-function getN(arr, n) {
-  return n ? arr.slice(0, n) : arr;
+function updateGallery() {
+  newPhotos = galleryModel.getPhotos({
+    n: settings.maxImages,
+    sortBy: settings.sortBy,
+    reverse: settings.reverse,
+    deleted: false,
+  });
 }
 
 function index(request, response) {
@@ -23,8 +29,9 @@ function index(request, response) {
   });
 }
 
-settingsModel.on('update', updateData);
-updateData();
+settingsModel.on('update', updateSettings);
+galleryModel.on('update', updateGallery);
+updateSettings();
 
 module.exports = (app) => [
   {
