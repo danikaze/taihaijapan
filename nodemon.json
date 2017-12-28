@@ -7,7 +7,8 @@
   "ignore": [
     "public",
     "ctl",
-    "appctl"
+    "appctl",
+    "data"
   ],
   "ext": "js json hbs"
 }

@@ -1,10 +1,41 @@
 <section id="upload-photo">
-  <h2>Upload new photo</h2>
-  <form action="/admin/photos" method="post" enctype="multipart/form-data">
-    <div class="photo"><label><span>Photo:</span> <input name="photo" type="file"></label></div>
-    <div class="slug"><label><span>Slug:</span> <input name="slug"></label></div>
-    <div class="tags"><label><span>Tags:</span> <input name="tags"></label></div>
-    <div class="keywords"><label><span>Keywords:</span> <input name="keywords"></label></div>
-    <input type="submit" value="Upload new photo">
+  <h4>Upload new photo</h4>
+
+  <form action="/admin/photos" method="post" enctype="multipart/form-data" class="mdl-grid">
+    <div id="photo-side" class="mdl-cell--4-col">
+      <label>
+        <div id="photo-icon" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+          <i class="material-icons">add</i>
+        </div>
+        <img id="new-thumbnail">
+        <input type="file" id="photo" name="photo">
+      </label>
+    </div>
+
+    <div id="info-side" class="mdl-cell--8-col mdl-cell--4-col-tablet">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="new-title" name="title">
+        <label class="mdl-textfield__label" for="new-title">Title or description</label>
+      </div>
+
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="new-slug" name="slug">
+        <label class="mdl-textfield__label" for="new-slug">Slug</label>
+      </div>
+
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="new-tags" name="tags">
+        <label class="mdl-textfield__label" for="new-tags">Tags</label>
+      </div>
+
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="new-keywords" name="keywords">
+        <label class="mdl-textfield__label" for="new-keywords">Keywords</label>
+      </div>
+
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+        Upload new photo
+      </button>
+    </div>
   </form>
 </section>

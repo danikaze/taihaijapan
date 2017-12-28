@@ -34,6 +34,8 @@ function getGalleryData(request, response) {
     fullUrl: 'https://taihaijapan.com/admin',
     bodyId: 'page-admin',
     title: 'taihaijapan | 退廃ジャパン',
+    routeAdmin: settings.route,
+    routeOptions: `${settings.route}/options`,
     photos,
   });
 }

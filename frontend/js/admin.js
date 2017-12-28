@@ -7,8 +7,6 @@ const PREVIEW_CLASS = 'preview';
 const ACTIVE_CLASS = 'active';
 const UPDATE_PENDING_CLASS = 'update-pending';
 const REMOVE_CLASS = 'removed';
-const CONFIRMATION_CLASS = 'confirm';
-const CONFIRMATION_TIMEOUT = 3000;
 const WAIT_BEFORE_UPDATE_MS = 1000;
 
 const debouncedUpdateData = debounce(doUpdateData, WAIT_BEFORE_UPDATE_MS);
@@ -62,6 +60,9 @@ function removeItem(li) {
   requestData(API_URL, { method: 'PUT', data }).then(() => {
     delete updateData[id];
     li.classList.add(REMOVE_CLASS);
+    li.querySelectorAll('.delete-button').forEach((button) => {
+      button.classList.add('mdl-button--fab', 'mdl-button--colored');
+    });
   });
 }
 
@@ -77,6 +78,9 @@ function restoreItem(li) {
 
   requestData(API_URL, { method: 'PUT', data }).then(() => {
     li.classList.remove(REMOVE_CLASS);
+    li.querySelectorAll('.delete-button').forEach((button) => {
+      button.classList.remove('mdl-button--fab', 'mdl-button--colored');
+    });
   });
 }
 
@@ -146,42 +150,44 @@ function addUpdateDetailsBehavior(li) {
 }
 
 /**
- * Add the behavior to remove photos, after a confirmation
+ * Add the behavior to remove/restore photos
  *
  * @param {HTMLLIElement} li
  */
-function addRemoveItemBehavior(li) {
+function addRemoveButtonBehavior(li) {
   li.querySelectorAll('.delete-button').forEach((button) => {
     button.addEventListener('click', (event) => {
-      if (button.classList.contains(CONFIRMATION_CLASS)) {
+      if (li.classList.contains(REMOVE_CLASS)) {
+        restoreItem(li);
+      } else {
         removeItem(li);
-        return;
       }
-      button.classList.add(CONFIRMATION_CLASS);
-      setTimeout(() => {
-        button.classList.remove(CONFIRMATION_CLASS);
-      }, CONFIRMATION_TIMEOUT);
     });
   });
 }
 
 /**
- * Add the behavior to restore removed photos, after a confirmation
- *
- * @param {HTMLLIElement} li
+ * Add the behavior to show a thumbnail of the image to upload when chosen
  */
-function addRestoreItemBehavior(li) {
-  li.querySelectorAll('.restore-button').forEach((button) => {
-    button.addEventListener('click', (event) => {
-      if (button.classList.contains(CONFIRMATION_CLASS)) {
-        restoreItem(li);
-        return;
-      }
-      button.classList.add(CONFIRMATION_CLASS);
-      setTimeout(() => {
-        button.classList.remove(CONFIRMATION_CLASS);
-      }, CONFIRMATION_TIMEOUT);
-    });
+function addThumbnailBehavior() {
+  const input = document.getElementById('photo');
+  const icon = document.getElementById('photo-icon');
+  const thumb = document.getElementById('new-thumbnail');
+
+  input.addEventListener('change', (event) => {
+    const file = input.files && input.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        thumb.src = e.target.result;
+        icon.style.display = 'none';
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      thumb.src = '';
+      icon.style.display = '';
+    }
   });
 }
 
@@ -189,11 +195,11 @@ function addRestoreItemBehavior(li) {
  * Prepare the page dyncamic behavior
  */
 function run() {
+  addThumbnailBehavior();
   document.querySelectorAll('#thumbnails li').forEach((li) => {
     addToggleDetailsBehavior(li);
     addUpdateDetailsBehavior(li);
-    addRemoveItemBehavior(li);
-    addRestoreItemBehavior(li);
+    addRemoveButtonBehavior(li);
   });
 }
 
