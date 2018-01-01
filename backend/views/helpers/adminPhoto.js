@@ -12,7 +12,6 @@ function adminPhoto() {
     + '</button>'
   + '</div>';
 
-  const deleteClasses = this.deleted ? ' mdl-button--fab mdl-button--colored' : '';
   const details = '<div class="edit">'
     + `<img src=${this.imgs[0].src}>`
     + '<div class="properties">'
@@ -32,9 +31,9 @@ function adminPhoto() {
       + '<div class="property keywords"><label><span>Keywords:</span>'
         + `<input name="keywords" value="${this.keywords}"></label></div>`
     + '</div>'
-    + `<button class="delete-button mdl-button mdl-js-button mdl-button--icon${deleteClasses}">`
-      + '<i class="material-icons">delete</i>'
-    + '</button>'
+    + '<label class="hide-button mdl-switch mdl-js-switch mdl-js-ripple-effect">'
+    + `  <input type="checkbox" class="mdl-switch__input"${!this.deleted ? ' checked' : ''}>`
+    + '</label>'
     + '<button class="close-button mdl-button ml-js-button mdl-button--icon">'
       + '<i class="material-icons">close</i>'
     + '</button>'

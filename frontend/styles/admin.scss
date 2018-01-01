@@ -26,6 +26,12 @@
       cursor: pointer;
     }
 
+    #new-thumbnail-loading {
+      display: none;
+      width: 50%;
+      margin: 3em auto;
+    }
+
     #info-side {
       margin-top: -20px;
     }
@@ -143,10 +149,11 @@
         right: 20px;
       }
 
-      .delete-button {
+      .hide-button {
         position: absolute;
         bottom: 20px;
         right: 20px;
+        width: inherit;
       }
     }
   }
