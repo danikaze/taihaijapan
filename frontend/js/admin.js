@@ -4,9 +4,10 @@ import '../styles/admin.scss';
 
 const API_URL = '/admin/photos';
 const PREVIEW_CLASS = 'preview';
+const EDIT_CLASS = 'edit';
 const ACTIVE_CLASS = 'active';
 const UPDATE_PENDING_CLASS = 'update-pending';
-const REMOVE_CLASS = 'removed';
+const HIDDEN_CLASS = 'removed';
 const WAIT_BEFORE_UPDATE_MS = 1000;
 
 const debouncedUpdateData = debounce(doUpdateData, WAIT_BEFORE_UPDATE_MS);
@@ -18,14 +19,20 @@ let updateElements = [];
 /**
  * Update the displayed data in the preview once its model is updated
  *
- * @param {HTMLElement} preview
+ * @param {HTMLElement} elem
  * @param {object} data
  */
-function updatePreviewData(preview, data) {
-  const slug = data.slug;
+function updateCardData(elem, data) {
+  const slug = data && data.slug;
   if (slug) {
-    const elem = preview.getElementsByClassName('slug')[0];
-    elem.innerText = slug;
+    const permalink = `/photo/${slug}/`;
+    const preview = elem.getElementsByClassName(PREVIEW_CLASS)[0];
+    const edit = elem.getElementsByClassName(EDIT_CLASS)[0];
+    preview.getElementsByClassName('slug')[0].innerText = slug;
+    preview.querySelector('.permalink a').href = permalink;
+    const editPermalink = edit.querySelector('.permalink a');
+    editPermalink.href = permalink;
+    editPermalink.innerText = permalink;
   }
 }
 
@@ -40,7 +47,7 @@ function doUpdateData() {
   requestData(API_URL, { method: 'PUT', data }).then(() => {
     updateElements.forEach((elem) => {
       elem.classList.remove(UPDATE_PENDING_CLASS);
-      updatePreviewData(elem.getElementsByClassName(PREVIEW_CLASS)[0], updateData[elem.dataset.photoId]);
+      updateCardData(elem, updateData[elem.dataset.photoId]);
     });
     updateData = {};
     updateElements = [];
@@ -59,10 +66,7 @@ function removeItem(li) {
 
   requestData(API_URL, { method: 'PUT', data }).then(() => {
     delete updateData[id];
-    li.classList.add(REMOVE_CLASS);
-    li.querySelectorAll('.delete-button').forEach((button) => {
-      button.classList.add('mdl-button--fab', 'mdl-button--colored');
-    });
+    li.classList.add(HIDDEN_CLASS);
   });
 }
 
@@ -77,10 +81,7 @@ function restoreItem(li) {
   data.photos[id] = { deleted: false };
 
   requestData(API_URL, { method: 'PUT', data }).then(() => {
-    li.classList.remove(REMOVE_CLASS);
-    li.querySelectorAll('.delete-button').forEach((button) => {
-      button.classList.remove('mdl-button--fab', 'mdl-button--colored');
-    });
+    li.classList.remove(HIDDEN_CLASS);
   });
 }
 
@@ -145,7 +146,9 @@ function addToggleDetailsBehavior(li) {
  */
 function addUpdateDetailsBehavior(li) {
   li.querySelectorAll('input').forEach((input) => {
-    input.addEventListener('change', prepareDataChange.bind(null, li, input));
+    if (input.name) {
+      input.addEventListener('change', prepareDataChange.bind(null, li, input));
+    }
   });
 }
 
@@ -155,9 +158,9 @@ function addUpdateDetailsBehavior(li) {
  * @param {HTMLLIElement} li
  */
 function addRemoveButtonBehavior(li) {
-  li.querySelectorAll('.delete-button').forEach((button) => {
+  li.querySelectorAll('.hide-button input').forEach((button) => {
     button.addEventListener('click', (event) => {
-      if (li.classList.contains(REMOVE_CLASS)) {
+      if (li.classList.contains(HIDDEN_CLASS)) {
         restoreItem(li);
       } else {
         removeItem(li);
@@ -173,14 +176,20 @@ function addThumbnailBehavior() {
   const input = document.getElementById('photo');
   const icon = document.getElementById('photo-icon');
   const thumb = document.getElementById('new-thumbnail');
+  const loading = document.getElementById('new-thumbnail-loading');
 
   input.addEventListener('change', (event) => {
+    thumb.style.display = 'none';
     const file = input.files && input.files[0];
+
     if (file) {
+      loading.style.display = 'block';
       const reader = new FileReader();
       reader.onload = (e) => {
+        loading.style.display = 'none';
         thumb.src = e.target.result;
         icon.style.display = 'none';
+        thumb.style.display = '';
       };
 
       reader.readAsDataURL(file);
