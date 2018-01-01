@@ -20,6 +20,13 @@
     }
   }
 
+  #remove-dialog {
+    h4 {
+      padding-left: inherit;
+      margin-bottom: 1em;
+    }
+  }
+
   #upload-photo,
   #edit-dialog {
     #photo {
@@ -69,8 +76,14 @@
         margin: 0 auto;
       }
 
-      &.removed img {
-        opacity: 0.3;
+      &.removed {
+        img {
+          opacity: 0.3;
+        }
+
+        .permalink a {
+          color: #a7a7a7;
+        }
       }
 
       &.update-pending .update-icon {

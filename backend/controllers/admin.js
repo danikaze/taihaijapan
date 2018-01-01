@@ -40,6 +40,17 @@ function getGalleryData(request, response) {
   });
 }
 
+function removePhotos(request, response) {
+  try {
+    const list = JSON.parse(request.query.photos);
+    galleryModel.remove(list).then((data) => {
+      response.send(data);
+    });
+  } catch (error) {
+    response.status(400).send('Wrong data');
+  }
+}
+
 settingsModel.on('update', updateSettings);
 galleryModel.on('update', updateGallery);
 updateSettings();
@@ -54,5 +65,10 @@ module.exports = (app) => [
     method: 'put',
     path: `${settings.route}/photos`,
     callback: updatePhotos,
+  },
+  {
+    method: 'delete',
+    path: `${settings.route}/photos`,
+    callback: removePhotos,
   },
 ];
