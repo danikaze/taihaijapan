@@ -23,12 +23,21 @@ function getValidator(instance) {
   v.addAlias('date', 'str', { regExp: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/ });
   v.addAlias('tag', 'str', { regExp: /[-A-Za-z0-9]+/ });
 
-  v.addValidator('slug', (data, options) => {
+  v.addValidator('newSlug', (data, options) => {
     const n = instance.data.photos.filter((p) => p.slug === data).length;
 
     return {
       data,
       valid: n === 0 && /[-A-Za-z0-9]+/.test(data),
+    };
+  });
+
+  v.addValidator('existingSlug', (data, options) => {
+    const n = instance.data.photos.filter((p) => p.slug === data).length;
+
+    return {
+      data,
+      valid: n <= 1 && /[-A-Za-z0-9]+/.test(data),
     };
   });
 
@@ -42,7 +51,7 @@ function getValidator(instance) {
       options: { optional: false },
     },
     slug: {
-      validator: 'slug',
+      validator: 'newSlug',
       options: { optional: false },
     },
     tags: {
@@ -69,7 +78,7 @@ function getValidator(instance) {
       validator: 'str',
     },
     slug: {
-      validator: 'slug',
+      validator: 'existingSlug',
     },
     tags: {
       validator: 'tagArray',

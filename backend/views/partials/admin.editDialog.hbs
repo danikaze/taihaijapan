@@ -1,12 +1,44 @@
-<div class="mdl-dialog">
+<dialog id="edit-dialog" class="mdl-dialog">
   <h4 class="mdl-dialog__title">Edit photo</h4>
 
-  <div class="mdl-dialog_content">
-    <img id="edit-img">
+  <div class="mdl-dialog_content mdl-grid">
+    <input type="hidden" id="edit-id">
+
+    <div id="edit-photo-side" class="mdl-cell--4-col">
+      <label>
+        <img id="edit-photo">
+      </label>
+    </div>
+
+    <div id="edit-info-side" class="mdl-cell--8-col mdl-cell--4-col-tablet">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="edit-title" name="title">
+        <label class="mdl-textfield__label" for="edit-title">Title or description</label>
+      </div>
+
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="edit-slug" name="slug">
+        <label class="mdl-textfield__label" for="edit-slug">Slug</label>
+      </div>
+
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="edit-tags" name="tags">
+        <label class="mdl-textfield__label" for="edit-tags">Tags</label>
+      </div>
+
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="edit-keywords" name="keywords">
+        <label class="mdl-textfield__label" for="edit-keywords">Keywords</label>
+      </div>
+
+      <label class="hide-button mdl-switch mdl-js-switch mdl-js-ripple-effect">
+        <input id="edit-hidden" type="checkbox" class="mdl-switch__input">
+      </label>
+    </div>
   </div>
 
    <div class="mdl-dialog__actions">
     <button id="edit-save" type="button" class="mdl-button">Save</button>
     <button id="edit-cancel" type="button" class="mdl-button">Cancel</button>
   </div>
-</div>
+</dialog>

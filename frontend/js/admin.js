@@ -1,20 +1,17 @@
-import debounce from 'lodash/debounce';
 import requestData from './util/requestData/requestData';
 import '../styles/admin.scss';
 
 const API_URL = '/admin/photos';
 const PREVIEW_CLASS = 'preview';
-const EDIT_CLASS = 'edit';
-const ACTIVE_CLASS = 'active';
 const UPDATE_PENDING_CLASS = 'update-pending';
 const HIDDEN_CLASS = 'removed';
-const WAIT_BEFORE_UPDATE_MS = 1000;
 
-const debouncedUpdateData = debounce(doUpdateData, WAIT_BEFORE_UPDATE_MS);
+const editDialog = {};
+let galleryData;
 
-let activeLi;
-let updateData = {};
-let updateElements = [];
+function getPhotoDataById(id) {
+  return galleryData.filter((p) => p.id === id)[0];
+}
 
 /**
  * Update the displayed data in the preview once its model is updated
@@ -22,88 +19,47 @@ let updateElements = [];
  * @param {HTMLElement} elem
  * @param {object} data
  */
-function updateCardData(elem, data) {
-  const slug = data && data.slug;
-  if (slug) {
-    const permalink = `/photo/${slug}/`;
-    const preview = elem.getElementsByClassName(PREVIEW_CLASS)[0];
-    const edit = elem.getElementsByClassName(EDIT_CLASS)[0];
-    preview.getElementsByClassName('slug')[0].innerText = slug;
-    preview.querySelector('.permalink a').href = permalink;
-    const editPermalink = edit.querySelector('.permalink a');
-    editPermalink.href = permalink;
-    editPermalink.innerText = permalink;
+function updateCardData(elem, id, data) {
+  const permalink = `/photo/${data.slug}/`;
+  const preview = elem.getElementsByClassName(PREVIEW_CLASS)[0];
+  const photoData = getPhotoDataById(id);
+  Object.assign(photoData, data);
+  preview.getElementsByClassName('slug')[0].innerText = data.slug;
+  preview.querySelector('.permalink a').href = permalink;
+  if (data.deleted) {
+    elem.classList.add(HIDDEN_CLASS);
+  } else {
+    elem.classList.remove(HIDDEN_CLASS);
   }
 }
 
 /**
- * Send the request with the prepared data to update items
+ * Send the data of the edit dialog
  */
-function doUpdateData() {
+function updateData() {
+  const id = parseInt(editDialog.id.value, 10);
+  const li = document.querySelector(`#thumbnails li[data-photo-id="${id}"]`);
   const data = {
-    photos: updateData,
+    photos: {},
+  };
+  data.photos[id] = {
+    title: editDialog.title.value,
+    slug: editDialog.slug.value,
+    tags: editDialog.tags.value,
+    keywords: editDialog.keywords.value,
+    deleted: !editDialog.hidden.checked,
   };
 
-  requestData(API_URL, { method: 'PUT', data }).then(() => {
-    updateElements.forEach((elem) => {
-      elem.classList.remove(UPDATE_PENDING_CLASS);
-      updateCardData(elem, updateData[elem.dataset.photoId]);
-    });
-    updateData = {};
-    updateElements = [];
-  });
-}
-
-/**
- * Send the request to set a photo as removed
- *
- * @param {HTMLLIElement} li
- */
-function removeItem(li) {
-  const id = li.dataset.photoId;
-  const data = { photos: {} };
-  data.photos[id] = { deleted: true };
-
-  requestData(API_URL, { method: 'PUT', data }).then(() => {
-    delete updateData[id];
-    li.classList.add(HIDDEN_CLASS);
-  });
-}
-
-/**
- * Send the request to restore a photo (un-delete it)
- *
- * @param {HTMLLIElement} li
- */
-function restoreItem(li) {
-  const id = li.dataset.photoId;
-  const data = { photos: {} };
-  data.photos[id] = { deleted: false };
-
-  requestData(API_URL, { method: 'PUT', data }).then(() => {
-    li.classList.remove(HIDDEN_CLASS);
-  });
-}
-
-/**
- * Stores the changing data to be sent in only one request
- *
- * @param {HTMLLIElement} li
- * @param {HTMLInputElement} input
- */
-function prepareDataChange(li, input) {
-  const id = li.dataset.photoId;
-  let data = updateData[id];
-
-  if (!data) {
-    data = {};
-    updateData[id] = data;
+  if (li) {
+    li.classList.add(UPDATE_PENDING_CLASS);
   }
 
-  data[input.name] = input.value;
-  li.classList.add(UPDATE_PENDING_CLASS);
-  updateElements.push(li);
-  debouncedUpdateData();
+  requestData(API_URL, { method: 'PUT', data }).then((newData) => {
+    if (li) {
+      li.classList.remove(UPDATE_PENDING_CLASS);
+      updateCardData(li, id, newData[id]);
+    }
+  });
 }
 
 /**
@@ -111,60 +67,26 @@ function prepareDataChange(li, input) {
  *
  * @param {HTMLLIElement} li
  */
-function addToggleDetailsBehavior(li) {
+function addEditDetailsBehavior(li) {
+  const id = parseInt(li.dataset.photoId, 10);
   // open-close by clicking the img
   li.querySelectorAll('img').forEach((img) => {
     img.addEventListener('click', (event) => {
-      if (activeLi) {
-        activeLi.classList.remove(ACTIVE_CLASS);
-        if (activeLi === li) {
-          activeLi = null;
-          return;
-        }
-      }
+      const photo = getPhotoDataById(id);
 
-      activeLi = li;
-      activeLi.classList.add(ACTIVE_CLASS);
-    });
-  });
+      editDialog.id.value = photo.id;
+      editDialog.hidden.checked = !photo.deleted;
+      editDialog.photo.src = photo.imgs[0].src;
+      editDialog.title.value = photo.title;
+      editDialog.slug.value = photo.slug;
+      editDialog.tags.value = photo.tags.join(', ');
+      editDialog.keywords.value = photo.keywords;
 
-  // close by clicking the close button
-  li.querySelectorAll('.close-button').forEach((button) => {
-    button.addEventListener('click', (event) => {
-      if (activeLi === li) {
-        activeLi.classList.remove(ACTIVE_CLASS);
-        activeLi = null;
-      }
-    });
-  });
-}
-
-/**
- * Add the behavior to update the photo data automatically when changing
- *
- * @param {HTMLLIElement} li
- */
-function addUpdateDetailsBehavior(li) {
-  li.querySelectorAll('input').forEach((input) => {
-    if (input.name) {
-      input.addEventListener('change', prepareDataChange.bind(null, li, input));
-    }
-  });
-}
-
-/**
- * Add the behavior to remove/restore photos
- *
- * @param {HTMLLIElement} li
- */
-function addRemoveButtonBehavior(li) {
-  li.querySelectorAll('.hide-button input').forEach((button) => {
-    button.addEventListener('click', (event) => {
-      if (li.classList.contains(HIDDEN_CLASS)) {
-        restoreItem(li);
-      } else {
-        removeItem(li);
-      }
+      editDialog.mdl.forEach((elem) => {
+        window.componentHandler.downgradeElements(elem);
+        window.componentHandler.upgradeElement(elem);
+      });
+      editDialog.elem.showModal();
     });
   });
 }
@@ -200,16 +122,49 @@ function addThumbnailBehavior() {
   });
 }
 
-/**
- * Prepare the page dyncamic behavior
- */
-function run() {
-  addThumbnailBehavior();
-  document.querySelectorAll('#thumbnails li').forEach((li) => {
-    addToggleDetailsBehavior(li);
-    addUpdateDetailsBehavior(li);
-    addRemoveButtonBehavior(li);
+function prepareEditDialog() {
+  editDialog.elem = document.getElementById('edit-dialog');
+
+  editDialog.id = document.getElementById('edit-id');
+  editDialog.hidden = document.getElementById('edit-hidden');
+  editDialog.photo = document.getElementById('edit-photo');
+  editDialog.title = document.getElementById('edit-title');
+  editDialog.slug = document.getElementById('edit-slug');
+  editDialog.tags = document.getElementById('edit-tags');
+  editDialog.keywords = document.getElementById('edit-keywords');
+
+  editDialog.mdl = [
+    editDialog.id.parentElement,
+    editDialog.hidden.parentElement,
+    editDialog.photo.parentElement,
+    editDialog.title.parentElement,
+    editDialog.slug.parentElement,
+    editDialog.tags.parentElement,
+    editDialog.keywords.parentElement,
+  ];
+
+  document.getElementById('edit-cancel').addEventListener('click', () => {
+    editDialog.elem.close();
+  });
+  document.getElementById('edit-save').addEventListener('click', () => {
+    updateData();
+    editDialog.elem.close();
   });
 }
 
-run();
+/**
+ * Prepare the page dyncamic behavior
+ */
+window.run = (data) => {
+  galleryData = data;
+  prepareEditDialog();
+
+  // if (!editDialog.elem.showModal) {
+  //   dialogPolyfill.registerDialog(editDialog.elem);
+  // }
+
+  addThumbnailBehavior();
+  document.querySelectorAll('#thumbnails li').forEach((li) => {
+    addEditDetailsBehavior(li);
+  });
+};

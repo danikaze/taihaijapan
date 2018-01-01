@@ -30,7 +30,7 @@ function urlAddParams(url, data) {
  * @param   {*}       [options.mockData]     If specified this will be the value resolved, instead of doing the request
  * @param   {Number}  [options.timeout]      Timeout in ms.
  * @param   {Boolean} [options.cache]        If `true`, `_t` won't be appended
- * @returns {Promise}                        Promise resolved to `[xhr.responseText, xhr]`
+ * @returns {Promise}                        Promise resolved to the response JSON
  */
 function requestData(url, options) {
   const opt = Object.assign({
@@ -67,7 +67,7 @@ function requestData(url, options) {
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status >= 200 && xhr.status < 400) {
-          resolve([xhr.responseText, xhr]);
+          resolve(JSON.parse(xhr.responseText));
         } else {
           reject(xhr);
         }

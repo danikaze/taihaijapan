@@ -12,7 +12,16 @@
     padding-left: 1em;
   }
 
-  #upload-photo {
+  #edit-dialog {
+    width: 85%;
+
+    h4 {
+      margin-bottom: 1em;
+    }
+  }
+
+  #upload-photo,
+  #edit-dialog {
     #photo {
       display: none;
     }
@@ -25,6 +34,10 @@
       width: 90%;
       cursor: pointer;
     }
+    #edit-photo {
+      width: 90%;
+      margin-bottom: 2em;
+    }
 
     #new-thumbnail-loading {
       display: none;
@@ -32,7 +45,8 @@
       margin: 3em auto;
     }
 
-    #info-side {
+    #info-side,
+    #edit-info-side {
       margin-top: -20px;
     }
 
