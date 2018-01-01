@@ -37,8 +37,22 @@
     </div>
   </div>
 
-   <div class="mdl-dialog__actions">
+  <div class="mdl-dialog__actions">
     <button id="edit-save" type="button" class="mdl-button">Save</button>
     <button id="edit-cancel" type="button" class="mdl-button">Cancel</button>
+    <button id="edit-remove" type="button" class="mdl-button mdl-button--accent mdl-button-colored">Remove</button>
+  </div>
+</dialog>
+
+<dialog id="remove-dialog" class="mdl-dialog">
+  <h4 class="mdl-dialog__title">Remove photo</h4>
+
+  <div class="mdl-dialog_content">
+    <p>Are you sure you want to delete this photo? This cannot be undone.</p>
+  </div>
+
+  <div class="mdl-dialog__actions">
+    <button id="remove-cancel" type="button" class="mdl-button">Cancel</button>
+    <button id="remove-accept" type="button" class="mdl-button mdl-button--accent mdl-button-colored">Remove</button>
   </div>
 </dialog>

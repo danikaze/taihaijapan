@@ -36,15 +36,7 @@ class Settings extends EventEmitter {
     }
 
     this.data = Object.assign(defaultSettings, userSettings);
-    this.fixPaths();
-
     this.emit('update');
-  }
-
-  fixPaths() {
-    this.data.images.originalPath = path.resolve(__dirname, '..', this.data.images.originalPath);
-    this.data.images.temporalPath = path.resolve(__dirname, '..', this.data.images.temporalPath);
-    this.data.images.path = path.resolve(__dirname, '..', this.data.images.path);
   }
 }
 

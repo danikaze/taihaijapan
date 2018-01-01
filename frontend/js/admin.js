@@ -62,6 +62,20 @@ function updateData() {
   });
 }
 
+function removePhoto() {
+  const id = parseInt(editDialog.id.value, 10);
+  const li = document.querySelector(`#thumbnails li[data-photo-id="${id}"]`);
+  const data = {
+    photos: [id],
+  };
+
+  requestData(API_URL, { method: 'DELETE', data }).then(() => {
+    if (li) {
+      li.parentElement.removeChild(li);
+    }
+  });
+}
+
 /**
  * Prepares the preview/details toggle when clicking an element
  *
@@ -122,7 +136,12 @@ function addThumbnailBehavior() {
   });
 }
 
+/**
+ * Prepare behavior for edit/remove dialogs
+ */
 function prepareEditDialog() {
+  const removeDialog = document.getElementById('remove-dialog');
+
   editDialog.elem = document.getElementById('edit-dialog');
 
   editDialog.id = document.getElementById('edit-id');
@@ -148,6 +167,18 @@ function prepareEditDialog() {
   });
   document.getElementById('edit-save').addEventListener('click', () => {
     updateData();
+    editDialog.elem.close();
+  });
+  document.getElementById('edit-remove').addEventListener('click', () => {
+    removeDialog.showModal();
+  });
+
+  document.getElementById('remove-cancel').addEventListener('click', () => {
+    removeDialog.close();
+  });
+  document.getElementById('remove-accept').addEventListener('click', () => {
+    removePhoto();
+    removeDialog.close();
     editDialog.elem.close();
   });
 }

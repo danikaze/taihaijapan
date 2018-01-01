@@ -9,6 +9,7 @@ const settingsModel = require('../models/settings');
 const log = require('../utils/log');
 const generateFileName = require('../utils/generateFileName');
 const resizeImage = require('../utils/resizeImage');
+const noop = require('../utils/noop');
 
 let settings;
 
@@ -143,7 +144,8 @@ function createThumbnails(data) {
     let remainingSizes = settings.sizes.length;
 
     settings.sizes.forEach((size, sizeIndex) => {
-      const tempNameTemplate = `${settings.temporalPath}/{random}${path.extname(data.original)}`;
+      const tempNameTemplate = path.resolve(__dirname, '..',
+        `${settings.temporalPath}/{random}${path.extname(data.original)}`);
       generateFileName(tempNameTemplate, data.original).then((resizeTargetPath) => {
         resizeImage(data.original, resizeTargetPath, size.w, size.h, settings.resize)
           .then((thumbInfo) => {
@@ -154,7 +156,7 @@ function createThumbnails(data) {
             };
             generateFileName(settings.resize.outputFile, thumbInfo.path, replaceValues)
             .then((outputFile) => {
-              const outputPath = path.join(settings.path, outputFile);
+              const outputPath = path.resolve(__dirname, '..', path.join(settings.path, outputFile));
               const outputFolder = path.dirname(outputPath);
               if (!fs.existsSync(outputFolder)) {
                 mkdirp(outputFolder);
@@ -343,15 +345,37 @@ class Gallery extends EventEmitter {
 
   /**
    *
-   * @param {number[]} ids list of ids of the photos to mark as removed
+   * @param {number[]} ids list of ids of the photos to fully remove
    */
   remove(ids) {
     return new Promise((resolve, reject) => {
-      ids.forEach((id) => {
-        const photo = this.get(id);
-        photo.deleted = !photo.deleted;
+      const filesToRemove = [];
+      const indexes = ids.map((id) => this.data.photos.findIndex((photo) => photo.id === parseInt(id, 10)));
+
+      // get the files to remove while updating the json
+      indexes.sort().reverse().forEach((index) => {
+        if (index !== -1) {
+          const photo = this.data.photos[index];
+          filesToRemove.push(photo.original);
+          photo.imgs.forEach((img) => {
+            filesToRemove.push(path.join(__dirname, '..', img.src));
+          });
+          this.data.photos.splice(index, 1);
+        }
       });
-      resolve();
+
+      // update the json and send the response
+      this.save().then(() => {
+        this.emit('update');
+        resolve({
+          photos: ids,
+        });
+      });
+
+      // leave the file removal task to the background
+      filesToRemove.forEach((file) => {
+        fs.unlink(file, noop);
+      });
     });
   }
 
