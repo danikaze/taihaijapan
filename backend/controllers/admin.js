@@ -23,6 +23,11 @@ function updatePhotos(request, response) {
     const data = JSON.parse(request.query.photos);
     galleryModel.update(data).then((updatedData) => {
       response.send(updatedData);
+    }).catch((errorData) => {
+      response.status(400).send({
+        error: 'Wrong data',
+        data: errorData,
+      });
     });
   } catch (error) {
     response.status(400).send('Wrong data');
@@ -45,6 +50,11 @@ function removePhotos(request, response) {
     const list = JSON.parse(request.query.photos);
     galleryModel.remove(list).then((data) => {
       response.send(data);
+    }).catch((errorData) => {
+      response.status(400).send({
+        error: 'Wrong data',
+        data: errorData,
+      });
     });
   } catch (error) {
     response.status(400).send('Wrong data');
