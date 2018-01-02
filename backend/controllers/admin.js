@@ -36,7 +36,7 @@ function updatePhotos(request, response) {
 
 function getGalleryData(request, response) {
   response.render('admin', {
-    fullUrl: 'https://taihaijapan.com/admin',
+    fullUrl: `https://taihaijapan.com${settings.route}`,
     bodyId: 'page-admin',
     title: 'taihaijapan | 退廃ジャパン',
     routeAdmin: settings.route,
