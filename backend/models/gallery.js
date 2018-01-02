@@ -24,23 +24,10 @@ function getValidator(instance) {
   v.addAlias('date', 'str', { regExp: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/ });
   v.addAlias('tag', 'str', { regExp: /[-A-Za-z0-9]+/ });
 
-  v.addValidator('newSlug', (data, options) => {
-    const n = instance.data.photos.filter((p) => p.slug === data).length;
-
-    return {
-      data,
-      valid: n === 0 && /[-A-Za-z0-9]+/.test(data),
-    };
-  });
-
-  v.addValidator('existingSlug', (data, options) => {
-    const n = instance.data.photos.filter((p) => p.slug === data).length;
-
-    return {
-      data,
-      valid: n <= 1 && /[-A-Za-z0-9]+/.test(data),
-    };
-  });
+  v.addValidator('slug', (data, options) => ({
+    data,
+    valid: /[-A-Za-z0-9]+/.test(data),
+  }));
 
   v.addSchema('new', {
     title: {
@@ -52,7 +39,7 @@ function getValidator(instance) {
       options: { optional: false },
     },
     slug: {
-      validator: 'newSlug',
+      validator: 'slug',
       options: { optional: false },
     },
     tags: {
@@ -79,7 +66,7 @@ function getValidator(instance) {
       validator: 'str',
     },
     slug: {
-      validator: 'existingSlug',
+      validator: 'slug',
     },
     tags: {
       validator: 'tagArray',
@@ -193,6 +180,18 @@ class Gallery extends EventEmitter {
   }
 
   /**
+   * Check if `elem` is unique
+   *
+   * @param  {object}  elem
+   * @return {boolean}      `true` if unique, `false` if not unique
+   */
+  checkUnique(elem) {
+    const repeated = this.data.photos.filter((item) => item.slug === elem.slug && item.id !== elem.slug);
+
+    return repeated.length === 0;
+  }
+
+  /**
    * Sanitices the data of a photo that can come from user entry
    *
    * @param {object} data
@@ -212,7 +211,9 @@ class Gallery extends EventEmitter {
                                   .join(', ');
     }
 
-    return this.validator.schema(schema, data);
+    this.validator.schema(schema, data);
+
+    return this.validator;
   }
 
   load() {
@@ -290,6 +291,11 @@ class Gallery extends EventEmitter {
         updated: now,
       }, validation.valid());
 
+      if (!this.checkUnique(data)) {
+        reject({ slug: 'must be unique' });
+        return;
+      }
+
       self.data.nextId++;
 
       createThumbnails(data).then((imageData) => {
@@ -330,6 +336,12 @@ class Gallery extends EventEmitter {
         }
 
         const data = validation.valid();
+
+        if (!this.checkUnique(data)) {
+          reject({ slug: 'must be unique' });
+          return;
+        }
+
         data.updated = now;
         updatedData[id] = data;
 

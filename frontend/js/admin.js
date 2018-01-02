@@ -5,6 +5,7 @@ const API_URL = '/admin/photos';
 const PREVIEW_CLASS = 'preview';
 const UPDATE_PENDING_CLASS = 'update-pending';
 const HIDDEN_CLASS = 'removed';
+const ERROR_CLASS = 'error';
 
 const editDialog = {};
 let galleryData;
@@ -52,12 +53,24 @@ function updateData() {
 
   if (li) {
     li.classList.add(UPDATE_PENDING_CLASS);
+    editDialog.elem.classList.add(UPDATE_PENDING_CLASS);
   }
 
   requestData(API_URL, { method: 'PUT', data }).then((newData) => {
     if (li) {
       li.classList.remove(UPDATE_PENDING_CLASS);
+      editDialog.elem.classList.remove(UPDATE_PENDING_CLASS);
       updateCardData(li, id, newData[id]);
+      editDialog.elem.close();
+    }
+  }).catch((error) => {
+    if (error && error.error && error.error.data) {
+      Object.keys(error.error.data).forEach((key) => {
+        const elem = editDialog[key];
+        if (elem) {
+          elem.parentElement.classList.add(ERROR_CLASS);
+        }
+      });
     }
   });
 }
@@ -152,6 +165,7 @@ function prepareEditDialog() {
   editDialog.tags = document.getElementById('edit-tags');
   editDialog.keywords = document.getElementById('edit-keywords');
 
+  // elements to reset as mdl dynamic elements
   editDialog.mdl = [
     editDialog.id.parentElement,
     editDialog.hidden.parentElement,
@@ -162,12 +176,23 @@ function prepareEditDialog() {
     editDialog.keywords.parentElement,
   ];
 
+  // reset marked errors on this elements
+  [
+    editDialog.title,
+    editDialog.slug,
+    editDialog.tags,
+    editDialog.keywords,
+  ].forEach((elem) => {
+    elem.addEventListener('keyup', () => {
+      elem.parentElement.classList.remove(ERROR_CLASS);
+    });
+  });
+
   document.getElementById('edit-cancel').addEventListener('click', () => {
     editDialog.elem.close();
   });
   document.getElementById('edit-save').addEventListener('click', () => {
     updateData();
-    editDialog.elem.close();
   });
   document.getElementById('edit-remove').addEventListener('click', () => {
     removeDialog.showModal();

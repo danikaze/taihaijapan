@@ -67,17 +67,33 @@ function requestData(url, options) {
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status >= 200 && xhr.status < 400) {
-          resolve(JSON.parse(xhr.responseText));
+          try {
+            resolve(JSON.parse(xhr.responseText));
+          } catch (e) {
+            resolve();
+          }
         } else {
-          reject(xhr);
+          try {
+            reject({
+              xhr,
+              error: JSON.parse(xhr.responseText),
+            });
+          } catch (e) {
+            reject({
+              xhr,
+            });
+          }
         }
       }
     };
 
     try {
       xhr.send();
-    } catch (e) {
-      reject(xhr, e);
+    } catch (error) {
+      reject({
+        xhr,
+        error,
+      });
     }
   });
 }
