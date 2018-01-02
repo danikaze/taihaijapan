@@ -1,0 +1,21 @@
+#page-admin-options {
+
+  h4 {
+    cursor: pointer;
+
+    &:hover {
+      color: #666666;
+    }
+  }
+
+  .mdl-textfield,
+  .mdl-checkbox {
+    width: 90%;
+    display: block;
+    margin: auto;
+  }
+
+  .mdl-data-table {
+    margin-left: 5%;
+  }
+}

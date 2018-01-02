@@ -1,4 +1,9 @@
 {
+  "global": {
+    "title": "taihaijapan | 退廃ジャパン",
+    "user": "danikaze",
+    "password": "xxx"
+  },
   "controllers": {
     "admin": {
       "route": "/admin",

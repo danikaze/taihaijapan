@@ -37,6 +37,7 @@ const entries = {
   index: path.join(paths.src, 'index.js'),
   gallery: path.join(paths.src, 'gallery.js'),
   admin: path.join(paths.src, 'admin.js'),
+  'admin.options': path.join(paths.src, 'admin.options.js'),
 };
 
 module.exports = {
