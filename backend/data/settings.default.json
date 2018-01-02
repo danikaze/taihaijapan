@@ -30,6 +30,7 @@
         "quality": 80
       }
     },
+    "hiddenByDefault": true,
     "sizes": [
       {
         "id": "T",

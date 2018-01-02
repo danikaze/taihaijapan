@@ -52,7 +52,7 @@ function getValidator(instance) {
     },
     deleted: {
       validator: 'bool',
-      options: { defaultValue: false },
+      options: { defaultValue: undefined },
     },
   }, {
     optional: true,
@@ -294,6 +294,10 @@ class Gallery extends EventEmitter {
       if (!this.checkUnique(data)) {
         reject({ slug: 'must be unique' });
         return;
+      }
+
+      if (data.deleted === undefined) {
+        data.deleted = settings.hiddenByDefault;
       }
 
       self.data.nextId++;
