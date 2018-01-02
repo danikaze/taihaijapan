@@ -1,10 +1,12 @@
 const settingsModel = require('../models/settings');
 const galleryModel = require('../models/gallery');
 
+let siteGlobalTitle;
 let settings;
 let photos;
 
 function updateSettings() {
+  siteGlobalTitle = settingsModel.data.global.title;
   settings = settingsModel.data.controllers.admin;
   updateGallery();
 }
@@ -38,7 +40,7 @@ function getGalleryData(request, response) {
   response.render('admin', {
     fullUrl: `https://taihaijapan.com${settings.route}`,
     bodyId: 'page-admin',
-    title: 'taihaijapan | 退廃ジャパン',
+    siteGlobalTitle,
     routeAdmin: settings.route,
     routeOptions: `${settings.route}/options`,
     photos,

@@ -1,11 +1,13 @@
 const settingsModel = require('../models/settings');
 const galleryModel = require('../models/gallery');
 
+let siteGlobalTitle;
 let settings;
 let sizes;
 let photos;
 
 function updateData() {
+  siteGlobalTitle = settingsModel.data.global.title;
   settings = settingsModel.data.controllers.gallery;
   sizes = settingsModel.data.images.sizes;
   updateGallery();
@@ -24,7 +26,7 @@ function gallery(request, response) {
   response.render('gallery', {
     fullUrl: 'https://taihaijapan.com/gallery/',
     bodyId: 'page-gallery',
-    title: 'taihaijapan | 退廃ジャパン > Gallery',
+    siteGlobalTitle: `${siteGlobalTitle} > Gallery`,
     sizes,
     photos,
   });
@@ -37,7 +39,7 @@ function photo(request, response) {
   response.render('gallery', {
     fullUrl: `https://taihaijapan.com${request.originalUrl}`,
     bodyId: 'page-gallery',
-    title: 'taihaijapan | 退廃ジャパン > Gallery',
+    siteGlobalTitle: `${siteGlobalTitle} > Gallery`,
     photo: currentPhoto,
     photoSlug: currentPhoto && currentPhoto.slug,
     photos,
