@@ -83,7 +83,7 @@ function getValidator() {
     resizePolicy: { validator: 'str' },
     outputFile: { validator: 'str' },
     format: { validator: 'str' },
-    formatOptions: { validator: 'str' },
+    formatOptions: { validator: 'imagesResizeFormatOptions' },
   });
 
   return v;
@@ -114,6 +114,7 @@ class Settings extends EventEmitter {
     };
     const errors = {
       controllers: {},
+      images: {},
     };
     let ok = true;
 
