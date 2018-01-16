@@ -1,10 +1,14 @@
 const bodyParser = require('body-parser');
+const Auth = require('../utils/Auth');
 const settingsModel = require('../models/settings');
 
+const auth = new Auth();
 let settings;
 
 function updateSettings() {
   settings = settingsModel.data;
+  auth.setCredentials(settings.global.user, settings.global.password);
+  auth.setRealm(settings.global.realm);
 }
 
 function displayOptions(request, response) {
@@ -32,11 +36,12 @@ module.exports = (app) => [
     method: 'get',
     path: `${settings.controllers.admin.route}/options`,
     callback: displayOptions,
+    middleware: auth.middleware(),
   },
   {
     method: 'post',
     path: `${settings.controllers.admin.route}/options`,
     callback: updateOptions,
-    middleware: bodyParser.urlencoded({ extended: true }),
+    middleware: [auth.middleware(), bodyParser.urlencoded({ extended: true })],
   },
 ];

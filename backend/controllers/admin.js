@@ -1,13 +1,17 @@
+const Auth = require('../utils/Auth');
 const settingsModel = require('../models/settings');
 const galleryModel = require('../models/gallery');
 
-let siteGlobalTitle;
+const auth = new Auth();
+let globalSettings;
 let settings;
 let photos;
 
 function updateSettings() {
-  siteGlobalTitle = settingsModel.data.global.title;
+  globalSettings = settingsModel.data.global;
   settings = settingsModel.data.controllers.admin;
+  auth.setCredentials(globalSettings.user, globalSettings.password);
+  auth.setRealm(globalSettings.realm);
   updateGallery();
 }
 
@@ -40,7 +44,7 @@ function getGalleryData(request, response) {
   response.render('admin', {
     fullUrl: `https://taihaijapan.com${settings.route}`,
     bodyId: 'page-admin',
-    siteGlobalTitle,
+    siteGlobalTitle: globalSettings.title,
     routeAdmin: settings.route,
     routeOptions: `${settings.route}/options`,
     photos,
@@ -72,15 +76,18 @@ module.exports = (app) => [
     method: 'get',
     path: settings.route,
     callback: getGalleryData,
+    middleware: auth.middleware(),
   },
   {
     method: 'put',
     path: `${settings.route}/photos`,
     callback: updatePhotos,
+    middleware: auth.middleware(),
   },
   {
     method: 'delete',
     path: `${settings.route}/photos`,
     callback: removePhotos,
+    middleware: auth.middleware(),
   },
 ];
