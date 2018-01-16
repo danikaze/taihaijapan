@@ -183,10 +183,12 @@ class Gallery extends EventEmitter {
    * Check if `elem` is unique
    *
    * @param  {object}  elem
+   * @param  {number}  [id]
    * @return {boolean}      `true` if unique, `false` if not unique
    */
-  checkUnique(elem) {
-    const repeated = this.data.photos.filter((item) => item.slug === elem.slug && item.id !== elem.slug);
+  checkUnique(elem, id) {
+    // eslint-disable-next-line eqeqeq
+    const repeated = this.data.photos.filter((item) => item.slug === elem.slug && item.id != id);
 
     return repeated.length === 0;
   }
@@ -341,7 +343,7 @@ class Gallery extends EventEmitter {
 
         const data = validation.valid();
 
-        if (!this.checkUnique(data)) {
+        if (!this.checkUnique(data, id)) {
           reject({ slug: 'must be unique' });
           return;
         }
