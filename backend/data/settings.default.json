@@ -1,8 +1,7 @@
 {
   "global": {
     "title": "taihaijapan | 退廃ジャパン",
-    "user": "danikaze",
-    "password": "xxx"
+    "realm": "taihaijapan"
   },
   "controllers": {
     "admin": {

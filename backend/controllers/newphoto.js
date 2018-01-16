@@ -1,9 +1,11 @@
 const multer = require('multer');
 const path = require('path');
+const Auth = require('../utils/Auth');
 const settingsModel = require('../models/settings');
 const galleryModel = require('../models/gallery');
 const stripExtension = require('../utils/stripExtension');
 
+const auth = new Auth();
 let settings;
 
 settingsModel.on('update', updateSettings);
@@ -18,6 +20,8 @@ const upload = uploadStorage.single('photo');
 
 function updateSettings() {
   settings = settingsModel.data.controllers.admin;
+  auth.setCredentials(settingsModel.data.global.user, settingsModel.data.global.password);
+  auth.setRealm(settingsModel.data.global.realm);
 }
 
 function newPhoto(request, response) {
@@ -56,5 +60,6 @@ module.exports = (app) => [
     method: 'post',
     path: `${settings.route}/photos`,
     callback: newPhoto,
+    middleware: auth.middleware(),
   },
 ];

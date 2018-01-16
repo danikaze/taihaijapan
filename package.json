@@ -90,6 +90,7 @@
   },
   "dependencies": {
     "async-q": "^0.3.1",
+    "basic-auth": "^2.0.0",
     "body-parser": "^1.18.2",
     "bulk-validator": "^1.0.1",
     "colors": "^1.1.2",
