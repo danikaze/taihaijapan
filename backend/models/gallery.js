@@ -19,7 +19,7 @@ function updateSettings() {
 
 const GALLERY_PATH = path.resolve(__dirname, '../data/gallery.json');
 
-function getValidator(instance) {
+function getValidator() {
   const v = new Validator();
   v.addAlias('date', 'str', { regExp: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/ });
   v.addAlias('tag', 'str', { regExp: /[-A-Za-z0-9]+/ });
@@ -176,7 +176,7 @@ class Gallery extends EventEmitter {
     });
 
     this.load();
-    this.validator = getValidator(this);
+    this.validator = getValidator();
   }
 
   /**

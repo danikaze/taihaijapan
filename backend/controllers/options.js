@@ -1,3 +1,4 @@
+const bodyParser = require('body-parser');
 const settingsModel = require('../models/settings');
 
 let settings;
@@ -17,6 +18,12 @@ function displayOptions(request, response) {
   });
 }
 
+function updateOptions(request, response) {
+  settingsModel.update(request.body)
+    .then(() => response.redirect(`${settings.controllers.admin.route}/options`))
+    .catch(() => response.redirect(`${settings.controllers.admin.route}/options?error`));
+}
+
 settingsModel.on('update', updateSettings);
 updateSettings();
 
@@ -25,5 +32,11 @@ module.exports = (app) => [
     method: 'get',
     path: `${settings.controllers.admin.route}/options`,
     callback: displayOptions,
+  },
+  {
+    method: 'post',
+    path: `${settings.controllers.admin.route}/options`,
+    callback: updateOptions,
+    middleware: bodyParser.urlencoded({ extended: true }),
   },
 ];
