@@ -15,6 +15,16 @@ function enableTogglers() {
   });
 }
 
+function enableUpdateButton() {
+  const form = document.forms[0];
+  const button = document.getElementById('update-button');
+
+  button.addEventListener('click', () => {
+    form.submit();
+  });
+}
+
 window.run = () => {
   enableTogglers();
+  enableUpdateButton();
 };
