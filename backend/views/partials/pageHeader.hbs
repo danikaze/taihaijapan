@@ -13,6 +13,10 @@
     <link rel="canonical" href="https://taihaijapan.com/photo/{{photoSlug}}/">
     {{/if}}
 
+    {{#if photo.keywords}}
+    <meta name="keywords" content="{{photo.keywords}}">
+    {{/if}}
+
     {{> sns.facebook}}
 
     {{> sns.twitter}}
