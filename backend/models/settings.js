@@ -49,6 +49,7 @@ function getValidator() {
     title: { validator: 'str' },
     user: { validator: 'str' },
     password: { validator: 'str' },
+    googleAnalytics: { validator: 'str' },
   });
 
   v.addSchema('controllers.admin', {

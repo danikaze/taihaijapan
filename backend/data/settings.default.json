@@ -1,7 +1,8 @@
 {
   "global": {
     "title": "taihaijapan | 退廃ジャパン",
-    "realm": "taihaijapan"
+    "realm": "taihaijapan",
+    "googleAnalytics": ""
   },
   "controllers": {
     "admin": {

@@ -2,12 +2,14 @@ const settingsModel = require('../models/settings');
 const galleryModel = require('../models/gallery');
 
 let siteGlobalTitle;
+let googleAnalyticsAccount;
 let settings;
 let sizes;
 let photos;
 
 function updateData() {
   siteGlobalTitle = settingsModel.data.global.title;
+  googleAnalyticsAccount = settingsModel.data.global.googleAnalytics;
   settings = settingsModel.data.controllers.gallery;
   sizes = settingsModel.data.images.sizes;
   updateGallery();
@@ -27,6 +29,7 @@ function gallery(request, response) {
     fullUrl: 'https://taihaijapan.com/gallery/',
     bodyId: 'page-gallery',
     siteGlobalTitle: `${siteGlobalTitle} > Gallery`,
+    googleAnalyticsAccount,
     sizes,
     photos,
   });
@@ -40,6 +43,7 @@ function photo(request, response) {
     fullUrl: `https://taihaijapan.com${request.originalUrl}`,
     bodyId: 'page-gallery',
     siteGlobalTitle: `${siteGlobalTitle} > Gallery`,
+    googleAnalyticsAccount,
     photo: currentPhoto,
     photoSlug: currentPhoto && currentPhoto.slug,
     photos,

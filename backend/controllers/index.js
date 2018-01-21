@@ -2,12 +2,14 @@ const settingsModel = require('../models/settings');
 const galleryModel = require('../models/gallery');
 
 let siteGlobalTitle;
+let googleAnalyticsAccount;
 let settings;
 let sizes;
 let newPhotos;
 
 function updateSettings() {
   siteGlobalTitle = settingsModel.data.global.title;
+  googleAnalyticsAccount = settingsModel.data.global.googleAnalytics;
   settings = settingsModel.data.controllers.index;
   sizes = settingsModel.data.images.sizes;
   updateGallery();
@@ -27,6 +29,7 @@ function index(request, response) {
     fullUrl: 'https://taihaijapan.com',
     bodyId: 'page-index',
     siteGlobalTitle,
+    googleAnalyticsAccount,
     newPhotos,
     sizes,
   });
