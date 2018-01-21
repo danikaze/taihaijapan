@@ -9,6 +9,10 @@
     <link rel="profile" href="http://gmpg.org/xfn/11">
     <link href="/public/css/taihaijapan-{{version}}.min.css" rel="stylesheet">
 
+    {{#if photoSlug}}
+    <link rel="canonical" href="https://taihaijapan.com/photo/{{photoSlug}}/">
+    {{/if}}
+
     {{> sns.facebook}}
 
     {{> sns.twitter}}
