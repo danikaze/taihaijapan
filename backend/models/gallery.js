@@ -244,7 +244,7 @@ class Gallery extends EventEmitter {
 
   /**
    *
-   * @param {object} options `{ n, sortBy, reverse, filter, deleted }`
+   * @param {object} options `{ n, sortBy, reverse, filter, deleted, secure }`
    */
   getPhotos(options = {}) {
     let res;
@@ -267,7 +267,25 @@ class Gallery extends EventEmitter {
       res.sort(getSorterFunction(options.sortBy, options.reverse));
     }
 
-    return res;
+    if (options.secure === false) {
+      return res;
+    }
+
+    const secureRes = [];
+
+    res.forEach((photo) => {
+      secureRes.push({
+        id: photo.id,
+        keywords: photo.keywords,
+        tags: photo.tags,
+        title: photo.title,
+        slug: photo.slug,
+        deleted: photo.deleted,
+        imgs: photo.imgs,
+      });
+    });
+
+    return secureRes;
   }
 
   /**
