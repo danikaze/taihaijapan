@@ -2,6 +2,10 @@
 .mdl-layout-title a {
   color: #ffffff;
   text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 h4 {
@@ -11,5 +15,11 @@ h4 {
 section {
   h4 {
     margin-left: 0.85em;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .mdl-layout-title {
+    display: none !important;
   }
 }
