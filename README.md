@@ -8,6 +8,10 @@ This code is based on one of his [JavaScript boilerplates](https://github.com/da
 
 # Changelog
 
+## 0.9.0
+* Changed the way the data model is managed (_settings_ and _gallery_)
+* Added an `admin` interface to administrate the data graphically
+
 ## 0.8.0
 * `index/` is displayed now with one big photo and some thumbnails.
 * Thumbnails are highlighted on mouse over.
