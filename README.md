@@ -1,10 +1,28 @@
 # Taihai Japan
 
-[Taihai Japan](https://taihaijapan.com) is a photography project by [@danikaze](https://twitter.com/danikaze) and this is the source gallery code of that site.
+[Taihai Japan](https://taihaijapan.com) is a photography project by [@danikaze](https://twitter.com/danikaze) and this is the source code for the gallery of that site.
 
-Feel free to fork it and customize it to create your own JavaScript based gallery ;)
+Feel free to fork it and customize it to create your own JavaScript/NodeJS based gallery ;)
 
-This code is based on one of his [JavaScript boilerplates](https://github.com/danikaze/boilerplate-webpack-babel).
+# Roadmap
+
+List of planned tasks/features (in no specific order):
+
+* Migration of the code to TypeScript for more rebust code
+* Migration of the model to SQLite
+  * Allow concurrent connections
+  * Maintain simplicity (no database server needed)
+* Imlement canonical AMP
+* Move to ReactJS and render the components from server side
+  * Still provide minimum JavaScript in browser side to minimize loading times
+* Provide several builds to server polyfills only in old browsers, optimizing loading times
+* PWA:
+  * Caching of resources and images for offline navigation
+* Continuous Integration
+  * TravisCI
+  * Code linting
+  * Unit testing
+  * Lighthouse reports
 
 # Changelog
 
