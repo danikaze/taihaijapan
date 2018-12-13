@@ -26,9 +26,8 @@ module.exports = {
       functions: false,
     }],
     'no-plusplus': 'off',
-    'no-restricted-syntax': [ // allows for-in
+    'no-restricted-syntax': [ // allows for-in, for-of
       'error',
-      'ForOfStatement',
       'LabeledStatement',
       'WithStatement',
     ],
