@@ -13,16 +13,16 @@
   "main": "backend/index.js",
   "scripts": {
     "start": "node backend/ prod.json",
-    "start:backend": "nodemon backend/ dev.json",
-    "start:frontend": "webpack --env=dev",
-    "be": "yarn start:backend",
-    "fe": "yarn start:frontend",
+    "start-backend": "nodemon backend/ dev.json",
+    "start-frontend": "webpack --env=dev",
+    "be": "npm run start-backend",
+    "fe": "npm run start-frontend",
     "build": "webpack --env=prod",
-    "rebuild": "yarn clean && yarn build",
+    "rebuild": "npm run clean && npm run build",
     "clean": "rimraf buildInfo && rimraf backend/public",
     "lint": "eslint frontend backend scripts --ext .js",
     "lint:fix": "eslint frontend backend scripts .js --fix",
-    "prepublish": "yarn build"
+    "prepublish": "npm run build"
   },
   "pre-commit": [
     "lint"
