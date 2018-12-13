@@ -7,7 +7,13 @@
     "helpersPath": "../views/helpers",
     "partialsPath": "../views/partials",
     "publicFolder": "../public",
-    "publicPath": "/public"
+    "publicPath": "/public",
+    "adminUrl": "/admin",
+    "adminRealm": "admin-auth",
+    "passphrase": "change-this"
+  },
+  "db": {
+    "path": "../data/db.sqlite"
   },
   "log": {
     "logLevel": "warn",
