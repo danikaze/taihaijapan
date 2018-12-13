@@ -13,9 +13,11 @@
   "main": "backend/index.js",
   "scripts": {
     "start": "node backend/ prod.json",
-    "start-backend": "nodemon backend/ dev.json",
+    "start-backend": "nodemon --inspect backend/ dev.json",
+    "start-backend-brk": "nodemon --inspect-brk backend/ dev.json",
     "start-frontend": "webpack --env=dev",
     "be": "npm run start-backend",
+    "be-brk": "npm run start-backend-brk",
     "fe": "npm run start-frontend",
     "build": "webpack --env=prod",
     "rebuild": "npm run clean && npm run build",
