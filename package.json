@@ -24,7 +24,8 @@
     "clean": "rimraf buildInfo && rimraf backend/public",
     "lint": "eslint frontend backend scripts --ext .js",
     "lint:fix": "eslint frontend backend scripts .js --fix",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "reset": "rimraf backend/data/photos backend/data/db.sqlite backend/public/photos"
   },
   "pre-commit": [
     "lint"
