@@ -7,19 +7,23 @@ const dbReady = require('../index').ready;
  */
 function getPhotos(query) {
   return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
-    stmt[query].get([], (errorSelect, photos) => {
+    stmt[query].all([0], (errorSelect, photos) => {
+      if (errorSelect) {
+        reject(errorSelect);
+        return;
+      }
+
       let stmtLeft = photos.length * 2;
+      if (stmtLeft === 0) {
+        resolve(photos);
+        return;
+      }
 
       function checkDone() {
         stmtLeft--;
         if (stmtLeft) {
           resolve(photos);
         }
-      }
-
-      if (errorSelect) {
-        reject(errorSelect);
-        return;
       }
 
       for (const photo of photos) {

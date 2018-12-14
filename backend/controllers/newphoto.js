@@ -2,8 +2,8 @@ const multer = require('multer');
 const path = require('path');
 const Auth = require('../utils/Auth');
 const settingsModel = require('../models/settings');
-const galleryModel = require('../models/gallery');
 const stripExtension = require('../utils/stripExtension');
+const addPhoto = require('../models/gallery/add-photo');
 
 const auth = new Auth();
 let settings;
@@ -35,14 +35,22 @@ function newPhoto(request, response) {
       return;
     }
 
+    const body = request.body;
+    const visible = body.visible === undefined ? !settings['images.hiddenByDefault']
+                                               : request.body.visible;
+    const tags = body.tags ? body.tags.split(',').map((tag) => tag.trim()).filter((tag) => tag.length > 0)
+                           : [];
+
     const photo = {
       original: request.file.path,
-      slug: request.body.slug,
-      tags: request.body.tags,
-      keywords: request.body.keywords,
+      title: body.title,
+      slug: body.slug,
+      tags,
+      keywords: body.keywords,
+      visible,
     };
 
-    galleryModel.add(photo).then(() => {
+    addPhoto(photo).then(() => {
       response.redirect(settings.route);
     }).catch((error) => {
       response.redirect(`${settings.route}?error=${Object.keys(error).join(',')}`);

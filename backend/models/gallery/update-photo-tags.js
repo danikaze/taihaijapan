@@ -29,7 +29,7 @@ function insertOneTag(text) {
       }
 
       if (this.changes !== 0) {
-        resolve({ id: this.lastID, isNew: false });
+        resolve({ id: this.lastID, isNew: true });
         return;
       }
 
@@ -40,7 +40,7 @@ function insertOneTag(text) {
           return;
         }
 
-        resolve({ id: row.id, isNew: true });
+        resolve({ id: row.id, isNew: false });
       });
     });
   }));
@@ -91,20 +91,21 @@ function updatePhotoTags(photoId, newTags) {
   return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
     getTags(photoId).then((currentTags) => {
       const toAdd = [];
-      for (const tagName of newTags) {
-        if (currentTags.filter((tag) => tag.name === tagName).length === 0) {
-          toAdd.push(tagName);
+      for (const tagText of newTags) {
+        const i = currentTags.findIndex((tag) => tag.text === tagText);
+        if (i === -1) {
+          toAdd.push(tagText);
         }
       }
 
       const toDelete = [];
       for (const tag of currentTags) {
-        if (newTags.indexOf(tag.name) === -1) {
+        if (newTags.indexOf(tag.text) === -1) {
           toDelete.push(tag.id);
         }
       }
 
-      let stmtLeft = (toAdd.length * 2) + toDelete.length;
+      let stmtLeft = toAdd.length + toDelete.length;
 
       function checkDone(error) {
         if (error) {
@@ -114,7 +115,7 @@ function updatePhotoTags(photoId, newTags) {
 
         stmtLeft--;
         if (stmtLeft === 0) {
-          stmt.purgeTags(); // no need to wait for this one
+          stmt.purgeTags.run(); // no need to wait for this one
           resolve();
         }
       }
@@ -125,11 +126,7 @@ function updatePhotoTags(photoId, newTags) {
 
       for (const tagName of toAdd) {
         insertOneTag(tagName)
-          .then(({ id, isNew }) => {
-            if (isNew) {
-              checkDone();
-              return;
-            }
+          .then(({ id }) => {
             linkOneTag(photoId, id).then(checkDone);
           })
           .catch(reject);

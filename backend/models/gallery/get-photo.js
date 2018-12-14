@@ -6,8 +6,8 @@ const dbReady = require('../index').ready;
  * @param id
  */
 function getPhoto(id) {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
-    let photoData;
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+    let photoData = {};
     let leftStmt = 3;
 
     function checkDone() {

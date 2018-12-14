@@ -2,26 +2,17 @@ const Auth = require('../utils/Auth');
 const settingsModel = require('../models/settings');
 const galleryModel = require('../models/gallery');
 
+const getPhotosAdmin = require('../models/gallery/get-photos').getPhotosAdmin;
+
 const auth = new Auth();
 let globalSettings;
 let settings;
-let photos;
 
 function updateSettings() {
   globalSettings = settingsModel.data.global;
   settings = settingsModel.data.controllers.admin;
   auth.setCredentials(globalSettings.user, globalSettings.password);
   auth.setRealm(globalSettings.realm);
-  updateGallery();
-}
-
-function updateGallery() {
-  photos = galleryModel.getPhotos({
-    n: settings.imagesPerPage,
-    sortBy: settings.sortBy,
-    reverse: settings.reverse,
-    deleted: true,
-  });
 }
 
 function updatePhotos(request, response) {
@@ -41,13 +32,15 @@ function updatePhotos(request, response) {
 }
 
 function getGalleryData(request, response) {
-  response.render('admin', {
-    fullUrl: `https://taihaijapan.com${settings.route}`,
-    bodyId: 'page-admin',
-    siteGlobalTitle: globalSettings.title,
-    routeAdmin: settings.route,
-    routeOptions: `${settings.route}/options`,
-    photos,
+  getPhotosAdmin().then((photos) => {
+    response.render('admin', {
+      fullUrl: `https://taihaijapan.com${settings.route}`,
+      bodyId: 'page-admin',
+      siteGlobalTitle: globalSettings.title,
+      routeAdmin: settings.route,
+      routeOptions: `${settings.route}/options`,
+      photos,
+    });
   });
 }
 
@@ -68,7 +61,6 @@ function removePhotos(request, response) {
 }
 
 settingsModel.on('update', updateSettings);
-galleryModel.on('update', updateGallery);
 updateSettings();
 
 module.exports = (app) => [

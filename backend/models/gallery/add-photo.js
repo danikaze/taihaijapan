@@ -1,6 +1,6 @@
 const createThumbnails = require('../../utils/create-thumbnails');
-const dbReady = require('../index').dbReady;
-const getSettings = require('../settings/get-settings');
+const dbReady = require('../index').ready;
+const getSettings = require('../settings/get-settings').getSettings;
 const getSizes = require('./get-sizes');
 const updatePhotoTags = require('./update-photo-tags');
 
@@ -10,9 +10,16 @@ const updatePhotoTags = require('./update-photo-tags');
  *
  * @param data
  */
-function insertPhoto(data) {
+function insertPhoto(photoData) {
   return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
-    stmt.insertPhoto.run(data, (error) => {
+    const data = [
+      photoData.original,
+      photoData.slug,
+      photoData.title || '',
+      photoData.keywords || '',
+      photoData.visible,
+    ];
+    stmt.insertPhoto.run(data, function callback(error) {
       if (error) {
         reject(error);
         return;
@@ -56,7 +63,7 @@ function addPhoto(photoData) {
     getSizes(),
   ];
 
-  Promise.all(configPromises).then(([settings, sizes]) => new Promise((resolve, reject) => {
+  return Promise.all(configPromises).then(([settings, sizes]) => new Promise((resolve, reject) => {
     const imagePromises = [];
 
     insertPhoto(photoData).then((photoId) => {
@@ -75,11 +82,10 @@ function addPhoto(photoData) {
         },
         baseUrl: settings['images.baseUrl'],
       };
-      createThumbnails(photoData, thumbnailsOptions).then((imageData) => {
-        const imagesPromise = insertImages(photoId, imageData);
-        imagePromises.push(imagesPromise);
 
-        Promise.all(imagePromises)
+      photoData.id = photoId;
+      createThumbnails(photoData, thumbnailsOptions).then((imageData) => {
+        insertImages(photoId, imageData)
           .then(resolve)
           .catch(reject);
       }).catch(reject);
