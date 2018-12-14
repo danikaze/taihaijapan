@@ -15,6 +15,9 @@
   "db": {
     "path": "../data/db.sqlite"
   },
+  "db": {
+    "path": "../data/db.sqlite"
+  },
   "log": {
     "logLevel": "warn",
     "logDate": true,

@@ -4,6 +4,7 @@ const Server = require('./Server');
 const CtlServer = require('./ctl/CtlServer');
 const ctlEmitter = require('./ctl/ctlEmitter');
 const log = require('./utils/log');
+const dbInit = require('./models').init;
 
 function initExpressServer() {
   const server = new Server(settings.values);
@@ -24,4 +25,6 @@ function initCtlServer() {
   });
 }
 
-initExpressServer();
+dbInit(settings.values.db.path)
+  .then(initExpressServer)
+  .error(log.error.bind('sqlite'));

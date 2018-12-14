@@ -5,15 +5,32 @@ const log = require('../utils/log');
 const prepareStatements = require('./prepare-statements');
 
 let dbInstance;
-let ready = new Promise((resolve, reject) => {
-  dbInstance = new sqlite3.Database(path.join(__dirname, '..', 'data', 'db.sqlite'), () => {
-    openDb()
-      .then((data) => {
-        module.exports.db = data.db;
-        resolve(data);
-      }, reject);
+let ready;
+
+/**
+ * Initialize the database.
+ * Needs to be called before anything else.
+ *
+ * @param {string} dbPath Path to the file to use as database
+ */
+function init(dbPath) {
+  ready = new Promise((resolve, reject) => {
+    dbInstance = new sqlite3.Database(dbPath, (error) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      openDb()
+        .then((data) => {
+          module.exports.db = data.db;
+          resolve(data);
+        }, reject);
+    });
   });
-});
+
+  return ready;
+}
 
 /**
  * Return SQL code to execute from a file without the comments, to avoid runtime problems
@@ -177,6 +194,7 @@ function updateStatements() {
  * It applies any existing update based on the `schema.version` seting
  */
 module.exports = {
+  init,
   ready,
   updateStatements,
 };
