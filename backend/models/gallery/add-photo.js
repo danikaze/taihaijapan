@@ -1,6 +1,5 @@
 const createThumbnails = require('../../utils/create-thumbnails');
-const dbReady = require('../index').ready;
-const getSettings = require('../settings/get-settings').getSettings;
+const getConfig = require('../config/get-config').getConfig;
 const getSizes = require('./get-sizes');
 const updatePhotoTags = require('./update-photo-tags');
 
@@ -59,7 +58,7 @@ function insertImages(photoId, thumbs) {
  */
 function addPhoto(photoData) {
   const configPromises = [
-    getSettings(),
+    getConfig(),
     getSizes(),
   ];
 

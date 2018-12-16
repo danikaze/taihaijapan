@@ -1,5 +1,5 @@
--- Site settings
-CREATE TABLE IF NOT EXISTS settings (
+-- Site config
+CREATE TABLE IF NOT EXISTS config (
   name text NOT NULL,
   value text NOT NULL,
   updated text NOT NULL DEFAULT (datetime('now', 'utc'))

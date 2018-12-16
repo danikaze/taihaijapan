@@ -1,7 +1,7 @@
 const schema = {
   // internal
   'schema.version': 'int',
-  'settings.cache': 'int',
+  'config.cache': 'int',
   // global
   'site.title': 'str',
   'site.realm': 'str',

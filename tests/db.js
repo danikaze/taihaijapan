@@ -1,6 +1,5 @@
 /* eslint-disable */
-const dbReady = require('../backend/models').ready;
-const getSettings = require('../backend/models/settings/get-settings').getSettings;
+const getConfig = require('../backend/models/config/get-config').getConfig;
 
 /*
  * test
@@ -16,11 +15,11 @@ dbReady.then(({ stmt }) => {
     });
   });
 
-  getSettings().then((settings) => {
+  getConfig().then((settings) => {
     console.log('schema.versions', settings['schema.version']);
   });
 
-  getSettings('settings.cache').then((value) => {
+  getConfig('settings.cache').then((value) => {
     console.log('schema.cache', value);
   });
 });

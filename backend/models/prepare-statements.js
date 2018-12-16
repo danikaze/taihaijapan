@@ -2,8 +2,8 @@ const log = require('../utils/log');
 
 const stmt = {};
 
-function getSetting(settings, name) {
-  const s = settings.filter((setting) => setting.name === name)[0];
+function getConfig(config, name) {
+  const s = config.filter((item) => item.name === name)[0];
   if (!s) {
     return undefined;
   }
@@ -13,25 +13,25 @@ function getSetting(settings, name) {
 
 function getSqls() {
   return new Promise((resolve, reject) => {
-    stmt.getSettings.all((error, settings) => {
+    stmt.getConfig.all((error, config) => {
       if (error) {
         reject(error);
         return;
       }
 
-      const pageIndexLimit = getSetting(settings, 'page.index.maxImages');
-      const pageIndexSortField = getSetting(settings, 'page.index.orderBy');
-      const pageIndexSortDirection = getSetting(settings, 'page.index.reverse') === 'true' ? 'DESC' : 'ASC';
+      const pageIndexLimit = getConfig(config, 'page.index.maxImages');
+      const pageIndexSortField = getConfig(config, 'page.index.orderBy');
+      const pageIndexSortDirection = getConfig(config, 'page.index.reverse') === 'true' ? 'DESC' : 'ASC';
 
-      const pageGalleryLimit = getSetting(settings, 'page.gallery.imagesPerPage');
-      const pageGallerySortField = getSetting(settings, 'page.gallery.orderBy');
-      const pageGallerySortDirection = getSetting(settings, 'page.gallery.reverse') === 'true' ? 'DESC' : 'ASC';
+      const pageGalleryLimit = getConfig(config, 'page.gallery.imagesPerPage');
+      const pageGallerySortField = getConfig(config, 'page.gallery.orderBy');
+      const pageGallerySortDirection = getConfig(config, 'page.gallery.reverse') === 'true' ? 'DESC' : 'ASC';
 
-      const pageAdminLimit = getSetting(settings, 'page.admin.imagesPerPage');
-      const pageAdminSortField = getSetting(settings, 'page.admin.orderBy');
-      const pageAdminSortDirection = getSetting(settings, 'page.admin.reverse') === 'true' ? 'DESC' : 'ASC';
+      const pageAdminLimit = getConfig(config, 'page.admin.imagesPerPage');
+      const pageAdminSortField = getConfig(config, 'page.admin.orderBy');
+      const pageAdminSortDirection = getConfig(config, 'page.admin.reverse') === 'true' ? 'DESC' : 'ASC';
 
-      // list of STMTs that need to be updated with settings
+      // list of STMTs that need to be updated with config values
       const sqls = {
         // photos
         getPhotosIndex: `SELECT id, title, slug
@@ -57,8 +57,8 @@ function getSqls() {
       // list of constant STMTs
       if (!('updateSetting' in stmt)) {
         Object.assign(sqls, {
-          // settings
-          updateSetting: 'UPDATE settings SET value = ?, updated = (datetime("now", "utc")) WHERE name = ?;',
+          // config
+          updateSetting: 'UPDATE config SET value = ?, updated = (datetime("now", "utc")) WHERE name = ?;',
           // thumbnail sizes
           selectSizes: 'SELECT id, label, width, height FROM sizes ORDER BY width ASC;',
           insertSize: 'INSERT INTO sizes(width, height) VALUES(?, ?);',
@@ -106,17 +106,17 @@ function getSqls() {
 }
 
 /**
- * getSettings is a bit special because it's used to create other SQLs, so it's prepared apart
+ * getConfig is a bit special because it's used to create other SQLs, so it's prepared apart
  */
-function prepareGetSettings(db) {
+function prepareGetConfig(db) {
   return new Promise((resolve, reject) => {
-    if (stmt.getSettings) {
+    if (stmt.getConfig) {
       resolve();
       return;
     }
 
-    const sql = 'SELECT * FROM settings;';
-    stmt.getSettings = db.prepare(sql, (error) => {
+    const sql = 'SELECT * FROM config;';
+    stmt.getConfig = db.prepare(sql, (error) => {
       if (error) {
         reject(error);
         return;
@@ -130,7 +130,7 @@ function prepareGetSettings(db) {
  * Prepare the statements for the queries to use
  */
 function prepareStatements(db) {
-  return prepareGetSettings(db).then(() => getSqls().then((sqls) => {
+  return prepareGetConfig(db).then(() => getSqls().then((sqls) => {
     const keys = Object.keys(sqls);
     let left = keys.length;
 

@@ -2,11 +2,11 @@
 INSERT INTO users(username, password) VALUES
   ('admin', '1234');
 
--- settings
-INSERT INTO settings(name, value) VALUES
+-- config
+INSERT INTO config(name, value) VALUES
   -- internal
   ('schema.version', '0'),
-  ('settings.cache', '60'),
+  ('config.cache', '60'),
   -- global
   ('site.title', 'My photo gallery'),
   ('site.baseUrl', 'https://taihaijapan.com'),
