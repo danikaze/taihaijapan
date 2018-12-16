@@ -1,53 +1,61 @@
 {{> admin.header}}
+<!--
+config = {{{stringify config true}}}
 
-<form action="options" method="POST" enctype="application/x-www-form-urlencoded">
-  <section id="global-options">
-    <h4 data-toggle="global-options-content">Site options</h4>
+admin = {{{stringify admin true}}}
 
-    <div id="global-options-content">
+sizes = {{{stringify sizes true}}}
+-->
+<form action="{{routeConfig}}" method="POST" enctype="application/x-www-form-urlencoded">
+  <section id="config-site">
+    <h4 data-toggle="config-site-content">Site options</h4>
+
+    <div id="config-site-content">
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-global-title" name="global[title]" value="{{options.global.title}}">
-        <label class="mdl-textfield__label" for="option-global-title">Site name or title</label>
+        <input class="mdl-textfield__input" type="text" id="config-site-title" name="site.title" value="{{lookup config 'site.title'}}">
+        <label class="mdl-textfield__label" for="config-site-title">Site name or title</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-global-googleAnalytics" name="global[googleAnalytics]" value="{{options.global.googleAnalytics}}">
-        <label class="mdl-textfield__label" for="option-global-googleAnalytics">Google Analytics account</label>
+        <input class="mdl-textfield__input" type="text" id="config-site-realm" name="site.realm" value="{{lookup config 'site.realm'}}">
+        <label class="mdl-textfield__label" for="config-site-realm">Realm used for authentication</label>
+      </div>
+
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="config-google-analytics" name="google.analytics" value="{{lookup config 'google.analytics'}}">
+        <label class="mdl-textfield__label" for="config-google-analytics">Google Analytics account</label>
       </div>
     </div>
   </section>
 
-  <section id="page-options">
-    <h4 data-toggle="admin-page-content">Admin page options</h4>
+  <section id="config-page-admin">
+    <h4 data-toggle="page-admin-content">Admin page options</h4>
 
-    <div id="admin-page-content">
+    <div id="page-admin-content">
+      <input type="hidden" name="admin[id]" value="{{admin.id}}" />
+
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-controllers-admin-route" name="controllers[admin][route]" pattern="\/[a-zA-z-/.0-9]+" value="{{options.controllers.admin.route}}">
-        <label class="mdl-textfield__label" for="option-controllers-admin-route">Route</label>
+        <input class="mdl-textfield__input" type="text" id="config-admin-user" name="admin[username]" value="{{admin.username}}">
+        <label class="mdl-textfield__label" for="config-admin-username">User for the admin page</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-global-user" name="global[user]" value="{{options.global.user}}">
-        <label class="mdl-textfield__label" for="option-global-user">User for the admin page</label>
+        <input class="mdl-textfield__input" type="password" id="config-admin-password" name="admin[password]">
+        <label class="mdl-textfield__label" for="config-admin-password">Password for the admin page</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="password" id="option-global-password" name="global[password]">
-        <label class="mdl-textfield__label" for="option-global-password">Password for the admin page</label>
+        <input class="mdl-textfield__input" type="number" min="0" id="page-admin-imagesPerPage" name="page.admin.imagesPerPage" value="{{lookup config 'page.admin.imagesPerPage'}}">
+        <label class="mdl-textfield__label" for="page-admin-imagesPerPage">Images Per Page (0 means no limit)</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-controllers-admin-imagesPerPage" name="controllers[admin][imagesPerPage]" pattern="[0-9]+" value="{{options.controllers.admin.imagesPerPage}}">
-        <label class="mdl-textfield__label" for="option-controllers-admin-imagesPerPage">Images Per Page (0 means no limit)</label>
+        <input class="mdl-textfield__input" type="text" id="page-admin-orderBy" name="page.admin.orderBy" pattern="(created)|(updated)|(slug)|(title)" value="{{lookup config 'page.admin.orderBy'}}">
+        <label class="mdl-textfield__label" for="page-admin-orderBy">Sort By (created, updated, slug, title)</label>
       </div>
 
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-controllers-admin-sortBy" name="controllers[admin][sortBy]" value="{{options.controllers.admin.sortBy}}">
-        <label class="mdl-textfield__label" for="option-controllers-admin-sortBy">Sort By</label>
-      </div>
-
-      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="option-controllers-admin-reverse">
-        <input type="checkbox" id="option-controllers-admin-reverse" class="mdl-checkbox__input" name="controllers[admin][reverse]"{{#if options.controllers.admin.reverse}} checked{{/if}}>
+      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="page-admin-reverse">
+        <input type="checkbox" id="page-admin-reverse" class="mdl-checkbox__input" name="page.admin.reverse"{{#if (lookup config 'page.admin.reverse')}} checked{{/if}}>
         <span class="mdl-checkbox__label">Reverse sorting</span>
       </label>
     </div>
@@ -56,17 +64,17 @@
 
     <div id="index-page-content">
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-controllers-index-maxImages" name="controllers[index][maxImages]" pattern="[0-9]+" value="{{options.controllers.index.maxImages}}">
-        <label class="mdl-textfield__label" for="option-controllers-index-maxImages">Maximum numberof images to display (0 means no limit)</label>
+        <input class="mdl-textfield__input" type="number" min="0" id="config-page-index-maxImages" name="page.index.maxImages" value="{{lookup config 'page.index.maxImages'}}">
+        <label class="mdl-textfield__label" for="config-page-index-maxImages">Maximum numberof images to display (0 means no limit)</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-controllers-index-sortBy" name="controllers[index][sortBy]" value="{{options.controllers.index.sortBy}}">
-        <label class="mdl-textfield__label" for="option-controllers-index-sortBy">Sort By</label>
+        <input class="mdl-textfield__input" type="text" id="config-controllers-index-orderBy" name="page.index.orderBy" pattern="(created)|(updated)|(slug)|(title)" value="{{lookup config 'page.index.orderBy'}}">
+        <label class="mdl-textfield__label" for="config-page-index-orderBy">Sort By (created, updated, slug, title)</label>
       </div>
 
-      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="option-controllers-index-reverse">
-        <input type="checkbox" id="option-controllers-index-reverse" class="mdl-checkbox__input" name="controllers[index][reverse]"{{#if options.controllers.index.reverse}} checked{{/if}}>
+      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-page-index-reverse">
+        <input type="checkbox" id="config-page-index-reverse" class="mdl-checkbox__input" name="page.index.reverse"{{#if (lookup config 'page.index.reverse')}} checked{{/if}}>
         <span class="mdl-checkbox__label">Reverse sorting</span>
       </label>
     </div>
@@ -75,17 +83,17 @@
 
     <div id="gallery-options-content">
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-controllers-gallery-imagesPerPage" name="controllers[gallery][imagesPerPage]" pattern="[0-9]+" value="{{options.controllers.gallery.imagesPerPage}}">
-        <label class="mdl-textfield__label" for="option-controllers-gallery-imagesPerPage">Images Per Page (0 means no limit)</label>
+        <input class="mdl-textfield__input" type="number" min="0" id="config-page-gallery-imagesPerPage" name="page.gallery.imagesPerPage" value="{{lookup config 'page.gallery.imagesPerPage'}}">
+        <label class="mdl-textfield__label" for="config-page-gallery-imagesPerPage">Images Per Page (0 means no limit)</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-controllers-gallery-sortBy" name="controllers[gallery][sortBy]" value="{{options.controllers.gallery.sortBy}}">
-        <label class="mdl-textfield__label" for="option-controllers-gallery-sortBy">Sort By</label>
+        <input class="mdl-textfield__input" type="text" id="config-page-gallery-orderBy" name="page.gallery.orderBy" pattern="(created)|(updated)|(slug)|(title)" value="{{lookup config 'page.gallery.orderBy'}}">
+        <label class="mdl-textfield__label" for="config-page-gallery-orderBy">Sort By (created, updated, slug, title)</label>
       </div>
 
-      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="option-controllers-gallery-reverse">
-        <input type="checkbox" id="option-controllers-gallery-reverse" class="mdl-checkbox__input" name="controllers[gallery][reverse]"{{#if options.controllers.gallery.reverse}} checked{{/if}}>
+      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-page-gallery-reverse">
+        <input type="checkbox" id="config-page-gallery-reverse" class="mdl-checkbox__input" name="page.gallery.reverse"{{#if (lookup config 'page.gallery.reverse')}} checked{{/if}}>
         <span class="mdl-checkbox__label">Reverse sorting</span>
       </label>
     </div>
@@ -96,29 +104,29 @@
     <h4 data-toggle="images-options-content">Image options</h4>
 
     <div id="images-options-content">
-      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="option-images-hiddenByDefault">
-        <input type="checkbox" id="option-images-hiddenByDefault" class="mdl-checkbox__input" name="images[hiddenByDefault]"{{#if options.images.hiddenByDefault}} checked{{/if}}>
+      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-images-hiddenByDefault">
+        <input type="checkbox" id="config-images-hiddenByDefault" class="mdl-checkbox__input" name="images.hiddenByDefault"{{#if (lookup config 'images.hiddenByDefault')}} checked{{/if}}>
         <span class="mdl-checkbox__label">Hidden by default</span>
       </label>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-images-originalPath" name="images[originalPath]" pattern="[a-zA-z0-9_.-]+(\/[a-zA-z0-9_.-]+)*" value="{{options.images.originalPath}}">
-        <label class="mdl-textfield__label" for="option-images-originalPath">Path for the original images (relative to backend)</label>
+        <input class="mdl-textfield__input" type="text" id="config-images-originalPath" name="images.originalPath" pattern="[a-zA-z0-9_.-]+(\/[a-zA-z0-9_.-]+)*" value="{{lookup config 'images.originalPath'}}">
+        <label class="mdl-textfield__label" for="config-images-originalPath">Path for the original images (relative to backend)</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-images-temporalPath" name="images[temporalPath]" pattern="[a-zA-z0-9_.-]+(\/[a-zA-z0-9_.-]+)*" value="{{options.images.temporalPath}}">
-        <label class="mdl-textfield__label" for="option-images-temporalPath">Path for the uploaded images (temp/relative to backend)</label>
+        <input class="mdl-textfield__input" type="text" id="config-images-temporalPath" name="images.temporalPath" pattern="[a-zA-z0-9_.-]+(\/[a-zA-z0-9_.-]+)*" value="{{lookup config 'images.temporalPath'}}">
+        <label class="mdl-textfield__label" for="config-images-temporalPath">Path for the uploaded images (temp/relative to backend)</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-images-path" name="images[path]" pattern="[a-zA-z0-9_.-]+(\/[a-zA-z0-9_.-]+)*" value="{{options.images.path}}">
-        <label class="mdl-textfield__label" for="option-images-path">Path for the generated thumbnails (relative to backend)</label>
+        <input class="mdl-textfield__input" type="text" id="config-images-path" name="images.path" pattern="[a-zA-z0-9_.-]+(\/[a-zA-z0-9_.-]+)*" value="{{lookup config 'images.path'}}">
+        <label class="mdl-textfield__label" for="config-images-path">Path for the generated thumbnails (relative to backend)</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-images-baseUrl" name="images[baseUrl]" pattern="(\/[a-zA-z0-9_.-]+)*" value="{{options.images.baseUrl}}">
-        <label class="mdl-textfield__label" for="option-images-baseUrl">URL for the images (relative to /)</label>
+        <input class="mdl-textfield__input" type="text" id="config-images-baseUrl" name="images.baseUrl" pattern="(\/[a-zA-z0-9_.-]+)*" value="{{lookup config 'images.baseUrl'}}">
+        <label class="mdl-textfield__label" for="config-images-baseUrl">URL for the images (relative to /)</label>
       </div>
     </div>
 
@@ -126,23 +134,23 @@
 
     <div id="resizing-options-content">
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-images-resize-resizePolicy" name="images[resize][resizePolicy]" pattern="(fit)|(cover)" value="{{options.images.resize.resizePolicy}}">
-        <label class="mdl-textfield__label" for="option-images-resize-resizePolicy">Resize policy (fit|cover)</label>
+        <input class="mdl-textfield__input" type="text" id="config-images-resize-policy" name="images.resize.policy" pattern="(cover)|(contain)|(fill)|(inside)|(outside)" value="{{lookup config 'images.resize.policy'}}">
+        <label class="mdl-textfield__label" for="config-images-resize-policy">Resize policy (cover, contain, fill, inside, outside)</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-images-resize-outputFile" name="images[resize][outputFile]" value="{{options.images.resize.outputFile}}">
-        <label class="mdl-textfield__label" for="option-images-resize-outputFile">OutputFile</label>
+        <input class="mdl-textfield__input" type="text" id="config-images-resize-outputFile" name="images.resize.outputFile" value="{{lookup config 'images.resize.outputFile'}}">
+        <label class="mdl-textfield__label" for="config-images-resize-outputFile">OutputFile</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-images-resize-format" name="images[resize][format]" pattern="(jpeg)|(png)|(webp)|(tiff)|(raw)" value="{{options.images.resize.format}}">
-        <label class="mdl-textfield__label" for="option-images-resize-format">Format (jpeg|png|webp|tiff|raw)</label>
+        <input class="mdl-textfield__input" type="text" id="config-images-resize-format" name="images.resize.format" pattern="(jpeg)|(png)|(webp)|(tiff)|(raw)" value="{{lookup config 'images.resize.format'}}">
+        <label class="mdl-textfield__label" for="config-images-resize-format">Format (jpeg, png, webp, tiff, raw)</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="option-images-resize-formatOptions-quality" name="images[resize][formatOptions][quality]" pattern="[0-9]+" value="{{options.images.resize.formatOptions.quality}}">
-        <label class="mdl-textfield__label" for="option-images-resize-formatOptions-quality">Quality</label>
+        <input class="mdl-textfield__input" type="number" min="0" id="config-images-resize-formatOptions-quality" name="images.resize.formatOptions.quality" pattern="[0-9]+" value="{{lookup config 'images.resize.formatOptions.quality'}}">
+        <label class="mdl-textfield__label" for="config-images-resize-formatOptions-quality">Quality</label>
       </div>
     </div>
 
@@ -158,21 +166,22 @@
           </tr>
         </thead>
         <tbody>
-          {{#each options.images.sizes}}
+          {{#each sizes}}
+            <input type="hidden" name="sizes[{{@key}}][id]" value="{{this.id}}"/>
             <tr>
               <td class="mdl-data-table__cell--non-numeric">
                 <div class="mdl-textfield mdl-js-textfield">
-                  <input class="mdl-textfield__input" type="text" id="option-images-sizes-id-{{@key}}" name="images[sizes][{{@key}}][id]" pattern="[a-zA-Z][a-zA-Z0-9_.-]?" value="{{this.id}}">
+                  <input class="mdl-textfield__input" type="text" id="config-sizes-label-{{@key}}" name="sizes[{{@key}}][label]" pattern="[a-zA-Z][a-zA-Z0-9_.-]?" value="{{this.label}}">
                 </div>
               </td>
               <td>
                 <div class="mdl-textfield mdl-js-textfield">
-                  <input class="mdl-textfield__input" type="text" id="option-images-sizes-w-{{@key}}" name="images[sizes][{{@key}}][w]" pattern="[0-9]+" value="{{this.w}}">
+                  <input class="mdl-textfield__input" type="number" min="0" id="config-sizes-w-{{@key}}" name="sizes[{{@key}}][width]" value="{{this.width}}">
                 </div>
               </td>
               <td>
                 <div class="mdl-textfield mdl-js-textfield">
-                  <input class="mdl-textfield__input" type="text" id="option-images-sizes-h-{{@key}}" name="images[sizes][{{@key}}][h]" pattern="[0-9]+" value="{{this.h}}">
+                  <input class="mdl-textfield__input" type="number" min="0" id="config-sizes-h-{{@key}}" name="sizes[{{@key}}][height]" value="{{this.height}}">
                 </div>
               </td>
             </tr>
@@ -188,7 +197,7 @@
 
 </form>
 
-<script src="/public/js/admin.options-{{version}}.min.js" type="text/javascript"></script>
+<script src="/public/js/admin.config-{{version}}.min.js" type="text/javascript"></script>
 <script type="text/javascript">
   run();
 </script>

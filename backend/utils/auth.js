@@ -1,5 +1,6 @@
 const auth = require('basic-auth');
 
+// TODO: Use users from the database
 class Auth {
   middleware() {
     return this.authRequired.bind(this);
@@ -30,4 +31,5 @@ class Auth {
   }
 }
 
-module.exports = Auth;
+// export a singleton class
+module.exports = new Auth();

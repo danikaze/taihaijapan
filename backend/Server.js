@@ -53,11 +53,15 @@ class Server extends EventEmitter {
       const helpers = requireAll({ dirname: this.serverSettings.helpersPath });
 
       Object.keys(helpers).forEach((fileName) => {
-        const helper = helpers[fileName];
-        if (helper.async) {
-          hbs.registerAsyncHelper(helper.fn.name, helper.fn);
-        } else {
-          hbs.registerHelper(helper.fn.name, helper.fn);
+        try {
+          const helper = helpers[fileName];
+          if (helper.async) {
+            hbs.registerAsyncHelper(helper.fn.name, helper.fn);
+          } else {
+            hbs.registerHelper(helper.fn.name, helper.fn);
+          }
+        } catch (error) {
+          log.error('Server', `Error registering template ${fileName}`);
         }
       });
 

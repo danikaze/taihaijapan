@@ -1,11 +1,10 @@
 const multer = require('multer');
 const path = require('path');
-const Auth = require('../utils/Auth');
+const auth = require('../utils/auth');
 const settingsModel = require('../models/settings');
 const stripExtension = require('../utils/stripExtension');
 const addPhoto = require('../models/gallery/add-photo');
 
-const auth = new Auth();
 let settings;
 
 settingsModel.on('update', updateSettings);

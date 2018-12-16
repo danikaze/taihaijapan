@@ -1,19 +1,9 @@
-const Auth = require('../utils/Auth');
-const settingsModel = require('../models/settings');
-const galleryModel = require('../models/gallery');
-
+const auth = require('../utils/auth');
 const getPhotosAdmin = require('../models/gallery/get-photos').getPhotosAdmin;
+const getConfig = require('../models/config/get-config').getConfig;
 
-const auth = new Auth();
-let globalSettings;
-let settings;
-
-function updateSettings() {
-  globalSettings = settingsModel.data.global;
-  settings = settingsModel.data.controllers.admin;
-  auth.setCredentials(globalSettings.user, globalSettings.password);
-  auth.setRealm(globalSettings.realm);
-}
+let routeAdmin;
+let routeConfig;
 
 function updatePhotos(request, response) {
   try {
@@ -32,13 +22,18 @@ function updatePhotos(request, response) {
 }
 
 function getGalleryData(request, response) {
-  getPhotosAdmin().then((photos) => {
+  const promises = [
+    getConfig(),
+    getPhotosAdmin(),
+  ];
+
+  Promise.all(promises).then(([config, photos]) => {
     response.render('admin', {
-      fullUrl: `https://taihaijapan.com${settings.route}`,
+      fullUrl: `${config['site.baseUrl']}${routeAdmin}`,
       bodyId: 'page-admin',
-      siteGlobalTitle: globalSettings.title,
-      routeAdmin: settings.route,
-      routeOptions: `${settings.route}/options`,
+      siteGlobalTitle: config['site.title'],
+      routeAdmin,
+      routeConfig,
       photos,
     });
   });
@@ -60,26 +55,29 @@ function removePhotos(request, response) {
   }
 }
 
-settingsModel.on('update', updateSettings);
-updateSettings();
+module.exports = (app, serverSettings, config) => {
+  routeAdmin = serverSettings.adminUrl;
+  routeConfig = `${routeAdmin}/options`;
+  const routePhotos = `${routeAdmin}/photos`;
 
-module.exports = (app) => [
-  {
-    method: 'get',
-    path: settings.route,
-    callback: getGalleryData,
-    middleware: auth.middleware(),
-  },
-  {
-    method: 'put',
-    path: `${settings.route}/photos`,
-    callback: updatePhotos,
-    middleware: auth.middleware(),
-  },
-  {
-    method: 'delete',
-    path: `${settings.route}/photos`,
-    callback: removePhotos,
-    middleware: auth.middleware(),
-  },
-];
+  return [
+    {
+      method: 'get',
+      path: routeAdmin,
+      callback: getGalleryData,
+      middleware: auth.middleware(),
+    },
+    {
+      method: 'put',
+      path: routePhotos,
+      callback: updatePhotos,
+      middleware: auth.middleware(),
+    },
+    {
+      method: 'delete',
+      path: routePhotos,
+      callback: removePhotos,
+      middleware: auth.middleware(),
+    },
+  ];
+};

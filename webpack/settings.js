@@ -37,7 +37,7 @@ const entries = {
   index: path.join(paths.src, 'index.js'),
   gallery: path.join(paths.src, 'gallery.js'),
   admin: path.join(paths.src, 'admin.js'),
-  'admin.options': path.join(paths.src, 'admin.options.js'),
+  'admin.config': path.join(paths.src, 'admin.config.js'),
 };
 
 module.exports = {

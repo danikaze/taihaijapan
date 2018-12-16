@@ -1,47 +1,82 @@
 const bodyParser = require('body-parser');
-const Auth = require('../utils/Auth');
+const auth = require('../utils/auth');
 const settingsModel = require('../models/settings');
+const getConfig = require('../models/config/get-config').getConfig;
+const updateConfig = require('../models/config/update-config');
+const invalidateCache = require('../models/config/get-config').invalidateCache;
+const schema = require('../models/config/config-schema');
+const getSizes = require('../models/gallery/get-sizes');
+const setSizes = require('../models/gallery/set-sizes');
+const getUsers = require('../models/users/get-users');
+const updateUser = require('../models/users/update-user');
+const typify = require('../utils/typify');
 
-const auth = new Auth();
-let settings;
-
-function updateSettings() {
-  settings = settingsModel.data;
-  auth.setCredentials(settings.global.user, settings.global.password);
-  auth.setRealm(settings.global.realm);
-}
+let routeAdmin;
+let routeConfig;
 
 function displayOptions(request, response) {
-  response.render('admin-options', {
-    fullUrl: `https://taihaijapan.com${settings.controllers.admin.route}/options`,
-    bodyId: 'page-admin-options',
-    siteGlobalTitle: settings.global.title,
-    routeAdmin: settings.controllers.admin.route,
-    routeOptions: `${settings.controllers.admin.route}/options`,
-    options: settings,
+  const promises = [
+    getConfig(),
+    getSizes(),
+    getUsers(),
+  ];
+  Promise.all(promises).then(([config, sizes, users]) => {
+    config['images.resize.formatOptions.quality'] = config['images.resize.formatOptions'].quality;
+    response.render('admin-options', {
+      fullUrl: `${config['site.baseUrl']}${routeConfig}`,
+      bodyId: 'page-admin-options',
+      siteGlobalTitle: config['site.title'],
+      routeAdmin,
+      routeConfig,
+      admin: {
+        id: users[0].id,
+        username: users[0].username,
+        email: users[0].email,
+      },
+      config,
+      sizes,
+    });
   });
 }
 
 function updateOptions(request, response) {
-  settingsModel.update(request.body)
-    .then(() => response.redirect(`${settings.controllers.admin.route}/options`))
-    .catch(() => response.redirect(`${settings.controllers.admin.route}/options?error`));
+  const { sizes, admin, ...config } = request.body;
+  const quality = Number(config['images.resize.formatOptions.quality']);
+  if (quality) {
+    config['images.resize.formatOptions'] = `{ "quality": ${quality} }`;
+    delete config['images.resize.formatOptions.quality'];
+  }
+
+  const typedConfig = typify(config, schema);
+  const promises = [
+    updateConfig(typedConfig),
+    setSizes(sizes),
+    updateUser(admin.id, admin),
+  ];
+
+  Promise.all(promises)
+    .then(() => response.redirect(routeConfig))
+    .catch(() => response.redirect(`${routeConfig}?error`));
 }
 
-settingsModel.on('update', updateSettings);
-updateSettings();
+settingsModel.on('update', invalidateCache);
 
-module.exports = (app) => [
-  {
-    method: 'get',
-    path: `${settings.controllers.admin.route}/options`,
-    callback: displayOptions,
-    middleware: auth.middleware(),
-  },
-  {
-    method: 'post',
-    path: `${settings.controllers.admin.route}/options`,
-    callback: updateOptions,
-    middleware: [auth.middleware(), bodyParser.urlencoded({ extended: true })],
-  },
-];
+module.exports = (app, serverSettings, config) => {
+  routeAdmin = serverSettings.adminUrl;
+  routeConfig = `${routeAdmin}/options`;
+
+  return [
+    {
+      method: 'get',
+      path: routeConfig,
+      callback: displayOptions,
+      middleware: auth.middleware(),
+    },
+    {
+      method: 'post',
+      path: routeConfig,
+      callback: updateOptions,
+      middleware: [auth.middleware(), bodyParser.urlencoded({ extended: true })],
+    },
+  ];
+};
