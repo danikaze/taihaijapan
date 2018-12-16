@@ -181,14 +181,17 @@ function openDb() {
  * Update the database prepared statements and the `ready` value to resolve to the new ones
  */
 function updateStatements() {
-  exportedData.ready.then(({ db }) => {
-    exportedData.ready = new Promise((resolve, reject) => {
+  const promise = new Promise((resolve, reject) => {
+    exportedData.ready.then(({ db }) => {
+      exportedData.ready = promise;
       prepareStatements(db).then(
         (stmt) => { resolve({ db, stmt }); },
         reject,
       );
     });
   });
+
+  return promise;
 }
 
 /**
