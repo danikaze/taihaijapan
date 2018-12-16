@@ -1,4 +1,5 @@
 const createThumbnails = require('../../utils/create-thumbnails');
+const db = require('..');
 const getConfig = require('../config/get-config').getConfig;
 const getSizes = require('./get-sizes');
 const updatePhotoTags = require('./update-photo-tags');
@@ -10,7 +11,7 @@ const updatePhotoTags = require('./update-photo-tags');
  * @param data
  */
 function insertPhoto(photoData) {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     const data = [
       photoData.original,
       photoData.slug,
@@ -34,7 +35,7 @@ function insertPhoto(photoData) {
  * @param {*} thumbs
  */
 function insertImages(photoId, thumbs) {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     const promises = thumbs.map((image) => new Promise((resolveOne, rejectOne) => {
       stmt.insertImage.run([photoId, image.width, image.height, image.src], (error) => {
         if (error) {

@@ -1,12 +1,12 @@
 const fs = require('fs');
-const dbReady = require('../index').ready;
+const db = require('../index');
 
 /**
  * Get the list of the paths for the images associated to a photo
  * @param photoId
  */
 function getImageSrcs(photoId) {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.getImageSrcs.all([photoId], (error, rows) => {
       if (error) {
         reject(error);
@@ -48,7 +48,7 @@ function deleteFiles(filePaths) {
  * @param photoId
  */
 function deletePhoto(photoId) {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.deletePhoto.run([photoId], (error, row) => {
       if (error) {
         reject(error);

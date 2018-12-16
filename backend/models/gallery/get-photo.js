@@ -1,4 +1,4 @@
-const dbReady = require('../index').ready;
+const db = require('../index');
 
 /**
  * Return all the information of the photo with the specified id
@@ -7,7 +7,7 @@ const dbReady = require('../index').ready;
  */
 function getPhoto(id) {
   return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
-    let photoData = {};
+    let photoData;
     let leftStmt = 3;
 
     function checkDone() {

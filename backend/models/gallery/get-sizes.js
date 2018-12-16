@@ -1,10 +1,10 @@
-const dbReady = require('../index').ready;
+const db = require('../index');
 
 /**
  * Get the different thumbnail sizes set in the database, ordered ASC by width
  */
 function getSizes() {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.selectSizes.all([], (error, rows) => {
       if (error) {
         reject(error);

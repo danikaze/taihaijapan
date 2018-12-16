@@ -1,4 +1,4 @@
-const dbReady = require('../index').ready;
+const db = require('../index');
 
 /**
  * Get a list of photos, with their tags and images, based on a main query
@@ -6,7 +6,7 @@ const dbReady = require('../index').ready;
  * @param query name of the stmt to get the photo list base data
  */
 function getPhotos(query) {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt[query].all([0], (errorSelect, photos) => {
       if (errorSelect) {
         reject(errorSelect);

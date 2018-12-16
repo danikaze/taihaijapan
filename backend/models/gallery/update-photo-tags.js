@@ -1,10 +1,10 @@
-const dbReady = require('../index').ready;
+const db = require('../');
 
 /**
  * Get the current tags of a photo
  */
 function getTags(photoId) {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.selectTagsByPhoto.all([photoId], (selectError, tags) => {
       if (selectError) {
         reject(selectError);
@@ -20,7 +20,7 @@ function getTags(photoId) {
  * Insert a new tag or get the ID of the existing one
  */
 function insertOneTag(text) {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     // try to insert a new tag
     stmt.insertTag.run([text], function insertCallback(insertError) {
       if (insertError) {
@@ -50,7 +50,7 @@ function insertOneTag(text) {
  * Associate a tag with the given photoId
  */
 function linkOneTag(photoId, tagId) {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.linkTag.run([photoId, tagId], (error) => {
       if (error) {
         reject(error);
@@ -68,7 +68,7 @@ function linkOneTag(photoId, tagId) {
  * @param {*} tagId
  */
 function unlinkOneTag(photoId, tagId) {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.unlinkTag.run([photoId, tagId], (error) => {
       if (error) {
         reject(error);
@@ -88,7 +88,7 @@ function unlinkOneTag(photoId, tagId) {
  * @param {string[]} tags
  */
 function updatePhotoTags(photoId, newTags) {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     getTags(photoId).then((currentTags) => {
       const toAdd = [];
       for (const tagText of newTags) {

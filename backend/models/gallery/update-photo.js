@@ -1,4 +1,4 @@
-const dbReady = require('../index').ready;
+const db = require('../index');
 const getPhoto = require('./get-photo');
 const updatePhotoTags = require('./update-photo-tags');
 
@@ -7,7 +7,7 @@ const updatePhotoTags = require('./update-photo-tags');
  * All of them is required
  */
 function updatePhotoBaseData(photoId, newData) {
-  return dbReady.then(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     const data = [newData.title, newData.keywords, newData.visible, photoId];
     stmt.updatePhoto.run(data, (error) => {
       if (error) {
