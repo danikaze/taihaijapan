@@ -9,7 +9,14 @@ const updatePhotoTags = require('./update-photo-tags');
  */
 function updatePhotoBaseData(photoId, newData) {
   return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
-    const data = [newData.title, newData.keywords, newData.visible, photoId];
+    const data = [
+      newData.slug,
+      newData.title,
+      newData.keywords,
+      newData.visible,
+      photoId,
+    ];
+
     stmt.updatePhoto.run(data, (error) => {
       if (error) {
         log.error('sqlite: updatePhotoBaseData', error);

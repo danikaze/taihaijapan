@@ -112,6 +112,10 @@ function updatePhotoTags(photoId, newTags) {
       }
 
       let stmtLeft = toAdd.length + toDelete.length;
+      if (stmtLeft === 0) {
+        resolve();
+        return;
+      }
 
       function checkDone(error) {
         if (error) {

@@ -1,19 +1,43 @@
 const auth = require('../utils/auth');
+const typify = require('../utils/typify');
 const getPhotosAdmin = require('../models/gallery/get-photos').getPhotosAdmin;
 const getConfig = require('../models/config/get-config').getConfig;
+const photoSchema = require('../models/schemas/photos');
+const updatePhoto = require('../models/gallery/update-photo');
 
 let routeAdmin;
 let routeConfig;
 
+/**
+ * Receive a list of photos to update as { id: newPhotoData }
+ * Return the same list with the updated data
+ *
+ * @param {*} request
+ * @param {*} response
+ */
 function updatePhotos(request, response) {
   try {
-    const data = JSON.parse(request.query.photos);
-    galleryModel.update(data).then((updatedData) => {
+    const rawData = JSON.parse(request.query.photos);
+    const promises = Object.keys(rawData).map((key) => {
+      const id = Number(key);
+      const photo = typify(rawData[key], photoSchema, { copy: true, includeExternal: false });
+      const rawTags = rawData[key].tags;
+      photo.tags = rawTags ? rawTags.split(',').map((tag) => tag.trim()).filter((tag) => tag.length > 0)
+                           : [];
+
+      return updatePhoto(id, photo);
+    });
+
+    Promise.all(promises).then((updatedPhotos) => {
+      const updatedData = {};
+      updatedPhotos.forEach((updatedPhoto) => {
+        updatedData[updatedPhoto.id] = updatedPhoto;
+      });
       response.send(updatedData);
-    }).catch((errorData) => {
+    }).catch((error) => {
       response.status(400).send({
         error: 'Wrong data',
-        data: errorData,
+        data: error,
       });
     });
   } catch (error) {
@@ -21,6 +45,13 @@ function updatePhotos(request, response) {
   }
 }
 
+/**
+ * Get all the photos for the admin gallery
+ * TODO: Pagination
+ *
+ * @param {*} request
+ * @param {*} response
+ */
 function getGalleryData(request, response) {
   const promises = [
     getConfig(),

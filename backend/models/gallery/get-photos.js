@@ -36,7 +36,7 @@ function getPhotos(query) {
             return;
           }
 
-          photo.tags = rows.map((tag) => tag.text);
+          photo.tags = rows ? rows.map((tag) => tag.text) : [];
           checkDone();
         });
 
@@ -48,7 +48,7 @@ function getPhotos(query) {
             return;
           }
 
-          photo.imgs = rows;
+          photo.imgs = rows || [];
           checkDone();
         });
       }

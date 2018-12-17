@@ -38,7 +38,7 @@ function updateCardData(elem, id, data) {
  * Send the data of the edit dialog
  */
 function updateData() {
-  const id = parseInt(editDialog.id.value, 10);
+  const id = Number(editDialog.id.value);
   const li = document.querySelector(`#thumbnails li[data-photo-id="${id}"]`);
   const data = {
     photos: {},
@@ -48,7 +48,7 @@ function updateData() {
     slug: editDialog.slug.value,
     tags: editDialog.tags.value,
     keywords: editDialog.keywords.value,
-    deleted: !editDialog.hidden.checked,
+    visible: editDialog.hidden.checked,
   };
 
   if (li) {

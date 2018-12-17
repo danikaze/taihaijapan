@@ -8,7 +8,7 @@ const db = require('../index');
  */
 function getPhoto(id) {
   return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
-    let photoData;
+    const photoData = {};
     let leftStmt = 3;
 
     function checkDone() {
@@ -21,13 +21,13 @@ function getPhoto(id) {
     const stmtParams = [Number(id)];
 
     // get basic photo data
-    stmt.selectPhoto.run(stmtParams, (error, row) => {
+    stmt.selectPhoto.get(stmtParams, (error, row) => {
       if (error) {
         log.error('sqlite: getPhoto.basic', error);
         reject(error);
       }
 
-      photoData = { ...photoData, ...row };
+      Object.assign(photoData, row);
       checkDone();
     });
 
@@ -38,7 +38,7 @@ function getPhoto(id) {
         reject(error);
       }
 
-      photoData.tags = rows;
+      photoData.tags = rows ? rows.map((tag) => tag.text) : [];
       checkDone();
     });
 
@@ -50,7 +50,7 @@ function getPhoto(id) {
         return;
       }
 
-      photoData.imgs = rows;
+      photoData.imgs = rows || [];
       checkDone();
     });
   }));
