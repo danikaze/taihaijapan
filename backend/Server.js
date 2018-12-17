@@ -5,6 +5,7 @@ const requireAll = require('require-all');
 const EventEmitter = require('events');
 const hbs = require('hbs');
 const log = require('./utils/log');
+const auth = require('./utils/auth');
 
 class Server extends EventEmitter {
   /**
@@ -15,6 +16,7 @@ class Server extends EventEmitter {
 
     this.serverSettings = settings.server;
     this.logSettings = settings.log;
+    auth.setRealm(this.serverSettings.adminRealm);
   }
 
   /**

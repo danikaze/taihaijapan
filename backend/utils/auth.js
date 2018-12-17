@@ -1,14 +1,9 @@
 const auth = require('basic-auth');
+const authUser = require('../models/users/auth-user');
 
-// TODO: Use users from the database
 class Auth {
   middleware() {
     return this.authRequired.bind(this);
-  }
-
-  setCredentials(user, pass) {
-    this.user = user;
-    this.pass = pass;
   }
 
   setRealm(realm) {
@@ -16,18 +11,27 @@ class Auth {
   }
 
   authRequired(request, response, next) {
-    const user = auth(request);
+    const credentials = auth(request);
 
-    if (this.user && this.pass) {
-      if (!user || user.name !== this.user || user.pass !== this.pass) {
-        response.setHeader('WWW-Authenticate', `Basic realm="${this.realm}"`);
-        response.sendStatus(401);
-        response.end('Access denied');
-        return;
-      }
+    if (!credentials) {
+      this.denyAccess(response);
+      return;
     }
 
-    next();
+    authUser(credentials.name, credentials.pass).then((userData) => {
+      if (!userData) {
+        this.denyAccess(response);
+        return;
+      }
+
+      next();
+    });
+  }
+
+  denyAccess(response) {
+    response.setHeader('WWW-Authenticate', `Basic realm="${this.realm}"`);
+    response.sendStatus(401);
+    response.end('Access denied');
   }
 }
 

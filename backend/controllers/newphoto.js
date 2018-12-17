@@ -19,8 +19,6 @@ const upload = uploadStorage.single('photo');
 
 function updateSettings() {
   settings = settingsModel.data.controllers.admin;
-  auth.setCredentials(settingsModel.data.global.user, settingsModel.data.global.password);
-  auth.setRealm(settingsModel.data.global.realm);
 }
 
 function newPhoto(request, response) {
