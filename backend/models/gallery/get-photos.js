@@ -22,7 +22,7 @@ function getPhotos(query) {
 
       function checkDone() {
         stmtLeft--;
-        if (stmtLeft) {
+        if (stmtLeft === 0) {
           resolve(photos);
         }
       }

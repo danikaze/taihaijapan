@@ -1,43 +1,32 @@
-const settingsModel = require('../models/settings');
-const galleryModel = require('../models/gallery');
-
-let siteGlobalTitle;
-let googleAnalyticsAccount;
-let settings;
-let sizes;
-let newPhotos;
-
-function updateSettings() {
-  siteGlobalTitle = settingsModel.data.global.title;
-  googleAnalyticsAccount = settingsModel.data.global.googleAnalytics;
-  settings = settingsModel.data.controllers.index;
-  sizes = settingsModel.data.images.sizes;
-  updateGallery();
-}
-
-function updateGallery() {
-  newPhotos = galleryModel.getPhotos({
-    n: settings.maxImages,
-    sortBy: settings.sortBy,
-    reverse: settings.reverse,
-    deleted: false,
-  });
-}
+const log = require('../utils/log');
+const getPhotosIndex = require('../models/gallery/get-photos').getPhotosIndex;
+const getSizes = require('../models/gallery/get-sizes');
+const getConfig = require('../models/config/get-config').getConfig;
 
 function index(request, response) {
-  response.render('index', {
-    fullUrl: 'https://taihaijapan.com',
-    bodyId: 'page-index',
-    siteGlobalTitle,
-    googleAnalyticsAccount,
-    newPhotos,
-    sizes,
-  });
+  const promises = [
+    getSizes(),
+    getPhotosIndex(),
+    getConfig(),
+  ];
+
+  Promise.all(promises)
+    .then(([sizes, newPhotos, config]) => {
+      response.render('index', {
+        bodyId: 'page-index',
+        fullUrl: config['site.baseUrl'],
+        siteGlobalTitle: config['site.title'],
+        googleAnalyticsAccount: config['site.analytics'],
+        newPhotos,
+        sizes,
+      });
+    })
+    .catch((error) => {
+      log.error('index', error);
+      response.status(500).send('Unexpected Error');
+    });
 }
 
-settingsModel.on('update', updateSettings);
-galleryModel.on('update', updateGallery);
-updateSettings();
 
 module.exports = (app) => [
   {

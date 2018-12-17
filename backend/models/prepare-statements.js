@@ -39,7 +39,8 @@ function getSqls() {
                           FROM photos
                           WHERE visible = 1
                           ORDER BY ${pageIndexSortField} ${pageIndexSortDirection}
-                          LIMIT ${pageIndexLimit};`,
+                          LIMIT ${pageIndexLimit}
+                          OFFSET ?;`,
 
         getPhotosPage: `SELECT id, title, slug, keywords
                         FROM photos
