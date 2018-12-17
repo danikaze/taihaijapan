@@ -17,11 +17,6 @@ sizes = {{{stringify sizes true}}}
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-site-realm" name="site.realm" value="{{lookup config 'site.realm'}}">
-        <label class="mdl-textfield__label" for="config-site-realm">Realm used for authentication</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input class="mdl-textfield__input" type="text" id="config-google-analytics" name="google.analytics" value="{{lookup config 'google.analytics'}}">
         <label class="mdl-textfield__label" for="config-google-analytics">Google Analytics account</label>
       </div>
@@ -45,6 +40,11 @@ sizes = {{{stringify sizes true}}}
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="password" id="config-admin-password-confirm" name="admin[passwordConfirmation]">
+        <label class="mdl-textfield__label" for="config-admin-password-confirm">Confirm password for the admin page</label>
+      </div>
+
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input class="mdl-textfield__input" type="number" min="0" id="page-admin-imagesPerPage" name="page.admin.imagesPerPage" value="{{lookup config 'page.admin.imagesPerPage'}}">
         <label class="mdl-textfield__label" for="page-admin-imagesPerPage">Images Per Page (0 means no limit)</label>
       </div>
@@ -55,7 +55,7 @@ sizes = {{{stringify sizes true}}}
       </div>
 
       <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="page-admin-reverse">
-        <input type="checkbox" id="page-admin-reverse" class="mdl-checkbox__input" name="page.admin.reverse"{{#if (lookup config 'page.admin.reverse')}} checked{{/if}}>
+        <input type="checkbox" value="true" id="page-admin-reverse" class="mdl-checkbox__input" name="page.admin.reverse"{{#if (lookup config 'page.admin.reverse')}} checked{{/if}}>
         <span class="mdl-checkbox__label">Reverse sorting</span>
       </label>
     </div>
@@ -74,7 +74,7 @@ sizes = {{{stringify sizes true}}}
       </div>
 
       <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-page-index-reverse">
-        <input type="checkbox" id="config-page-index-reverse" class="mdl-checkbox__input" name="page.index.reverse"{{#if (lookup config 'page.index.reverse')}} checked{{/if}}>
+        <input type="checkbox" value="true" id="config-page-index-reverse" class="mdl-checkbox__input" name="page.index.reverse"{{#if (lookup config 'page.index.reverse')}} checked{{/if}}>
         <span class="mdl-checkbox__label">Reverse sorting</span>
       </label>
     </div>
@@ -93,7 +93,7 @@ sizes = {{{stringify sizes true}}}
       </div>
 
       <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-page-gallery-reverse">
-        <input type="checkbox" id="config-page-gallery-reverse" class="mdl-checkbox__input" name="page.gallery.reverse"{{#if (lookup config 'page.gallery.reverse')}} checked{{/if}}>
+        <input type="checkbox" value="true" id="config-page-gallery-reverse" class="mdl-checkbox__input" name="page.gallery.reverse"{{#if (lookup config 'page.gallery.reverse')}} checked{{/if}}>
         <span class="mdl-checkbox__label">Reverse sorting</span>
       </label>
     </div>
@@ -105,7 +105,7 @@ sizes = {{{stringify sizes true}}}
 
     <div id="images-options-content">
       <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-images-hiddenByDefault">
-        <input type="checkbox" id="config-images-hiddenByDefault" class="mdl-checkbox__input" name="images.hiddenByDefault"{{#if (lookup config 'images.hiddenByDefault')}} checked{{/if}}>
+        <input type="checkbox" value="true" id="config-images-hiddenByDefault" class="mdl-checkbox__input" name="images.hiddenByDefault"{{#if (lookup config 'images.hiddenByDefault')}} checked{{/if}}>
         <span class="mdl-checkbox__label">Hidden by default</span>
       </label>
 

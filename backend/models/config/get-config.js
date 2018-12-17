@@ -1,7 +1,7 @@
 const log = require('../../utils/log');
 const typify = require('../../utils/typify');
 const db = require('../index');
-const schema = require('./config-schema');
+const configSchema = require('../schemas/config');
 
 let updatePromise;
 let cachedConfig;
@@ -17,7 +17,7 @@ function configToObject(configArray) {
     values[item.name] = item.value;
   }
 
-  return typify(values, schema);
+  return typify(values, configSchema);
 }
 
 /**

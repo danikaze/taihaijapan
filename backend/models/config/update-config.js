@@ -1,12 +1,12 @@
 const log = require('../../utils/log');
 const db = require('../index');
-const schema = require('./config-schema');
+const configSchema = require('../schemas/config');
 
 /**
  * Get a string to store the value of a setting based on the schema
  */
 function serialize(name, value) {
-  return schema[name] === 'json' ? JSON.stringify(value) : String(value);
+  return configSchema[name] === 'json' ? JSON.stringify(value) : String(value);
 }
 
 /**

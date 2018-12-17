@@ -4,7 +4,8 @@ const settingsModel = require('../models/settings');
 const getConfig = require('../models/config/get-config').getConfig;
 const updateConfig = require('../models/config/update-config');
 const invalidateCache = require('../models/config/get-config').invalidateCache;
-const schema = require('../models/config/config-schema');
+const configSchema = require('../models/schemas/config');
+const sizesSchema = require('../models/schemas/sizes');
 const getSizes = require('../models/gallery/get-sizes');
 const setSizes = require('../models/gallery/set-sizes');
 const getUsers = require('../models/users/get-users');
@@ -47,12 +48,22 @@ function updateOptions(request, response) {
     delete config['images.resize.formatOptions.quality'];
   }
 
-  const typedConfig = typify(config, schema);
+  const typedConfig = {
+    'page.admin.reverse': false,
+    'page.index.reverse': false,
+    'page.gallery.reverse': false,
+    'images.hiddenByDefault': false,
+    ...typify(config, configSchema),
+  };
+  const typedSizes = sizes.map((size) => typify(size, sizesSchema));
   const promises = [
     updateConfig(typedConfig),
-    setSizes(sizes),
-    updateUser(admin.id, admin),
+    setSizes(typedSizes),
   ];
+
+  if (admin.password && admin.password === admin.passwordConfirmation) {
+    promises.push(updateUser(admin.id, admin));
+  }
 
   Promise.all(promises)
     .then(() => response.redirect(routeConfig))
