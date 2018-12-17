@@ -102,7 +102,7 @@ function addEditDetailsBehavior(li) {
       const photo = getPhotoDataById(id);
 
       editDialog.id.value = photo.id;
-      editDialog.hidden.checked = !photo.deleted;
+      editDialog.hidden.checked = !!photo.visible;
       editDialog.photo.src = photo.imgs[0].src;
       editDialog.title.value = photo.title;
       editDialog.slug.value = photo.slug;

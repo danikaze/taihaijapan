@@ -36,7 +36,7 @@ function getPhotos(query) {
             return;
           }
 
-          photo.tags = rows;
+          photo.tags = rows.map((tag) => tag.text);
           checkDone();
         });
 
