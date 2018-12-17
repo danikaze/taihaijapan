@@ -1,8 +1,8 @@
 const path = require('path');
 const fs = require('fs');
-const sqlite3 = require('sqlite3').verbose();
 const log = require('../utils/log');
 const prepareStatements = require('./prepare-statements');
+let sqlite3 = require('sqlite3');
 
 let dbInstance;
 const exportedData = {
@@ -16,9 +16,13 @@ const exportedData = {
  *
  * @param {string} dbPath Path to the file to use as database
  */
-function init(dbPath) {
+function init(dbSettings) {
+  if (dbSettings.debugMode) {
+    sqlite3 = sqlite3.verbose();
+  }
+
   exportedData.ready = new Promise((resolve, reject) => {
-    dbInstance = new sqlite3.Database(dbPath, (error) => {
+    dbInstance = new sqlite3.Database(dbSettings.path, (error) => {
       if (error) {
         log.error('sqlite: error opening the database', error);
         reject(error);

@@ -26,7 +26,7 @@ function initCtlServer() {
   });
 }
 
-dbInit(settings.values.db.path)
+dbInit(settings.values.db)
   .then(() => getConfig())
   .then(initExpressServer)
   .catch(log.error.bind('sqlite'));
