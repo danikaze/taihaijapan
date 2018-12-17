@@ -1,3 +1,4 @@
+const log = require('../../utils/log');
 const createThumbnails = require('../../utils/create-thumbnails');
 const db = require('..');
 const getConfig = require('../config/get-config').getConfig;
@@ -21,6 +22,7 @@ function insertPhoto(photoData) {
     ];
     stmt.insertPhoto.run(data, function callback(error) {
       if (error) {
+        log.error('sqlite: addPhoto', error);
         reject(error);
         return;
       }
@@ -39,6 +41,7 @@ function insertImages(photoId, thumbs) {
     const promises = thumbs.map((image) => new Promise((resolveOne, rejectOne) => {
       stmt.insertImage.run([photoId, image.width, image.height, image.src], (error) => {
         if (error) {
+          log.error('sqlite: insertImages', error);
           rejectOne(error);
           return;
         }

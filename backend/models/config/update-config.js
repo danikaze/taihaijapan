@@ -1,3 +1,4 @@
+const log = require('../../utils/log');
 const db = require('../index');
 const schema = require('./config-schema');
 
@@ -13,12 +14,13 @@ function serialize(name, value) {
  * TODO: Trigger an event to notify multiple server instances to invalidate the config cache
  */
 function updateConfig(config) {
-  return db.ready(({ stmt }) => new Promise((resolve, reject) => {
+  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     const keys = Object.keys(config);
     let left = keys.length;
 
     function checkDone(error) {
       if (error) {
+        log.error('sqlite: updateConfig', error);
         reject(error);
         return;
       }

@@ -1,3 +1,4 @@
+const log = require('../../utils/log');
 const typify = require('../../utils/typify');
 const db = require('../index');
 const schema = require('./config-schema');
@@ -26,6 +27,7 @@ function refreshConfig() {
   return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.getConfig.all((error, rows) => {
       if (error) {
+        log.error('sqlite: refreshConfig', error);
         reject(error);
         return;
       }

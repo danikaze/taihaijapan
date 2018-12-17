@@ -1,3 +1,4 @@
+const log = require('../../utils/log');
 const db = require('../');
 
 /**
@@ -5,9 +6,10 @@ const db = require('../');
  */
 function getTags(photoId) {
   return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
-    stmt.selectTagsByPhoto.all([photoId], (selectError, tags) => {
-      if (selectError) {
-        reject(selectError);
+    stmt.selectTagsByPhoto.all([photoId], (error, tags) => {
+      if (error) {
+        log.error('sqlite: getTags', error);
+        reject(error);
         return;
       }
 
@@ -22,9 +24,10 @@ function getTags(photoId) {
 function insertOneTag(text) {
   return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     // try to insert a new tag
-    stmt.insertTag.run([text], function insertCallback(insertError) {
-      if (insertError) {
-        reject(insertError);
+    stmt.insertTag.run([text], function insertCallback(error) {
+      if (error) {
+        log.error('sqlite: insertOneTag', error);
+        reject(error);
         return;
       }
 
@@ -36,6 +39,7 @@ function insertOneTag(text) {
       // if not inserted (was already there, get its id)
       stmt.selectTag.get([text], (selectError, row) => {
         if (selectError) {
+          log.error('sqlite: insertOneTag.select', selectError);
           reject(selectError);
           return;
         }
@@ -53,6 +57,7 @@ function linkOneTag(photoId, tagId) {
   return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.linkTag.run([photoId, tagId], (error) => {
       if (error) {
+        log.error('sqlite: linkOneTag', error);
         reject(error);
         return;
       }
@@ -71,6 +76,7 @@ function unlinkOneTag(photoId, tagId) {
   return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.unlinkTag.run([photoId, tagId], (error) => {
       if (error) {
+        log.error('sqlite: unlinkOneTag', error);
         reject(error);
         return;
       }

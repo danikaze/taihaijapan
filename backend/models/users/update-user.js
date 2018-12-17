@@ -1,3 +1,4 @@
+const log = require('../../utils/log');
 const db = require('../index');
 
 function updateUser(id, data) {
@@ -11,6 +12,7 @@ function updateUser(id, data) {
 
     stmt.updateUser.run(params, (error) => {
       if (error) {
+        log.error('sqlite: updateUser', error);
         reject(error);
         return;
       }

@@ -20,6 +20,7 @@ function init(dbPath) {
   exportedData.ready = new Promise((resolve, reject) => {
     dbInstance = new sqlite3.Database(dbPath, (error) => {
       if (error) {
+        log.error('sqlite: error opening the database', error);
         reject(error);
         return;
       }
@@ -147,6 +148,7 @@ function openDb() {
           log.info('sqlite', 'Inserting default data');
           db.exec(sql, (error) => {
             if (error) {
+              log.error('sqlite: insert default data', error);
               reject(error);
               return;
             }

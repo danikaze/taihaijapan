@@ -1,3 +1,4 @@
+const log = require('../../utils/log');
 const db = require('../index');
 
 /**
@@ -22,6 +23,7 @@ function getPhoto(id) {
     // get basic photo data
     stmt.selectPhoto.run(stmtParams, (error, row) => {
       if (error) {
+        log.error('sqlite: getPhoto.basic', error);
         reject(error);
       }
 
@@ -32,6 +34,7 @@ function getPhoto(id) {
     // get tags
     stmt.selectTagsByPhoto.all(stmtParams, (error, rows) => {
       if (error) {
+        log.error('sqlite: getPhoto.tags', error);
         reject(error);
       }
 
@@ -42,6 +45,7 @@ function getPhoto(id) {
     // get images
     stmt.getImageSrcs.all(stmtParams, (error, rows) => {
       if (error) {
+        log.error('sqlite: getPhoto.images', error);
         reject(error);
         return;
       }

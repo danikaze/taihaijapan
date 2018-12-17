@@ -15,6 +15,7 @@ function getSqls() {
   return new Promise((resolve, reject) => {
     stmt.getConfig.all((error, config) => {
       if (error) {
+        log.error('sqlite: getSqls.getConfig', error);
         reject(error);
         return;
       }
@@ -61,8 +62,8 @@ function getSqls() {
           updateSetting: 'UPDATE config SET value = ?, updated = (datetime("now", "utc")) WHERE name = ?;',
           // thumbnail sizes
           selectSizes: 'SELECT id, label, width, height FROM sizes ORDER BY width ASC;',
-          insertSize: 'INSERT INTO sizes(width, height) VALUES(?, ?);',
-          updateSize: 'UPDATE sizes SET width = ?, height = ? WHERE id = ?;',
+          insertSize: 'INSERT INTO sizes(label, width, height) VALUES(?, ?, ?);',
+          updateSize: 'UPDATE sizes SET label = ?, width = ?, height = ? WHERE id = ?;',
           deleteSize: 'DELETE FROM sizes WHERE id = ?;',
           // tags
           insertTag: 'INSERT INTO tags(text) VALUES(?);',
@@ -118,6 +119,7 @@ function prepareGetConfig(db) {
     const sql = 'SELECT * FROM config;';
     stmt.getConfig = db.prepare(sql, (error) => {
       if (error) {
+        log.error('sqlite: preparing getConfig statement', error);
         reject(error);
         return;
       }
@@ -155,7 +157,7 @@ function prepareStatements(db) {
       });
     });
   })).catch((error) => {
-    log.error('sqlite', `Error preparing statements ${JSON.stringify(error, null, 2)}`);
+    log.error('sqlite', `preparing statements ${JSON.stringify(error, null, 2)}`);
   });
 }
 

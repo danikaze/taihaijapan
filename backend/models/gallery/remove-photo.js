@@ -1,4 +1,5 @@
 const fs = require('fs');
+const log = require('../../utils/log');
 const db = require('../index');
 
 /**
@@ -9,6 +10,7 @@ function getImageSrcs(photoId) {
   return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.getImageSrcs.all([photoId], (error, rows) => {
       if (error) {
+        log.error('sqlite: getImageSrcs', error);
         reject(error);
         return;
       }
@@ -27,6 +29,7 @@ function deleteFiles(filePaths) {
   return new Promise((resolve, reject) => {
     function checkDone(error) {
       if (error) {
+        log.error('deleteFiles', error);
         reject(error);
         return;
       }
@@ -51,6 +54,7 @@ function deletePhoto(photoId) {
   return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.deletePhoto.run([photoId], (error, row) => {
       if (error) {
+        log.error('sqlite: deletePhoto', error);
         reject(error);
         return;
       }

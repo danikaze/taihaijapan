@@ -1,3 +1,4 @@
+const log = require('../../utils/log');
 const db = require('../index');
 const getPhoto = require('./get-photo');
 const updatePhotoTags = require('./update-photo-tags');
@@ -11,6 +12,7 @@ function updatePhotoBaseData(photoId, newData) {
     const data = [newData.title, newData.keywords, newData.visible, photoId];
     stmt.updatePhoto.run(data, (error) => {
       if (error) {
+        log.error('sqlite: updatePhotoBaseData', error);
         reject(error);
         return;
       }

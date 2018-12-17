@@ -1,3 +1,4 @@
+const log = require('../../utils/log');
 const db = require('../index');
 
 /**
@@ -7,6 +8,7 @@ function getSizes() {
   return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.selectSizes.all([], (error, rows) => {
       if (error) {
+        log.error('sqlite: getSizes', error);
         reject(error);
         return;
       }
