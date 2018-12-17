@@ -4,6 +4,7 @@ const getPhotosAdmin = require('../models/gallery/get-photos').getPhotosAdmin;
 const getConfig = require('../models/config/get-config').getConfig;
 const photoSchema = require('../models/schemas/photos');
 const updatePhoto = require('../models/gallery/update-photo');
+const removePhoto = require('../models/gallery/remove-photo');
 
 let routeAdmin;
 let routeConfig;
@@ -70,17 +71,22 @@ function getGalleryData(request, response) {
   });
 }
 
+/**
+ * Process the request to delete a photo
+ */
 function removePhotos(request, response) {
   try {
     const list = JSON.parse(request.query.photos);
-    galleryModel.remove(list).then((data) => {
-      response.send(data);
-    }).catch((errorData) => {
-      response.status(400).send({
-        error: 'Wrong data',
-        data: errorData,
+    const promises = list.map(removePhoto);
+
+    Promise.all(promises)
+      .then(() => response.send())
+      .catch((errorData) => {
+        response.status(400).send({
+          error: 'Wrong data',
+          data: errorData,
+        });
       });
-    });
   } catch (error) {
     response.status(400).send('Wrong data');
   }
