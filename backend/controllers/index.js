@@ -16,7 +16,7 @@ function index(request, response) {
         bodyId: 'page-index',
         fullUrl: config['site.baseUrl'],
         siteGlobalTitle: config['site.title'],
-        googleAnalyticsAccount: config['site.analytics'],
+        googleAnalyticsAccount: config['google.analytics'],
         newPhotos,
         sizes,
       });

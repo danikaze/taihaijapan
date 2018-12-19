@@ -41,7 +41,7 @@ function getPhotos(query) {
         });
 
         // get images
-        stmt.getImageSrcs.all([photo.id], (error, rows) => {
+        stmt.getImagesByPhoto.all([photo.id], (error, rows) => {
           if (error) {
             log.error('sqlite: getPhotos.images', error);
             reject(error);
