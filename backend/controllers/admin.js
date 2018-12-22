@@ -11,7 +11,7 @@ const displayOptions = require('./admin/display-options').displayOptions;
 const updateOptions = require('./admin/update-options').updateOptions;
 
 module.exports = (app, serverSettings, config) => {
-  initUpload(config);
+  initUpload(serverSettings);
   const routeAdmin = serverSettings.adminUrl;
   const routePhoto = `${routeAdmin}/photos`;
   const routePhotoId = `${routePhoto}/:photoId`;

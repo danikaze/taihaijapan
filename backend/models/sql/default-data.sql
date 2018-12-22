@@ -24,11 +24,6 @@ INSERT INTO config(name, value) VALUES
   ('page.gallery.reverse', 'true'),
   -- images
   ('images.hiddenByDefault', 'true'),
-  -- images.paths
-  ('images.originalPath', 'data/photos'),
-  ('images.temporalPath', 'data/temp'),
-  ('images.path', 'public/photos'),
-  ('images.baseUrl', '/public/photos'),
   -- images.resize
   ('images.resize.policy', 'inside'),
   ('images.resize.outputFile', '{id:3}/{size}-{hash:16}.jpg'),

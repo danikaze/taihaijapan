@@ -13,8 +13,13 @@ const settingsPath = {
     'helpersPath',
     'partialsPath',
     'publicFolder',
+    'imagesOriginalPath',
+    'imagesTemporalPath',
+    'imagesThumbPath',
   ],
-  db: ['path'],
+  db: [
+    'path',
+  ],
 };
 
 /*
