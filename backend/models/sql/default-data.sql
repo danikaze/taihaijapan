@@ -6,7 +6,6 @@ INSERT INTO users(username, password) VALUES
 INSERT INTO config(name, value) VALUES
   -- internal
   ('schema.version', '0'),
-  ('config.cache', '60'),
   -- global
   ('site.title', 'My photo gallery'),
   ('site.baseUrl', 'https://taihaijapan.com'),

@@ -16,6 +16,9 @@
     "path": "../data/db.sqlite",
     "debugMode": false
   },
+  "cacheTtl": {
+    "config": 60
+  },
   "log": {
     "logLevel": "warn",
     "logDate": true,

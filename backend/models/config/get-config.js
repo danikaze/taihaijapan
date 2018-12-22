@@ -1,10 +1,11 @@
 const log = require('../../utils/log');
 const typify = require('../../utils/typify');
-const db = require('../index');
+const db = require('../');
 const configSchema = require('../schemas/config');
 
 let updatePromise;
 let cachedConfig;
+let cacheTtl = 0;
 let cachedUntil = 0;
 
 /**
@@ -33,7 +34,7 @@ function refreshConfig() {
       }
 
       cachedConfig = configToObject(rows);
-      cachedUntil = new Date().getTime() + ((cachedConfig['config.cache'] * 1000) || 0);
+      cachedUntil = new Date().getTime() + cacheTtl;
 
       resolve(cachedConfig);
     });
@@ -68,7 +69,15 @@ function invalidateCache() {
   cachedUntil = 0;
 }
 
+/**
+ * Initialize the configuration module with the server settings
+ */
+function init(ttl) {
+  cacheTtl = Math.round(ttl) * 1000;
+}
+
 module.exports = {
   getConfig,
   invalidateCache,
+  init,
 };

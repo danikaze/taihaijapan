@@ -5,6 +5,9 @@
   "db": {
     "debugMode": true
   },
+  "cacheTtl": {
+    "config": 0
+  },
   "log": {
     "logLevel": "silly",
     "logDate": true,
