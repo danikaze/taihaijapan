@@ -1,37 +1,20 @@
-const log = require('../utils/log');
-const getPhotosIndex = require('../models/gallery/get-photos').getPhotosIndex;
-const getSizes = require('../models/gallery/get-sizes');
-const getConfig = require('../models/config/get-config').getConfig;
-
-function index(request, response) {
-  const promises = [
-    getSizes(),
-    getPhotosIndex(),
-    getConfig(),
-  ];
-
-  Promise.all(promises)
-    .then(([sizes, newPhotos, config]) => {
-      response.render('index', {
-        bodyId: 'page-index',
-        fullUrl: config['site.baseUrl'],
-        siteGlobalTitle: config['site.title'],
-        googleAnalyticsAccount: config['google.analytics'],
-        newPhotos,
-        sizes,
-      });
-    })
-    .catch((error) => {
-      log.error('index', error);
-      response.status(500).send('Unexpected Error');
-    });
-}
-
+const displayIndex = require('./gallery/display-index').displayIndex;
+const displayGallery = require('./gallery/display-gallery').displayGallery;
 
 module.exports = (app) => [
   {
     method: 'get',
     path: '/',
-    callback: index,
+    callback: displayIndex,
+  },
+  {
+    method: 'get',
+    path: '/gallery',
+    callback: displayGallery,
+  },
+  {
+    method: 'get',
+    path: '/photo/:slug',
+    callback: displayGallery,
   },
 ];

@@ -1,120 +1,64 @@
+const bodyParser = require('body-parser');
 const auth = require('../utils/auth');
-const typify = require('../utils/typify');
-const getPhotosAdmin = require('../models/gallery/get-photos').getPhotosAdmin;
-const getConfig = require('../models/config/get-config').getConfig;
-const photoSchema = require('../models/schemas/photos');
-const updatePhoto = require('../models/gallery/update-photo');
-const removePhoto = require('../models/gallery/remove-photo');
 
-let routeAdmin;
-let routeConfig;
+const displayGallery = require('./admin/display-gallery').displayGallery;
+const addPhoto = require('./admin/add-photo').addPhoto;
+const initUpload = require('./admin/add-photo').init;
+const updatePhoto = require('./admin/update-photo').updatePhoto;
+const deletePhoto = require('./admin/delete-photo').deletePhoto;
 
-/**
- * Receive a list of photos to update as { id: newPhotoData }
- * Return the same list with the updated data
- *
- * @param {*} request
- * @param {*} response
- */
-function updatePhotos(request, response) {
-  try {
-    const rawData = JSON.parse(request.query.photos);
-    const promises = Object.keys(rawData).map((key) => {
-      const id = Number(key);
-      const photo = typify(rawData[key], photoSchema, { copy: true, includeExternal: false });
-      const rawTags = rawData[key].tags;
-      photo.tags = rawTags ? rawTags.split(',').map((tag) => tag.trim()).filter((tag) => tag.length > 0)
-                           : [];
-
-      return updatePhoto(id, photo);
-    });
-
-    Promise.all(promises).then((updatedPhotos) => {
-      const updatedData = {};
-      updatedPhotos.forEach((updatedPhoto) => {
-        updatedData[updatedPhoto.id] = updatedPhoto;
-      });
-      response.send(updatedData);
-    }).catch((error) => {
-      response.status(400).send({
-        error: 'Wrong data',
-        data: error,
-      });
-    });
-  } catch (error) {
-    response.status(400).send('Wrong data');
-  }
-}
-
-/**
- * Get all the photos for the admin gallery
- * TODO: Pagination
- *
- * @param {*} request
- * @param {*} response
- */
-function getGalleryData(request, response) {
-  const promises = [
-    getConfig(),
-    getPhotosAdmin(),
-  ];
-
-  Promise.all(promises).then(([config, photos]) => {
-    response.render('admin', {
-      fullUrl: `${config['site.baseUrl']}${routeAdmin}`,
-      bodyId: 'page-admin',
-      siteGlobalTitle: config['site.title'],
-      routeAdmin,
-      routeConfig,
-      photos,
-    });
-  });
-}
-
-/**
- * Process the request to delete a photo
- */
-function removePhotos(request, response) {
-  try {
-    const list = JSON.parse(request.query.photos);
-    const promises = list.map(removePhoto);
-
-    Promise.all(promises)
-      .then(() => response.send())
-      .catch((errorData) => {
-        response.status(400).send({
-          error: 'Wrong data',
-          data: errorData,
-        });
-      });
-  } catch (error) {
-    response.status(400).send('Wrong data');
-  }
-}
+const displayOptions = require('./admin/display-options').displayOptions;
+const updateOptions = require('./admin/update-options').updateOptions;
 
 module.exports = (app, serverSettings, config) => {
-  routeAdmin = serverSettings.adminUrl;
-  routeConfig = `${routeAdmin}/options`;
-  const routePhotos = `${routeAdmin}/photos`;
+  initUpload(config);
+  const routeAdmin = serverSettings.adminUrl;
+  const routePhoto = `${routeAdmin}/photos`;
+  const routePhotoId = `${routePhoto}/:photoId`;
+  const routeOptions = `${routeAdmin}/options`;
 
   return [
+    // get the whole gallery
     {
       method: 'get',
       path: routeAdmin,
-      callback: getGalleryData,
+      callback: displayGallery.bind(null, serverSettings),
       middleware: auth.middleware(),
     },
+    // add one photo
+    {
+      method: 'post',
+      path: routePhoto,
+      callback: addPhoto.bind(null, serverSettings),
+      middleware: auth.middleware(),
+    },
+    // update one photo
     {
       method: 'put',
-      path: routePhotos,
-      callback: updatePhotos,
+      path: routePhoto,
+      callback: updatePhoto.bind(null, serverSettings),
       middleware: auth.middleware(),
     },
+    // remove one photo
     {
       method: 'delete',
-      path: routePhotos,
-      callback: removePhotos,
+      path: routePhotoId,
+      callback: deletePhoto.bind(null, serverSettings),
       middleware: auth.middleware(),
+    },
+    // get the gallery options
+    {
+      method: 'get',
+      path: routeOptions,
+      callback: displayOptions.bind(null, serverSettings),
+      middleware: auth.middleware(),
+    },
+    // update the gallery options
+    {
+      method: 'post',
+      path: routeOptions,
+      callback: updateOptions.bind(null, serverSettings),
+      middleware: [auth.middleware(), bodyParser.urlencoded({ extended: true })],
     },
   ];
 };

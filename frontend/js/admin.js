@@ -76,13 +76,10 @@ function updateData() {
 }
 
 function removePhoto() {
-  const id = parseInt(editDialog.id.value, 10);
-  const li = document.querySelector(`#thumbnails li[data-photo-id="${id}"]`);
-  const data = {
-    photos: [id],
-  };
+  const photoId = Number(editDialog.id.value);
+  const li = document.querySelector(`#thumbnails li[data-photo-id="${photoId}"]`);
 
-  requestData(API_URL, { method: 'DELETE', data }).then(() => {
+  requestData(`${API_URL}/${photoId}`, { method: 'DELETE' }).then(() => {
     if (li) {
       li.parentElement.removeChild(li);
     }

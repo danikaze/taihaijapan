@@ -88,6 +88,9 @@ function addPhoto(photoData) {
 
       photoData.id = photoId;
       createThumbnails(photoData, thumbnailsOptions).then((imageData) => {
+        log.verbose('add-photo', `New photo added (id: ${photoId}, slug: ${photoData.slug})`);
+        log.silly('add-photo', `Created thumbnails for id ${photoId}: ${JSON.stringify(imageData, null, 2)}`);
+
         insertImages(photoId, imageData)
           .then(resolve)
           .catch(reject);

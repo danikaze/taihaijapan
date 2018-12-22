@@ -1,6 +1,8 @@
 const fs = require('fs');
+const path = require('path');
 const log = require('../../utils/log');
 const db = require('../index');
+const getPhoto = require('./get-photo');
 
 /**
  * Get the list of the paths for the images associated to a photo
@@ -65,21 +67,29 @@ function deletePhoto(photoId) {
 }
 
 /**
- * Remove a photo from the gallery (and all its related data)
- * @param id
+ * Remove a list of photos from the gallery (and all its related data)
+ * @param photoIds
  */
-function removePhoto(id) {
-  return new Promise((resolve, reject) => {
-    const photoId = Number(id);
+function removePhotos(photoIds) {
+  const promises = photoIds.map((photoId) => new Promise((resolve, reject) => {
+    Promise.all([
+      getPhoto(photoId),
+      getImageSrcs(photoId),
+    ]).then(([photoData, srcs]) => {
+      const imagePaths = srcs.map((src) => path.join(path.resolve(__dirname, '..', '..'), src));
+      imagePaths.push(photoData.original);
 
-    getImageSrcs(photoId)
-      .then((srcs) => {
-        deleteFiles(srcs);
-        deletePhoto(photoId)
-          .then(resolve);
-      })
-      .catch(reject);
-  });
+      // no need to wait for file deletion
+      deleteFiles(imagePaths).catch(() => {
+        log.error('removePhotos', `Error deleting some files of photo id ${photoId}`);
+      });
+      deletePhoto(photoId)
+        .then(resolve);
+    })
+    .catch(reject);
+  }));
+
+  return Promise.all(promises);
 }
 
-module.exports = removePhoto;
+module.exports = removePhotos;

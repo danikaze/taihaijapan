@@ -77,7 +77,7 @@ class Server extends EventEmitter {
    * { method, path, callback(request, response) }
    */
   loadEndPoints(routesPath, config) {
-    const files = requireAll({ dirname: routesPath });
+    const files = requireAll({ dirname: routesPath, recursive: false });
 
     Object.keys(files).forEach((fileName) => {
       try {
