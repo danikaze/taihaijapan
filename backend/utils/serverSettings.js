@@ -12,7 +12,7 @@ const settingsPath = {
     'viewsPath',
     'helpersPath',
     'partialsPath',
-    'publicFolder',
+    'publicPath',
     'imagesOriginalPath',
     'imagesTemporalPath',
     'imagesThumbPath',

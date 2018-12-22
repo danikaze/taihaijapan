@@ -8,7 +8,7 @@ INSERT INTO config(name, value) VALUES
   ('schema.version', '0'),
   -- global
   ('site.title', 'My photo gallery'),
-  ('site.baseUrl', 'https://taihaijapan.com'),
+  ('site.baseUrl', 'http://localhost'),
   ('google.analytics', ''),
   -- page.admin
   ('page.admin.imagesPerPage', '50'),
