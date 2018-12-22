@@ -13,21 +13,25 @@
   "main": "backend/index.js",
   "scripts": {
     "start": "node backend/ prod.json",
-    "start:backend": "nodemon backend/ dev.json",
-    "start:frontend": "webpack --env=dev",
-    "be": "yarn start:backend",
-    "fe": "yarn start:frontend",
+    "start-backend": "nodemon --inspect backend/ dev.json",
+    "start-backend-brk": "nodemon --inspect-brk backend/ dev.json",
+    "start-frontend": "webpack --env=dev",
+    "be": "npm run start-backend",
+    "be-brk": "npm run start-backend-brk",
+    "fe": "npm run start-frontend",
     "build": "webpack --env=prod",
-    "rebuild": "yarn clean && yarn build",
+    "rebuild": "npm run clean && npm run build",
     "clean": "rimraf buildInfo && rimraf backend/public",
     "lint": "eslint frontend backend scripts --ext .js",
     "lint:fix": "eslint frontend backend scripts .js --fix",
-    "prepublish": "yarn build"
+    "prepublish": "npm run build",
+    "reset": "rimraf backend/data/photos backend/data/db.sqlite backend/public/photos"
   },
   "pre-commit": [
     "lint"
   ],
   "devDependencies": {
+    "@types/sqlite3": "^3.1.3",
     "babel-cli": "^6.24.1",
     "babel-core": "6.17.0",
     "babel-eslint": "7.0.0",
@@ -110,7 +114,9 @@
     "photoswipe": "^4.1.2",
     "q": "^1.5.0",
     "require-all": "^2.2.0",
-    "sharp": "^0.18.4",
+    "sharp": "^0.21.0",
+    "sqlite3": "^4.0.4",
+    "vanilla-type-check": "^2.0.1",
     "yargs": "^9.0.1"
   }
 }

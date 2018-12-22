@@ -100,8 +100,8 @@ function createPhotoSwipe(photoIndex) {
     this.biggestSizesLoaded[item.id] = biggestImage;
     const shownItem = item.imgs[biggestImage];
     item.src = shownItem.src;
-    item.w = shownItem.w;
-    item.h = shownItem.h;
+    item.w = shownItem.width;
+    item.h = shownItem.height;
     item.pid = item.slug;
   });
 

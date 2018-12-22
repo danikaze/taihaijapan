@@ -14,6 +14,7 @@ const settingsPath = {
     'partialsPath',
     'publicFolder',
   ],
+  db: ['path'],
 };
 
 /*

@@ -15,7 +15,7 @@ function chooseBestSize(viewport, sizes, options) {
 
   for (let i = 0; i < last; i++) {
     const size = sizes[i];
-    if ((!size.w || size.w > w) && (!size.h || size.h > h)) {
+    if ((!size.width || size.width > w) && (!size.height || size.height > h)) {
       return i;
     }
   }

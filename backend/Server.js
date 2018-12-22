@@ -5,6 +5,7 @@ const requireAll = require('require-all');
 const EventEmitter = require('events');
 const hbs = require('hbs');
 const log = require('./utils/log');
+const auth = require('./utils/auth');
 
 class Server extends EventEmitter {
   /**
@@ -15,12 +16,14 @@ class Server extends EventEmitter {
 
     this.serverSettings = settings.server;
     this.logSettings = settings.log;
+    auth.setRealm(this.serverSettings.adminRealm);
   }
 
   /**
   * Set and start the HTTP server
+  * @param {object} config Configuration of the page from the database
   */
-  start() {
+  start(config) {
     this.app = express();
     this.app.disable('x-powered-by');
     this.app.use(this.serverSettings.publicPath, express.static(this.serverSettings.publicFolder));
@@ -31,7 +34,7 @@ class Server extends EventEmitter {
     this.app.set('view engine', 'hbs');
     this.app.set('views', this.serverSettings.viewsPath);
 
-    this.loadEndPoints(this.serverSettings.controllersPath);
+    this.loadEndPoints(this.serverSettings.controllersPath, config);
     this.app.use(error404handler);
 
     this.setHbs().then(() => {
@@ -52,11 +55,15 @@ class Server extends EventEmitter {
       const helpers = requireAll({ dirname: this.serverSettings.helpersPath });
 
       Object.keys(helpers).forEach((fileName) => {
-        const helper = helpers[fileName];
-        if (helper.async) {
-          hbs.registerAsyncHelper(helper.fn.name, helper.fn);
-        } else {
-          hbs.registerHelper(helper.fn.name, helper.fn);
+        try {
+          const helper = helpers[fileName];
+          if (helper.async) {
+            hbs.registerAsyncHelper(helper.fn.name, helper.fn);
+          } else {
+            hbs.registerHelper(helper.fn.name, helper.fn);
+          }
+        } catch (error) {
+          log.error('Server', `Error registering template ${fileName}`);
         }
       });
 
@@ -69,12 +76,12 @@ class Server extends EventEmitter {
    * Create all the end points defined in the routes folder as modules returning
    * { method, path, callback(request, response) }
    */
-  loadEndPoints(routesPath) {
-    const files = requireAll({ dirname: routesPath });
+  loadEndPoints(routesPath, config) {
+    const files = requireAll({ dirname: routesPath, recursive: false });
 
     Object.keys(files).forEach((fileName) => {
       try {
-        const apis = files[fileName](this.app);
+        const apis = files[fileName](this.app, this.serverSettings, config);
 
         apis.forEach((api) => {
           if (api.middleware) {

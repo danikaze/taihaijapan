@@ -4,7 +4,7 @@ const fs = require('fs');
 const mkdirp = require('mkdirp').sync;
 
 const DEFAULT_OPTIONS = {
-  resizePolicy: 'fit',  // fit|cover
+  resizePolicy: 'inside',  // cover, contain, fill, inside or outside
   format: 'jpeg',
   formatOptions: {
     quality: 80,
@@ -20,15 +20,16 @@ function resizeImage(inputPath, outputPath, width, height, options) {
 
   const opt = Object.assign({}, DEFAULT_OPTIONS, options);
   return new Promise((resolve, reject) => {
-    const resizeProcess = sharp(inputPath).withoutEnlargement(opt.doNotEnlarge);
-
-    if (opt.resizePolicy === 'fit') {
-      resizeProcess.resize(width || 100000, height || 100000).max();
-    } else if (opt.resizePolicy === 'cover') {
-      resizeProcess.resize(width || 1, height || 1).min();
-    }
+    const resizeProcess = sharp(inputPath);
+    const resizeOptions = {
+      width: opt.resizePolicy === 'inside' ? (width || 10000) : (width || 1),
+      height: opt.resizePolicy === 'inside' ? (height || 10000) : (height || 1),
+      withoutEnlargment: opt.doNotEnlarge,
+      fit: opt.resizePolicy,
+    };
 
     resizeProcess
+      .resize(resizeOptions)
       .toFormat(opt.format, opt.formatOptions)
       .toFile(outputPath, (error, info) => {
         info.input = inputPath;

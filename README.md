@@ -26,6 +26,10 @@ List of planned tasks/features (in no specific order):
 
 # Changelog
 
+##
+* Replaced `yarn` by `npm`
+* Moved the models to sqlite
+
 ## 0.9.0
 * Changed the way the data model is managed (_settings_ and _gallery_)
 * Added an `admin` interface to administrate the data graphically

@@ -38,7 +38,7 @@ function updateCardData(elem, id, data) {
  * Send the data of the edit dialog
  */
 function updateData() {
-  const id = parseInt(editDialog.id.value, 10);
+  const id = Number(editDialog.id.value);
   const li = document.querySelector(`#thumbnails li[data-photo-id="${id}"]`);
   const data = {
     photos: {},
@@ -48,7 +48,7 @@ function updateData() {
     slug: editDialog.slug.value,
     tags: editDialog.tags.value,
     keywords: editDialog.keywords.value,
-    deleted: !editDialog.hidden.checked,
+    visible: editDialog.hidden.checked,
   };
 
   if (li) {
@@ -76,13 +76,10 @@ function updateData() {
 }
 
 function removePhoto() {
-  const id = parseInt(editDialog.id.value, 10);
-  const li = document.querySelector(`#thumbnails li[data-photo-id="${id}"]`);
-  const data = {
-    photos: [id],
-  };
+  const photoId = Number(editDialog.id.value);
+  const li = document.querySelector(`#thumbnails li[data-photo-id="${photoId}"]`);
 
-  requestData(API_URL, { method: 'DELETE', data }).then(() => {
+  requestData(`${API_URL}/${photoId}`, { method: 'DELETE' }).then(() => {
     if (li) {
       li.parentElement.removeChild(li);
     }
@@ -102,7 +99,7 @@ function addEditDetailsBehavior(li) {
       const photo = getPhotoDataById(id);
 
       editDialog.id.value = photo.id;
-      editDialog.hidden.checked = !photo.deleted;
+      editDialog.hidden.checked = !!photo.visible;
       editDialog.photo.src = photo.imgs[0].src;
       editDialog.title.value = photo.title;
       editDialog.slug.value = photo.slug;

@@ -13,11 +13,11 @@ function getSrcsetTag(imgs, sizes) {
   imgs.forEach((img) => {
     let code = img.src;
 
-    if (img.w) {
-      code += ` ${img.w}w`;
+    if (img.width) {
+      code += ` ${img.width}w`;
     }
-    if (img.h) {
-      code += ` ${img.h}h`;
+    if (img.height) {
+      code += ` ${img.height}h`;
     }
 
     srcset.push(code);

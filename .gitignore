@@ -11,6 +11,7 @@ buildInfo
 backend/public
 backend/gallery.json
 backend/data/photos
+backend/data/db.sqlite
 backend/data/settings.json
 backend/data/gallery.json
 coverage
