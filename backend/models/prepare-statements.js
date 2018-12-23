@@ -62,9 +62,9 @@ function getSqls() {
           // config
           updateSetting: 'UPDATE config SET value = ?, updated = (datetime("now", "utc")) WHERE name = ?;',
           // thumbnail sizes
-          selectSizes: 'SELECT id, label, width, height FROM sizes ORDER BY width ASC;',
-          insertSize: 'INSERT INTO sizes(label, width, height) VALUES(?, ?, ?);',
-          updateSize: 'UPDATE sizes SET label = ?, width = ?, height = ? WHERE id = ?;',
+          selectSizes: 'SELECT id, label, width, height, quality FROM sizes ORDER BY width ASC;',
+          insertSize: 'INSERT INTO sizes(label, width, height, quality) VALUES(?, ?, ?, ?);',
+          updateSize: 'UPDATE sizes SET label = ?, width = ?, height = ?, quality = ? WHERE id = ?;',
           deleteSize: 'DELETE FROM sizes WHERE id = ?;',
           // tags
           insertTag: 'INSERT INTO tags(text) VALUES(?);',

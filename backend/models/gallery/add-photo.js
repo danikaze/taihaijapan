@@ -5,6 +5,8 @@ const getConfig = require('../config/get-config').getConfig;
 const getSizes = require('./get-sizes');
 const updatePhotoTags = require('./update-photo-tags');
 
+let serverSettings;
+
 /**
  * Insert data as a new row in the `photos` table, returning a promise resolved to the new row ID.
  * It does not insert any related data.
@@ -75,15 +77,14 @@ function addPhoto(photoData) {
 
       const thumbnailsOptions = {
         sizes,
-        path: config['images.path'],
-        temporalPath: config['images.temporalPath'],
+        path: serverSettings.imagesThumbPath,
+        temporalPath: serverSettings.imagesTemporalPath,
         resize: {
           policy: 'inside',
           outputFile: '{id:3}/{size}-{hash:16}.jpg',
           format: 'jpeg',
-          formatOptions: config['images.resize.quality'],
         },
-        baseUrl: config['images.baseUrl'],
+        baseUrl: serverSettings.imagesBaseUrl,
       };
 
       photoData.id = photoId;
@@ -99,4 +100,18 @@ function addPhoto(photoData) {
   }));
 }
 
-module.exports = addPhoto;
+/**
+ * Initialize the configuration module with the server settings
+ */
+function init(settings) {
+  serverSettings = {
+    imagesTemporalPath: settings.imagesTemporalPath,
+    imagesThumbPath: settings.imagesThumbPath,
+    imagesBaseUrl: settings.imagesBaseUrl,
+  };
+}
+
+module.exports = {
+  addPhoto,
+  init,
+};

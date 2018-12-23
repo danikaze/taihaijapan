@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS sizes (
   label text NOT NULL UNIQUE,
   width integer NOT NULL,
   height integer NOT NULL,
+  quality integer NOT NULL,
 
   UNIQUE(width, height) ON CONFLICT IGNORE
 );

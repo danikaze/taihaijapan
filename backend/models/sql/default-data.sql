@@ -23,12 +23,11 @@ INSERT INTO config(name, value) VALUES
   ('page.gallery.orderBy', 'created'),
   ('page.gallery.reverse', 'true'),
   -- images
-  ('images.hiddenByDefault', 'true'),
-  ('images.resize.quality', '80');
+  ('images.hiddenByDefault', 'true');
 
 -- image sizes
-INSERT INTO sizes(label, width, height) VALUES
-  ('T', 400, 0),
-  ('S', 720, 0),
-  ('M', 1280, 0),
-  ('L', 2000, 0);
+INSERT INTO sizes(label, width, height, quality) VALUES
+  ('T', 400, 0, 60),
+  ('S', 720, 0, 80),
+  ('M', 1280, 0, 80),
+  ('L', 2000, 0, 80);

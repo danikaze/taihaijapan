@@ -30,6 +30,8 @@ List of planned tasks/features (in no specific order):
 * Replaced `yarn` by `npm`
 * Moved the data models to sqlite
 * Moved some user **options** (customizable values from the admin control panel) to server **settings** (values set in a json file only read by the server at start)
+* Simpler image configuration
+* Image resizing quality customizable per size
 
 ## 0.9.0
 * Changed the way the data model is managed (_settings_ and _gallery_)

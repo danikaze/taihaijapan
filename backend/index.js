@@ -5,6 +5,7 @@ const CtlServer = require('./ctl/CtlServer');
 const ctlEmitter = require('./ctl/ctlEmitter');
 const log = require('./utils/log');
 const modelInit = require('./models').init;
+const addPhotoInit = require('./models/gallery/add-photo').init;
 const configInit = require('./models/config/get-config').init;
 const getConfig = require('./models/config/get-config').getConfig;
 
@@ -29,6 +30,7 @@ function initCtlServer() {
 
 modelInit(settings.values)
   .then(() => configInit(settings.values.cacheTtl.config))
+  .then(() => addPhotoInit(settings.values.server))
   .then(() => getConfig())
   .then(initExpressServer)
   .catch(log.error.bind('sqlite'));

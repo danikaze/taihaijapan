@@ -1,7 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const stripExtension = require('../../utils/stripExtension');
-const modelAddPhoto = require('../../models/gallery/add-photo');
+const modelAddPhoto = require('../../models/gallery/add-photo').addPhoto;
 const getConfig = require('../../models/config/get-config').getConfig;
 
 let upload;
