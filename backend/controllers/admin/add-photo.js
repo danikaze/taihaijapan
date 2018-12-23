@@ -52,14 +52,12 @@ function addPhoto(serverSettings, request, response) {
 }
 
 /**
- * Set the proper parameters based on the user configuration
- *
- * @param {*} config configuration from the db
+ * Set the proper parameters based on the server settings
  */
-function init(config) {
+function init(serverSettings) {
   const uploadStorage = multer({
     storage: multer.diskStorage({
-      destination: path.join(path.resolve(__dirname, '..', '..'), config['images.originalPath']),
+      destination: serverSettings.imagesOriginalPath,
       filename: getUploadFilename,
     }),
   });

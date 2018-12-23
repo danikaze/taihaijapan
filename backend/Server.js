@@ -26,7 +26,7 @@ class Server extends EventEmitter {
   start(config) {
     this.app = express();
     this.app.disable('x-powered-by');
-    this.app.use(this.serverSettings.publicPath, express.static(this.serverSettings.publicFolder));
+    this.app.use(this.serverSettings.publicUrl, express.static(this.serverSettings.publicPath));
 
     this.app.use(compress());
     this.app.use(morgan(this.logSettings.logRequests));

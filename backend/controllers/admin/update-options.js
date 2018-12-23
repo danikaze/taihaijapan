@@ -13,11 +13,6 @@ const updateUser = require('../../models/users/update-user');
  */
 function updateOptions(serverSettigs, request, response) {
   const { sizes, admin, ...config } = request.body;
-  const quality = Number(config['images.resize.formatOptions.quality']);
-  if (quality) {
-    config['images.resize.formatOptions'] = `{ "quality": ${quality} }`;
-    delete config['images.resize.formatOptions.quality'];
-  }
 
   const typedConfig = {
     'page.admin.reverse': false,

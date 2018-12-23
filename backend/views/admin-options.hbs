@@ -110,47 +110,8 @@ sizes = {{{stringify sizes true}}}
       </label>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-images-originalPath" name="images.originalPath" pattern="[a-zA-z0-9_.-]+(\/[a-zA-z0-9_.-]+)*" value="{{lookup config 'images.originalPath'}}">
-        <label class="mdl-textfield__label" for="config-images-originalPath">Path for the original images (relative to backend)</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-images-temporalPath" name="images.temporalPath" pattern="[a-zA-z0-9_.-]+(\/[a-zA-z0-9_.-]+)*" value="{{lookup config 'images.temporalPath'}}">
-        <label class="mdl-textfield__label" for="config-images-temporalPath">Path for the uploaded images (temp/relative to backend)</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-images-path" name="images.path" pattern="[a-zA-z0-9_.-]+(\/[a-zA-z0-9_.-]+)*" value="{{lookup config 'images.path'}}">
-        <label class="mdl-textfield__label" for="config-images-path">Path for the generated thumbnails (relative to backend)</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-images-baseUrl" name="images.baseUrl" pattern="(\/[a-zA-z0-9_.-]+)*" value="{{lookup config 'images.baseUrl'}}">
-        <label class="mdl-textfield__label" for="config-images-baseUrl">URL for the images (relative to /)</label>
-      </div>
-    </div>
-
-    <h4 data-toggle="resizing-options-content">Image resizing options</h4>
-
-    <div id="resizing-options-content">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-images-resize-policy" name="images.resize.policy" pattern="(cover)|(contain)|(fill)|(inside)|(outside)" value="{{lookup config 'images.resize.policy'}}">
-        <label class="mdl-textfield__label" for="config-images-resize-policy">Resize policy (cover, contain, fill, inside, outside)</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-images-resize-outputFile" name="images.resize.outputFile" value="{{lookup config 'images.resize.outputFile'}}">
-        <label class="mdl-textfield__label" for="config-images-resize-outputFile">OutputFile</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-images-resize-format" name="images.resize.format" pattern="(jpeg)|(png)|(webp)|(tiff)|(raw)" value="{{lookup config 'images.resize.format'}}">
-        <label class="mdl-textfield__label" for="config-images-resize-format">Format (jpeg, png, webp, tiff, raw)</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="number" min="0" id="config-images-resize-formatOptions-quality" name="images.resize.formatOptions.quality" pattern="[0-9]+" value="{{lookup config 'images.resize.formatOptions.quality'}}">
-        <label class="mdl-textfield__label" for="config-images-resize-formatOptions-quality">Quality</label>
+        <input class="mdl-textfield__input" type="number" min="0" max="100" id="config-images-resize-quality" name="images.resize.quality" value="{{lookup config 'images.resize.quality'}}">
+        <label class="mdl-textfield__label" for="config-images-resize-quality">Thumbnail compresion quality</label>
       </div>
     </div>
 

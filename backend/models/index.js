@@ -16,13 +16,13 @@ const exportedData = {
  *
  * @param {string} dbPath Path to the file to use as database
  */
-function init(dbSettings) {
-  if (dbSettings.debugMode) {
+function init(settings) {
+  if (settings.db.debugMode) {
     sqlite3 = sqlite3.verbose();
   }
 
   exportedData.ready = new Promise((resolve, reject) => {
-    dbInstance = new sqlite3.Database(dbSettings.path, (error) => {
+    dbInstance = new sqlite3.Database(settings.db.path, (error) => {
       if (error) {
         log.error('sqlite: error opening the database', error);
         reject(error);

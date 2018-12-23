@@ -6,15 +6,22 @@
     "viewsPath": "../views",
     "helpersPath": "../views/helpers",
     "partialsPath": "../views/partials",
-    "publicFolder": "../public",
-    "publicPath": "/public",
+    "publicPath": "../public",
+    "publicUrl": "/public",
     "adminUrl": "/admin",
     "adminRealm": "admin-auth",
-    "passphrase": "change-this"
+    "passphrase": "change-this",
+    "imagesOriginalPath": "../data/photos",
+    "imagesTemporalPath": "../data/temp",
+    "imagesThumbPath": "../public/photos",
+    "imagesBaseUrl": "/public/photos"
   },
   "db": {
     "path": "../data/db.sqlite",
     "debugMode": false
+  },
+  "cacheTtl": {
+    "config": 60
   },
   "log": {
     "logLevel": "warn",

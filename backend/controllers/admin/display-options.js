@@ -19,7 +19,6 @@ function displayOptions(serverSettings, request, response) {
     const routeAdmin = serverSettings.adminUrl;
     const routeOptions = `${routeAdmin}/options`;
 
-    config['images.resize.formatOptions.quality'] = config['images.resize.formatOptions'].quality;
     response.render('admin-options', {
       fullUrl: `${config['site.baseUrl']}${routeOptions}`,
       bodyId: 'page-admin-options',
