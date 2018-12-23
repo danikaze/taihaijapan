@@ -1,6 +1,6 @@
 {
   "server": {
-    "port": 9090
+    "port": 9092
   },
   "db": {
     "debugMode": true
@@ -12,5 +12,8 @@
     "logLevel": "silly",
     "logDate": true,
     "logRequests": "dev"
+  },
+  "ctl": {
+    "port": 5002
   }
 }

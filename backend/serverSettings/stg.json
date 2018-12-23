@@ -4,5 +4,8 @@
   },
   "log": {
     "logLevel": "silly"
+  },
+  "ctl": {
+    "port": 5001
   }
 }
