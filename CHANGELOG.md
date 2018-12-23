@@ -1,6 +1,6 @@
 # Changelog
 
-##
+## 0.10.0
 * Replaced `yarn` by `npm`
 * Moved the data models to sqlite
 * Moved some user **options** (customizable values from the admin control panel) to server **settings** (values set in a json file only read by the server at start)
