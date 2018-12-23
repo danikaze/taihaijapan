@@ -108,11 +108,6 @@ sizes = {{{stringify sizes true}}}
         <input type="checkbox" value="true" id="config-images-hiddenByDefault" class="mdl-checkbox__input" name="images.hiddenByDefault"{{#if (lookup config 'images.hiddenByDefault')}} checked{{/if}}>
         <span class="mdl-checkbox__label">Hidden by default</span>
       </label>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="number" min="0" max="100" id="config-images-resize-quality" name="images.resize.quality" value="{{lookup config 'images.resize.quality'}}">
-        <label class="mdl-textfield__label" for="config-images-resize-quality">Thumbnail compresion quality</label>
-      </div>
     </div>
 
     <h4 data-toggle="thumbnails-options-content">Thumbnail sizes</h4>
@@ -124,6 +119,7 @@ sizes = {{{stringify sizes true}}}
             <th class="mdl-data-table__cell--non-numeric">Size Id</th>
             <th>Width</th>
             <th>Height</th>
+            <th>Quality</th>
           </tr>
         </thead>
         <tbody>
@@ -143,6 +139,11 @@ sizes = {{{stringify sizes true}}}
               <td>
                 <div class="mdl-textfield mdl-js-textfield">
                   <input class="mdl-textfield__input" type="number" min="0" id="config-sizes-h-{{@key}}" name="sizes[{{@key}}][height]" value="{{this.height}}">
+                </div>
+              </td>
+              <td>
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="number" min="0" max="100" id="config-sizes-quality-{{@key}}" name="sizes[{{@key}}][quality]" value="{{this.quality}}">
                 </div>
               </td>
             </tr>

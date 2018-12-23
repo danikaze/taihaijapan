@@ -13,6 +13,7 @@ function addSize(size) {
       size.label || '',
       size.width,
       size.height,
+      size.quality,
     ];
 
     stmt.insertSize.run(params, (error) => {
@@ -37,6 +38,7 @@ function updateSize(size) {
       size.label || '',
       size.width,
       size.height,
+      size.quality,
       size.id,
     ];
 
@@ -46,6 +48,7 @@ function updateSize(size) {
         reject(error);
         return;
       }
+      log.silly('updateSize', `size id: ${size.id} updated to ${JSON.stringify(size)}`);
       resolve();
     });
   }));
@@ -64,6 +67,7 @@ function removeSize(sizeId) {
         reject(error);
         return;
       }
+      log.silly('removeSize', `size id: ${sizeId} deleted`);
       resolve();
     });
   }));
@@ -78,7 +82,8 @@ function removeSize(sizeId) {
 function isEqualSize(a, b) {
   return a.label === b.label
     && a.width === b.width
-    && a.height === b.height;
+    && a.height === b.height
+    && a.quality === b.quality;
 }
 
 /**

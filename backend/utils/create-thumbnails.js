@@ -22,7 +22,8 @@ function createThumbnails(data, options) {
         `${options.temporalPath}/{random}${path.extname(data.original)}`,
       );
       generateFileName(tempNameTemplate, data.original).then((resizeTargetPath) => {
-        resizeImage(data.original, resizeTargetPath, size.width, size.height, options.resize)
+        const resizeOptions = { formatOptions: { quality: size.quality } };
+        resizeImage(data.original, resizeTargetPath, size.width, size.height, resizeOptions)
           .then((thumbInfo) => {
             const replaceValues = {
               id: data.id,
