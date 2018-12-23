@@ -66,7 +66,7 @@ function addPhoto(photoData) {
     getSizes(),
   ];
 
-  return Promise.all(configPromises).then(([settings, sizes]) => new Promise((resolve, reject) => {
+  return Promise.all(configPromises).then(([config, sizes]) => new Promise((resolve, reject) => {
     const imagePromises = [];
 
     insertPhoto(photoData).then((photoId) => {
@@ -75,15 +75,15 @@ function addPhoto(photoData) {
 
       const thumbnailsOptions = {
         sizes,
-        path: settings['images.path'],
-        temporalPath: settings['images.temporalPath'],
+        path: config['images.path'],
+        temporalPath: config['images.temporalPath'],
         resize: {
-          policy: settings['images.resize.policy'],
-          outputFile: settings['images.resize.outputFile'],
-          format: settings['images.resize.format'],
-          formatOptions: settings['images.resize.formatOptions'],
+          policy: 'inside',
+          outputFile: '{id:3}/{size}-{hash:16}.jpg',
+          format: 'jpeg',
+          formatOptions: config['images.resize.quality'],
         },
-        baseUrl: settings['images.baseUrl'],
+        baseUrl: config['images.baseUrl'],
       };
 
       photoData.id = photoId;

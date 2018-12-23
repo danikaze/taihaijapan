@@ -24,11 +24,7 @@ INSERT INTO config(name, value) VALUES
   ('page.gallery.reverse', 'true'),
   -- images
   ('images.hiddenByDefault', 'true'),
-  -- images.resize
-  ('images.resize.policy', 'inside'),
-  ('images.resize.outputFile', '{id:3}/{size}-{hash:16}.jpg'),
-  ('images.resize.format', 'jpeg'),
-  ('images.resize.formatOptions', '{ "quality": 80 }');
+  ('images.resize.quality', '80');
 
 -- image sizes
 INSERT INTO sizes(label, width, height) VALUES

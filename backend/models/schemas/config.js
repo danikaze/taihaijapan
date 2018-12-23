@@ -19,17 +19,9 @@ const schema = {
   'page.gallery.imagesPerPage': 'int',
   'page.gallery.orderBy': 'str',
   'page.gallery.reverse': 'bool',
-  // images.paths
-  'images.originalPath': 'str',
-  'images.temporalPath': 'str',
-  'images.path': 'str',
-  'images.baseUrl': 'str',
-  // images.resize
-  'images.resize.policy': 'str',
-  'images.resize.outputFile': 'str',
-  'images.resize.format': 'str',
-  'images.resize.formatOptions': 'json',
+  // images
   'images.hiddenByDefault': 'bool',
+  'images.resize.quality': 'int',
 };
 
 module.exports = schema;
