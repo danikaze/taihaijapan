@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.10.1
+* Fixed a bug where the gallery page shown the same photos as the index, instead of applying its own settings.
+
 ## 0.10.0
 * Replaced `yarn` by `npm`
 * Moved the data models to sqlite

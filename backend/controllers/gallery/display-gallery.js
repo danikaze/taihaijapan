@@ -1,5 +1,5 @@
 const log = require('../../utils/log');
-const getPhotosIndex = require('../../models/gallery/get-photos').getPhotosIndex;
+const getPhotosPage = require('../../models/gallery/get-photos').getPhotosPage;
 const getSizes = require('../../models/gallery/get-sizes');
 const getConfig = require('../../models/config/get-config').getConfig;
 
@@ -12,7 +12,7 @@ const getConfig = require('../../models/config/get-config').getConfig;
 function displayGallery(request, response) {
   const promises = [
     getSizes(),
-    getPhotosIndex(),
+    getPhotosPage(),
     getConfig(),
   ];
 
