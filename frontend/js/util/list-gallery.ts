@@ -1,13 +1,21 @@
 import Photoswipe from 'photoswipe/';
-import '../polyfills/Array.findIndex';
-import PhotoswipeUi from './PhotoswipeUi';
-import photoswipeHtml from './PhotoswipeHtml';
+import '../polyfills/array-find-index';
+import { PhotoSwipeUi } from './PhotoswipeUi';
+import { html as photoswipeHtml } from './PhotoswipeHtml';
 import '../../styles/photoswipe/index.scss';
-import chooseBestSize from './chooseBestSize';
+import { chooseBestSize } from './choose-best-size';
 
 const asArray = Array.prototype.slice;
 
-class ListGallery {
+export class ListGallery {
+  private readonly indexElem;
+  private readonly viewerElem;
+  private readonly options;
+  private readonly photos;
+  private readonly sizes;
+  private readonly thumbnails;
+  private readonly biggestSizesLoaded;
+
   constructor(indexElem, viewerElem, sizes, galleryPhotos, options) {
     this.indexElem = indexElem;
     this.viewerElem = viewerElem;
@@ -64,7 +72,7 @@ function getElemBounds(elems, index) {
  * @param {number} [photoIndex] index of the photo to open the gallery with
  */
 function createPhotoSwipe(photoIndex) {
-  const gallery = new Photoswipe(this.viewerElem, PhotoswipeUi, this.photos, {
+  const gallery = new Photoswipe(this.viewerElem, PhotoSwipeUi, this.photos, {
     index: photoIndex,
     showHideOpacity: true,
     getThumbBoundsFn: getElemBounds.bind(this, this.thumbnails),
@@ -111,7 +119,7 @@ function createPhotoSwipe(photoIndex) {
 /**
  * @return {Object} Parameters of the URL hash (`#p1=v1&p2=v2`) as `{ p1: v1, p2: v2 }`
  */
-function parseUrlHash() {
+function parseUrlHash(): { [k: string]: string } {
   const hash = window.location.hash.substring(1).split('&');
   const params = {};
 
@@ -161,5 +169,3 @@ function createPhotoSwipeHtml(elem) {
 
   elem.innerHTML = photoswipeHtml;
 }
-
-export default ListGallery;

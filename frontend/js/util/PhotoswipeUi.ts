@@ -1,31 +1,27 @@
 import '../../styles/photoswipe/skin/default-skin.scss';
 
-/*! PhotoSwipe Default UI - 4.1.2 - 2017-04-05
+interface VendorDocument extends Document {
+	mozCancelFullScreen?;
+	webkitExitFullscreen?;
+	msExitFullscreen?;
+}
+
+interface VendorHTMLElement extends HTMLElement {
+	mozRequestFullScreen?;
+	webkitRequestFullscreen?;
+	msRequestFullscreen?;
+}
+
+/*
+* PhotoSwipe Default UI - 4.1.2 - 2017-04-05
 * http://photoswipe.com
 * Copyright (c) 2017 Dmitry Semenov; */
 /**
 *
 * UI on top of main sliding area (caption, arrows, close button, etc.).
 * Built just using public methods/properties of PhotoSwipe.
-*
 */
-(function (root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define(factory);
-	} else if (typeof exports === 'object') {
-		module.exports = factory();
-	} else {
-		root.PhotoSwipeUI_Default = factory();
-	}
-})(this, function () {
-
-	'use strict';
-
-
-
-var PhotoSwipeUI_Default =
- function(pswp, framework) {
-
+export function PhotoSwipeUi(pswp, framework) {
 	var ui = this;
 	var _overlayUIUpdated = false,
 		_controlsVisible = true,
@@ -800,12 +796,12 @@ var PhotoSwipeUI_Default =
 	};
 
 	ui.supportsFullscreen = function() {
-		var d = document;
+		var d: VendorDocument = document;
 		return !!(d.exitFullscreen || d.mozCancelFullScreen || d.webkitExitFullscreen || d.msExitFullscreen);
 	};
 
 	ui.getFullscreenAPI = function() {
-		var dE = document.documentElement,
+		var dE: VendorHTMLElement = document.documentElement,
 			api,
 			tF = 'fullscreenchange';
 
@@ -851,7 +847,7 @@ var PhotoSwipeUI_Default =
 				_options.closeOnScroll = false;
 
 				if(this.enterK === 'webkitRequestFullscreen') {
-					pswp.template[this.enterK]( Element.ALLOW_KEYBOARD_INPUT );
+					pswp.template[this.enterK]( (Element as any).ALLOW_KEYBOARD_INPUT );
 				} else {
 					return pswp.template[this.enterK]();
 				}
@@ -867,11 +863,4 @@ var PhotoSwipeUI_Default =
 
 		return api;
 	};
-
-
-
 };
-return PhotoSwipeUI_Default;
-
-
-});

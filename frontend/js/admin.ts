@@ -1,5 +1,27 @@
-import requestData from './util/requestData/requestData';
+import requestData from './util/requestData';
 import '../styles/admin.scss';
+
+interface AppWindow extends Window {
+  run(data): void;
+  componentHandler: any;
+}
+
+interface MdlElement extends HTMLElement {
+  close(): void;
+  showModal(): void;
+}
+
+interface Dialog {
+  elem: MdlElement;
+  id: HTMLInputElement;
+  hidden: HTMLInputElement;
+  photo: HTMLInputElement;
+  title: HTMLInputElement;
+  slug: HTMLInputElement;
+  tags: HTMLInputElement;
+  keywords: HTMLInputElement;
+  mdl: HTMLElement[];
+}
 
 const API_URL = '/admin/photos';
 const PREVIEW_CLASS = 'preview';
@@ -7,7 +29,7 @@ const UPDATE_PENDING_CLASS = 'update-pending';
 const HIDDEN_CLASS = 'removed';
 const ERROR_CLASS = 'error';
 
-const editDialog = {};
+const editDialog: Dialog = {} as Dialog;
 let galleryData;
 
 function getPhotoDataById(id) {
@@ -56,7 +78,7 @@ function updateData() {
     editDialog.elem.classList.add(UPDATE_PENDING_CLASS);
   }
 
-  requestData(API_URL, { method: 'PUT', data }).then((newData) => {
+  requestData(API_URL, { method: 'put', data }).then((newData) => {
     if (li) {
       li.classList.remove(UPDATE_PENDING_CLASS);
       editDialog.elem.classList.remove(UPDATE_PENDING_CLASS);
@@ -79,7 +101,7 @@ function removePhoto() {
   const photoId = Number(editDialog.id.value);
   const li = document.querySelector(`#thumbnails li[data-photo-id="${photoId}"]`);
 
-  requestData(`${API_URL}/${photoId}`, { method: 'DELETE' }).then(() => {
+  requestData(`${API_URL}/${photoId}`, { method: 'delete' }).then(() => {
     if (li) {
       li.parentElement.removeChild(li);
     }
@@ -107,8 +129,8 @@ function addEditDetailsBehavior(li) {
       editDialog.keywords.value = photo.keywords;
 
       editDialog.mdl.forEach((elem) => {
-        window.componentHandler.downgradeElements(elem);
-        window.componentHandler.upgradeElement(elem);
+        (window as AppWindow).componentHandler.downgradeElements(elem);
+        (window as AppWindow).componentHandler.upgradeElement(elem);
       });
       editDialog.elem.showModal();
     });
@@ -119,9 +141,9 @@ function addEditDetailsBehavior(li) {
  * Add the behavior to show a thumbnail of the image to upload when chosen
  */
 function addThumbnailBehavior() {
-  const input = document.getElementById('photo');
+  const input = document.getElementById('photo') as HTMLInputElement;
   const icon = document.getElementById('photo-icon');
-  const thumb = document.getElementById('new-thumbnail');
+  const thumb = document.getElementById('new-thumbnail') as HTMLImageElement;
   const loading = document.getElementById('new-thumbnail-loading');
 
   input.addEventListener('change', (event) => {
@@ -133,7 +155,7 @@ function addThumbnailBehavior() {
       const reader = new FileReader();
       reader.onload = (e) => {
         loading.style.display = 'none';
-        thumb.src = e.target.result;
+        thumb.src = (e.target as any).result;
         icon.style.display = 'none';
         thumb.style.display = '';
       };
@@ -150,17 +172,17 @@ function addThumbnailBehavior() {
  * Prepare behavior for edit/remove dialogs
  */
 function prepareEditDialog() {
-  const removeDialog = document.getElementById('remove-dialog');
+  const removeDialog = document.getElementById('remove-dialog') as MdlElement;
 
-  editDialog.elem = document.getElementById('edit-dialog');
+  editDialog.elem = document.getElementById('edit-dialog') as MdlElement;
 
-  editDialog.id = document.getElementById('edit-id');
-  editDialog.hidden = document.getElementById('edit-hidden');
-  editDialog.photo = document.getElementById('edit-photo');
-  editDialog.title = document.getElementById('edit-title');
-  editDialog.slug = document.getElementById('edit-slug');
-  editDialog.tags = document.getElementById('edit-tags');
-  editDialog.keywords = document.getElementById('edit-keywords');
+  editDialog.id = document.getElementById('edit-id') as HTMLInputElement;
+  editDialog.hidden = document.getElementById('edit-hidden') as HTMLInputElement;
+  editDialog.photo = document.getElementById('edit-photo') as HTMLInputElement;
+  editDialog.title = document.getElementById('edit-title') as HTMLInputElement;
+  editDialog.slug = document.getElementById('edit-slug') as HTMLInputElement;
+  editDialog.tags = document.getElementById('edit-tags') as HTMLInputElement;
+  editDialog.keywords = document.getElementById('edit-keywords') as HTMLInputElement;
 
   // elements to reset as mdl dynamic elements
   editDialog.mdl = [
@@ -208,13 +230,9 @@ function prepareEditDialog() {
 /**
  * Prepare the page dyncamic behavior
  */
-window.run = (data) => {
+(window as AppWindow).run = (data) => {
   galleryData = data;
   prepareEditDialog();
-
-  // if (!editDialog.elem.showModal) {
-  //   dialogPolyfill.registerDialog(editDialog.elem);
-  // }
 
   addThumbnailBehavior();
   document.querySelectorAll('#thumbnails li').forEach((li) => {

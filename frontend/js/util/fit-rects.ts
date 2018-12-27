@@ -8,7 +8,7 @@
  * @param   {number} [maxH] maximum height
  * @returns {object}        best size as `{ w, h }`
  */
-function fitRects(w, h, maxW, maxH) {
+export function fitRects(w, h, maxW, maxH) {
   let ratio;
 
   if (!maxH) {
@@ -24,5 +24,3 @@ function fitRects(w, h, maxW, maxH) {
     h: h * ratio,
   };
 }
-
-module.exports = fitRects;

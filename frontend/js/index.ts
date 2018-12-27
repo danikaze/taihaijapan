@@ -1,7 +1,11 @@
-import fitRects from './util/fitRects';
-import SrcSetEmu from './util/SrcSetEmu';
+import { fitRects } from './util/fit-rects';
+import { SrcSetEmu } from './util/src-set-emu';
 
 import '../styles/index.scss';
+
+interface AppWindow extends Window {
+  start(sizes, photos): void;
+}
 
 const thumbnails = document.getElementById('thumbnails');
 const options = {
@@ -16,7 +20,7 @@ let srcSetEmu;
 /**
  * Resize an image to fit in a box
  */
-function fitImage(photo, maxW, maxH) {
+function fitImage(photo, maxW?, maxH?) {
   if (!maxW) {
     photo.elem.onload = null;
     maxW = thumbnails.offsetWidth;
@@ -43,7 +47,7 @@ function start(sizes, photos) {
   const imgElems = thumbnails.querySelectorAll('.img-0 img');
   srcSetEmu = new SrcSetEmu(sizes, null, { auto: false });
 
-  const img = imgElems[0];
+  const img = imgElems[0] as HTMLImageElement;
   const photo = photos[0];
   srcSetEmu.addImage(img, photo.imgs, photo.id);
   photo.elem = img;
@@ -58,4 +62,4 @@ function start(sizes, photos) {
   window.addEventListener('resize', fitImages);
 }
 
-window.start = start;
+(window as AppWindow).start = start;

@@ -7,7 +7,7 @@
  * @param  {number}   [options.fitRatio=1] Percentage of the viewport to fit
  * @return {number}                        Index of the best size use with this viewport size
  */
-function chooseBestSize(viewport, sizes, options) {
+export function chooseBestSize(viewport, sizes, options?): number {
   const fitRatio = (options && options.fitRatio) || 1;
   const w = viewport.x * window.devicePixelRatio * fitRatio;
   const h = viewport.y * window.devicePixelRatio * fitRatio;
@@ -22,5 +22,3 @@ function chooseBestSize(viewport, sizes, options) {
 
   return last;
 }
-
-module.exports = chooseBestSize;

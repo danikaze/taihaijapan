@@ -3,7 +3,11 @@ import 'es6-promise/auto';
 
 import '../styles/index.scss';
 
-import ListGallery from './util/ListGallery';
+interface AppWindow extends Window {
+  start(sizes, photos, activeSlug?): void;
+}
+
+import { ListGallery } from './util/list-gallery';
 
 const THUMBNAIL_ID = 'thumbnails';
 const GALLERY_ID = 'gallery';
@@ -15,4 +19,4 @@ function start(sizes, photos, activeSlug) {
   new ListGallery(galleryContainer, galleryViewer, sizes, photos, { activeSlug });
 }
 
-window.start = start;
+(window as AppWindow).start = start;

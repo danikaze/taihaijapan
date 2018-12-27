@@ -1,4 +1,4 @@
-const html = ''
+export const html = ''
 // Background of PhotoSwipe.
 // It's a separate element as animating opacity is faster than rgba().
 + '<div class="pswp__bg"></div>'
@@ -48,5 +48,3 @@ const html = ''
    + '</div>'
 + '</div>'
 + '</div>';
-
-export default html;

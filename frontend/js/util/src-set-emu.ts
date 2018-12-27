@@ -1,9 +1,14 @@
-import chooseBestSize from './chooseBestSize';
+import { chooseBestSize } from './choose-best-size';
 
 /**
  * Class to manage images to emulate the srcSet behavior for IE browsers, which don't support it.
  */
-class SrcSetEmu {
+export class SrcSetEmu {
+  private ids;
+  private readonly sizes;
+  private readonly images;
+  private readonly options;
+
   /**
    *
    * @param {object[]} sizes          List of ordered sizes as { w, h }[]
@@ -108,5 +113,3 @@ class SrcSetEmu {
     item.elem.src = item.imgs[bestSize].src;
   }
 }
-
-module.exports = SrcSetEmu;

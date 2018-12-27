@@ -1,7 +1,11 @@
 const GROUP_CLOSED_CLASS = 'closed';
 
+interface AppWindow extends Window {
+  run(): void;
+}
+
 function enableTogglers() {
-  document.querySelectorAll('h4[data-toggle]').forEach((button) => {
+  document.querySelectorAll('h4[data-toggle]').forEach((button: HTMLElement) => {
     const contents = document.getElementById(button.dataset.toggle);
     button.addEventListener('click', () => {
       if (contents.style.display === 'none') {
@@ -24,7 +28,7 @@ function enableUpdateButton() {
   });
 }
 
-window.run = () => {
+(window as AppWindow).run = () => {
   enableTogglers();
   enableUpdateButton();
 };
