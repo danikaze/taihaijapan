@@ -1,5 +1,5 @@
 #!/usr/bin/node
-const CtlClient = require('./ctl/CtlClient');
+const CtlClient = require('./ctl/ctl-client');
 
 const ctlClient = new CtlClient();
 ctlClient.start();

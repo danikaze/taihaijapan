@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "allowJs": false,
+    "module": "commonjs",
+    "baseUrl": ".",
+    "pretty": true,
+    "inlineSourceMap": true,
+    "jsx": "react",
+    "removeComments": false,
+    "resolveJsonModule": true,
+    "target": "es2017",
+    "outDir": "./build",
+    "lib": [
+      "dom",
+      "es2017"
+    ]
+  },
+  "include": [
+    "backend/index.ts",
+    "backend/views/**/*.ts"
+  ],
+  "exclude": [
+  ]
+}

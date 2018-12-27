@@ -94,13 +94,7 @@ module.exports = (env) => ({
         use: extractCssAdmin.extract(getExtractTextConfig(env, ['sass-loader'])),
       },
       // linting
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        enforce: 'pre',
-        include: settings.paths.src,
-        use: 'eslint-loader',
-      },
+
       // transpiling
       {
         test: /\.jsx?$/,

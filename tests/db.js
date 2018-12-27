@@ -19,8 +19,4 @@ db.ready.then(({ stmt }) => {
   getConfig().then((settings) => {
     console.log('schema.versions', settings['schema.version']);
   });
-
-  getConfig('settings.cache').then((value) => {
-    console.log('schema.cache', value);
-  });
 });

@@ -18,6 +18,7 @@
   "main": "backend/index.js",
   "scripts": {
     "start": "node backend/ prod.json",
+    "watch": "./.scripts/watch.sh",
     "start-backend": "nodemon --inspect backend/ dev.json",
     "start-backend-brk": "nodemon --inspect-brk backend/ dev.json",
     "start-frontend": "webpack --env=dev",
@@ -30,13 +31,13 @@
     "prepublish": "npm run build",
     "reset": "rimraf backend/data/photos backend/data/db.sqlite backend/public/photos"
   },
-  "pre-commit": [
-  ],
+  "pre-commit": [],
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@types/basic-auth": "^1.1.2",
     "@types/body-parser": "^1.17.0",
     "@types/compression": "0.0.36",
+    "@types/events": "^1.2.0",
     "@types/express": "^4.16.0",
     "@types/hbs": "^4.0.0",
     "@types/mkdirp": "^0.5.2",
