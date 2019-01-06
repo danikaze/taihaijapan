@@ -27,7 +27,4 @@ echo -e "${COLOR_MESSAGE}Building frontend code:${COLOR_NC}"
 echo -e " * Running webpack..."
 $WEBPACK --config webpack.prod.config.js
 
-echo -e " * Copying other files..."
-rsync -a --prune-empty-dirs --exclude '.DS_Store' frontend/public/ build/backend/public
-
 echo

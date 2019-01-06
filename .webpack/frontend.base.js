@@ -2,6 +2,7 @@ const merge = require('webpack-merge');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const packageJson = require('../package.json');
 const base = require('./base');
@@ -53,6 +54,13 @@ module.exports = (env) => merge(base(env), {
     new MiniCssExtractPlugin({
       filename: `css/[name]-${packageJson.version}.min.css`,
     }),
+
+    // copy other needed files
+    new CopyWebpackPlugin([{
+      from: getAbsPath('frontend/public'),
+      to: getAbsPath('build/backend/public'),
+      ignore: ['.DS_Store'],
+    }]),
   ],
 
   // optimization
