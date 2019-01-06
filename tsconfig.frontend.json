@@ -5,20 +5,18 @@
     "module": "commonjs",
     "baseUrl": ".",
     "pretty": true,
-    "inlineSourceMap": true,
+    "sourceMap": true,
     "jsx": "react",
     "removeComments": false,
     "resolveJsonModule": true,
-    "target": "es2017",
-    "outDir": "./build",
+    "target": "es5",
     "lib": [
       "dom",
       "es2017"
     ]
   },
   "include": [
-    "backend/index.ts",
-    "backend/views/**/*.ts"
+    "frontend/**/*.ts",
   ],
   "exclude": [
   ]
