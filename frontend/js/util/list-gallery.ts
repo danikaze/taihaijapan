@@ -1,5 +1,5 @@
-import Photoswipe from 'photoswipe/';
 import '../polyfills/array-find-index';
+import * as PhotoSwipe from 'photoswipe/';
 import { PhotoSwipeUi } from './photoswipe-ui';
 import { html as photoswipeHtml } from './photoswipe-html';
 import { chooseBestSize } from './choose-best-size';
@@ -71,7 +71,7 @@ function getElemBounds(elems, index) {
  * @param {number} [photoIndex] index of the photo to open the gallery with
  */
 function createPhotoSwipe(photoIndex) {
-  const gallery = new Photoswipe(this.viewerElem, PhotoSwipeUi, this.photos, {
+  const gallery = new PhotoSwipe(this.viewerElem, PhotoSwipeUi, this.photos, {
     index: photoIndex,
     showHideOpacity: true,
     getThumbBoundsFn: getElemBounds.bind(this, this.thumbnails),

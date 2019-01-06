@@ -60,7 +60,7 @@ module.exports = (env) => merge(base(env), {
     splitChunks: {
       cacheGroups: {
         adminStyles: groupCssFiles('admin', (issuer) => issuer.indexOf('admin') !== -1),
-        publicStyles: groupCssFiles('admin', (issuer) => issuer.indexOf('admin') === -1),
+        publicStyles: groupCssFiles(packageJson.name, (issuer) => issuer.indexOf('admin') === -1),
       },
     },
   },
