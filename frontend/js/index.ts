@@ -1,7 +1,9 @@
+import '../styles/index.scss';
+import '../styles/photoswipe/index.scss';
+import '../styles/photoswipe/skin/default-skin.scss';
+
 import { fitRects } from './util/fit-rects';
 import { SrcSetEmu } from './util/src-set-emu';
-
-import '../styles/index.scss';
 
 interface AppWindow extends Window {
   start(sizes, photos): void;
@@ -48,6 +50,10 @@ function start(sizes, photos) {
   srcSetEmu = new SrcSetEmu(sizes, null, { auto: false });
 
   const img = imgElems[0] as HTMLImageElement;
+  if (!img) {
+    return;
+  }
+
   const photo = photos[0];
   srcSetEmu.addImage(img, photo.imgs, photo.id);
   photo.elem = img;
