@@ -1,6 +1,11 @@
-import { version } from '../../../package.json';
+import * as packageJson from '../../../package.json';
+
+const v = packageJson.version;
+function version() {
+  return v;
+}
 
 export default {
-  fn: () => version,
+  fn: version,
   async: false,
 };
