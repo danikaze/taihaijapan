@@ -2,13 +2,13 @@
  * Fits a rectangle (w, h) in container (maxW, maxH).
  * The returned size is the one closest to the container (shrinked or expanded)
  *
- * @param   {number} w      original width
- * @param   {number} h      original height
- * @param   {number} [maxW] maximum width
- * @param   {number} [maxH] maximum height
- * @returns {object}        best size as `{ w, h }`
+ * @param   w    original width
+ * @param   h    original height
+ * @param   maxW maximum width
+ * @param   maxH maximum height
+ * @returns      best size
  */
-export function fitRects(w, h, maxW, maxH) {
+export function fitRects(w: number, h: number, maxW?: number, maxH?: number): { width: number, height: number } {
   let ratio;
 
   if (!maxH) {
@@ -20,7 +20,7 @@ export function fitRects(w, h, maxW, maxH) {
   }
 
   return {
-    w: w * ratio,
-    h: h * ratio,
+    width: w * ratio,
+    height: h * ratio,
   };
 }

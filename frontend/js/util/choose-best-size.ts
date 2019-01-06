@@ -1,13 +1,19 @@
+import { Size, Viewport as ViewPort } from '../interfaces';
+
+export interface Options {
+  /** Percentage of the viewport to fit */
+  fitRatio: number;
+}
+
 /**
  * Choose the smallest size that fits the specified viewport
  *
- * @param  {Object}   viewport             Viewport to fit as `{ x, y }`
- * @param  {Object[]} sizes        List of available sizes as `{ w, h }`
- * @param  {Object}   options
- * @param  {number}   [options.fitRatio=1] Percentage of the viewport to fit
- * @return {number}                        Index of the best size use with this viewport size
+ * @param  viewport Viewport to fit
+ * @param  sizes    List of available sizes
+ * @param  options  Optional behavior
+ * @return          Index of the best size use with this viewport size
  */
-export function chooseBestSize(viewport, sizes, options?): number {
+export function chooseBestSize(viewport: ViewPort, sizes: Size[], options?: Options): number {
   const fitRatio = (options && options.fitRatio) || 1;
   const w = viewport.x * window.devicePixelRatio * fitRatio;
   const h = viewport.y * window.devicePixelRatio * fitRatio;

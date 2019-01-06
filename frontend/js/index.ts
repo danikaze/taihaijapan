@@ -1,36 +1,46 @@
+/*
+ * Entry point of the Index page
+ */
 import '../styles/index.scss';
 import '../styles/photoswipe/index.scss';
 import '../styles/photoswipe/skin/default-skin.scss';
 
+import { Size, PublicPhoto } from './interfaces';
 import { fitRects } from './util/fit-rects';
 import { SrcSetEmu } from './util/src-set-emu';
 
 interface AppWindow extends Window {
-  start(sizes, photos): void;
+  start(sizes: Size[], photos: PublicPhoto[]): void;
 }
 
-const thumbnails = document.getElementById('thumbnails');
-const options = {
-  scrollFrequency: 1000 / 60,
-  scrollDuration: 150,
-  marginH: 10,
-};
+interface PhotoListElem extends PublicPhoto {
+  elem?: HTMLImageElement;
+}
 
-let photoList;
-let srcSetEmu;
+const MARGIN_H = 10;
+
+const thumbnails = document.getElementById('thumbnails');
+let photoList: PhotoListElem[];
+let srcSetEmu: SrcSetEmu;
 
 /**
  * Resize an image to fit in a box
  */
-function fitImage(photo, maxW?, maxH?) {
-  if (!maxW) {
+function fitImage(photo, maxW?: number, maxH?: number): void {
+  let w: number;
+  let h: number;
+
+  if (maxW) {
+    w = maxW;
+    h = maxH;
+  } else {
     photo.elem.onload = null;
-    maxW = thumbnails.offsetWidth;
-    maxH = window.innerHeight - (options.marginH * 2);
+    w = thumbnails.offsetWidth;
+    h = window.innerHeight - (MARGIN_H * 2);
   }
   const elem = photo.elem;
-  const size = fitRects(elem.width, elem.height, maxW, maxH);
-  elem.style.width = `${size.w}px`;
+  const size = fitRects(elem.width, elem.height, w, h);
+  elem.style.width = `${size.width}px`;
 
   srcSetEmu.updateImage(photo.id);
 }
@@ -38,25 +48,35 @@ function fitImage(photo, maxW?, maxH?) {
 /**
  * Resize photos to fit in the screen
  */
-function fitImages() {
+function fitImages(): void {
   const maxW = thumbnails.offsetWidth;
-  const maxH = window.innerHeight - (options.marginH * 2);
+  const maxH = window.innerHeight - (MARGIN_H * 2);
 
   fitImage(photoList[0], maxW, maxH);
 }
 
-function start(sizes, photos) {
-  const imgElems = thumbnails.querySelectorAll('.img-0 img');
-  srcSetEmu = new SrcSetEmu(sizes, null, { auto: false });
-
-  const img = imgElems[0] as HTMLImageElement;
-  if (!img) {
+/**
+ * Initialize the index page with data from the model
+ *
+ * @param sizes List of available sizes
+ * @param photos List of photos to display
+ */
+function start(sizes: Size[], photos: PublicPhoto[]): void {
+  if (photos.length === 0) {
     return;
   }
 
-  const photo = photos[0];
+  const imgElems = thumbnails.querySelectorAll('.img-0 img');
+  srcSetEmu = new SrcSetEmu(sizes, null, { auto: false });
+
+  photoList = photos.map((photo, i) => ({
+    ...photo,
+    elem: imgElems[i] as HTMLImageElement,
+  }));
+
+  const photo = photoList[0];
+  const img = photo.elem;
   srcSetEmu.addImage(img, photo.imgs, photo.id);
-  photo.elem = img;
 
   if (img.width && img.height) {
     fitImage(photo);
@@ -64,7 +84,6 @@ function start(sizes, photos) {
     img.onload = fitImage.bind(null, photo, null, null);
   }
 
-  photoList = photos;
   window.addEventListener('resize', fitImages);
 }
 

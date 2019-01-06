@@ -1,3 +1,4 @@
+/* tslint:disable */
 interface VendorDocument extends Document {
 	mozCancelFullScreen?;
 	webkitExitFullscreen?;
@@ -106,10 +107,7 @@ export function PhotoSwipeUi(pswp, framework) {
 			fitControlsWidth: 1200
 
 		},
-		_blockControlsTap,
-		_blockControlsTapTimeout;
-
-
+		_blockControlsTap;
 
 	var _onControlsTap = function(e) {
 			if(_blockControlsTap) {
@@ -152,7 +150,7 @@ export function PhotoSwipeUi(pswp, framework) {
 				// older versions strangely work correctly,
 				// but just in case we add delay on all of them)
 				var tapDelay = framework.features.isOldAndroid ? 600 : 30;
-				_blockControlsTapTimeout = setTimeout(function() {
+				setTimeout(function() {
 					_blockControlsTap = false;
 				}, tapDelay);
 			}

@@ -1,10 +1,17 @@
+/*
+ * Entry point of the Admin page
+ */
 import '../styles/admin.scss';
 
-import requestData from './util/request-data';
+import { requestData } from './util/request-data';
+import { AdminPhoto } from './interfaces';
 
 interface AppWindow extends Window {
+  componentHandler: {
+    downgradeElements(HTMLElement): void;
+    upgradeElement(HTMLElement): void;
+  };
   run(data): void;
-  componentHandler: any;
 }
 
 interface MdlElement extends HTMLElement {
@@ -30,7 +37,8 @@ const UPDATE_PENDING_CLASS = 'update-pending';
 const HIDDEN_CLASS = 'removed';
 const ERROR_CLASS = 'error';
 
-const editDialog: Dialog = {} as Dialog;
+const editDialog = {} as Dialog;
+/** Global gallery data */
 let galleryData;
 
 function getPhotoDataById(id) {
@@ -40,16 +48,17 @@ function getPhotoDataById(id) {
 /**
  * Update the displayed data in the preview once its model is updated
  *
- * @param {HTMLElement} elem
- * @param {object} data
+ * @param elem HTML element of the preview card
+ * @param id   ID of the photo
+ * @param data data to update
  */
-function updateCardData(elem, id, data) {
+function updateCardData(elem: HTMLElement, id: number, data): void {
   const permalink = `/photo/${data.slug}/`;
   const preview = elem.getElementsByClassName(PREVIEW_CLASS)[0];
   const photoData = getPhotoDataById(id);
   Object.assign(photoData, data);
-  preview.getElementsByClassName('slug')[0].innerText = data.slug;
-  preview.querySelector('.permalink a').href = permalink;
+  (preview.getElementsByClassName('slug')[0] as HTMLElement).innerText = data.slug;
+  (preview.querySelector('.permalink a') as HTMLAnchorElement).href = permalink;
   if (data.deleted) {
     elem.classList.add(HIDDEN_CLASS);
   } else {
@@ -60,9 +69,9 @@ function updateCardData(elem, id, data) {
 /**
  * Send the data of the edit dialog
  */
-function updateData() {
+function updateData(): void {
   const id = Number(editDialog.id.value);
-  const li = document.querySelector(`#thumbnails li[data-photo-id="${id}"]`);
+  const li = document.querySelector(`#thumbnails li[data-photo-id="${id}"]`) as HTMLLIElement;
   const data = {
     photos: {},
   };
@@ -79,7 +88,7 @@ function updateData() {
     editDialog.elem.classList.add(UPDATE_PENDING_CLASS);
   }
 
-  requestData(API_URL, { method: 'put', data }).then((newData) => {
+  requestData(API_URL, { data, method: 'put' }).then((newData) => {
     if (li) {
       li.classList.remove(UPDATE_PENDING_CLASS);
       editDialog.elem.classList.remove(UPDATE_PENDING_CLASS);
@@ -87,19 +96,23 @@ function updateData() {
       editDialog.elem.close();
     }
   }).catch((error) => {
-    if (error && error.error && error.error.data) {
-      Object.keys(error.error.data).forEach((key) => {
-        const elem = editDialog[key];
-        if (elem) {
-          elem.parentElement.classList.add(ERROR_CLASS);
-        }
-      });
+    if (!error || !error.error || !error.error.data) {
+      return;
     }
+
+    Object.keys(error.error.data).forEach((key) => {
+      const elem = editDialog[key];
+      if (elem) {
+        elem.parentElement.classList.add(ERROR_CLASS);
+      }
+    });
   });
 }
 
-function removePhoto() {
-  const photoId = Number(editDialog.id.value);
+/**
+ * @param photoId ID of the photo to remove
+ */
+function removePhoto(photoId: number): void {
   const li = document.querySelector(`#thumbnails li[data-photo-id="${photoId}"]`);
 
   requestData(`${API_URL}/${photoId}`, { method: 'delete' }).then(() => {
@@ -112,10 +125,10 @@ function removePhoto() {
 /**
  * Prepares the preview/details toggle when clicking an element
  *
- * @param {HTMLLIElement} li
+ * @param li LI Element containing the details to add the dynamic behavior to
  */
-function addEditDetailsBehavior(li) {
-  const id = parseInt(li.dataset.photoId, 10);
+function addEditDetailsBehavior(li: HTMLLIElement): void {
+  const id = Number(li.dataset.photoId);
   // open-close by clicking the img
   li.querySelectorAll('img').forEach((img) => {
     img.addEventListener('click', (event) => {
@@ -141,7 +154,7 @@ function addEditDetailsBehavior(li) {
 /**
  * Add the behavior to show a thumbnail of the image to upload when chosen
  */
-function addThumbnailBehavior() {
+function addThumbnailBehavior(): void {
   const input = document.getElementById('photo') as HTMLInputElement;
   const icon = document.getElementById('photo-icon');
   const thumb = document.getElementById('new-thumbnail') as HTMLImageElement;
@@ -156,7 +169,7 @@ function addThumbnailBehavior() {
       const reader = new FileReader();
       reader.onload = (e) => {
         loading.style.display = 'none';
-        thumb.src = (e.target as any).result;
+        thumb.src = (e.target as FileReader).result as string;
         icon.style.display = 'none';
         thumb.style.display = '';
       };
@@ -172,7 +185,7 @@ function addThumbnailBehavior() {
 /**
  * Prepare behavior for edit/remove dialogs
  */
-function prepareEditDialog() {
+function prepareEditDialog(): void {
   const removeDialog = document.getElementById('remove-dialog') as MdlElement;
 
   editDialog.elem = document.getElementById('edit-dialog') as MdlElement;
@@ -222,7 +235,7 @@ function prepareEditDialog() {
     removeDialog.close();
   });
   document.getElementById('remove-accept').addEventListener('click', () => {
-    removePhoto();
+    removePhoto(Number(editDialog.id.value));
     removeDialog.close();
     editDialog.elem.close();
   });
@@ -231,12 +244,12 @@ function prepareEditDialog() {
 /**
  * Prepare the page dynamic behavior
  */
-(window as AppWindow).run = (data) => {
+(window as AppWindow).run = (data: AdminPhoto[]): void => {
   galleryData = data;
   prepareEditDialog();
 
   addThumbnailBehavior();
-  document.querySelectorAll('#thumbnails li').forEach((li) => {
+  document.querySelectorAll('#thumbnails li').forEach((li: HTMLLIElement) => {
     addEditDetailsBehavior(li);
   });
 };

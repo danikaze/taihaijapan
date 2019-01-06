@@ -7,23 +7,31 @@ export interface RequestDataOptions<T> {
   mockData?: T;
   /** Timeout in ms. */
   timeout?: number;
-  /** If `false`, `_t` won't be appended */
+  /** If `false`, `_t` won't be appended (default `true`) */
   cache?: boolean;
 }
 
-function urlAddParams(url, data) {
+const STATE_READY = 4;
+const HTTP_STATE_OK = 200;
+const HTTP_STATE_ERROR = 400;
+
+/**
+ * Add the specified data to a url
+ */
+function urlAddParams(url: string, data): string {
   let joiner = url.indexOf('?') === -1 ? '?' : '&';
+  let res = url;
 
   Object.keys(data).forEach((key) => {
     let value = data[key];
     if (typeof value === 'object') {
       value = JSON.stringify(value);
     }
-    url = `${url}${joiner}${key}=${encodeURIComponent(value)}`;
+    res = `${res}${joiner}${key}=${encodeURIComponent(value)}`;
     joiner = '&';
   });
 
-  return url;
+  return res;
 }
 
 /**
@@ -31,57 +39,60 @@ function urlAddParams(url, data) {
  *
  * @returns Promise resolved to the response JSON
  */
-function requestData<T = {}>(url: string, options?: RequestDataOptions<T>): Promise<T> {
+export function requestData<T = {}>(url: string, options?: RequestDataOptions<T>): Promise<T> {
   const opt = {
     method: 'get',
     cache: true,
     ...options,
   };
 
-  return new Promise((resolve, reject) => {
+  return new Promise<T>((resolve, reject) => {
     if (opt.mockData) {
       resolve(opt.mockData);
       return;
     }
 
+    let requestUrl = url;
     if (typeof opt.data === 'object') {
       if (opt.method === 'post') {
         //
       } else {
-        url = urlAddParams(url, opt.data);
+        requestUrl = urlAddParams(requestUrl, opt.data);
       }
     }
 
     if (!opt.cache) {
-      url = urlAddParams(url, { _t: new Date().getTime() });
+      requestUrl = urlAddParams(requestUrl, { _t: new Date().getTime() });
     }
 
     const xhr = new XMLHttpRequest();
-    xhr.open(opt.method, url, true);
+    xhr.open(opt.method, requestUrl, true);
 
     if (opt.timeout) {
       xhr.timeout = opt.timeout;
     }
 
     xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        if (xhr.status >= 200 && xhr.status < 400) {
-          try {
-            resolve(JSON.parse(xhr.responseText));
-          } catch (e) {
-            resolve();
-          }
-        } else {
-          try {
-            reject({
-              xhr,
-              error: JSON.parse(xhr.responseText),
-            });
-          } catch (e) {
-            reject({
-              xhr,
-            });
-          }
+      if (xhr.readyState !== STATE_READY) {
+        return;
+      }
+
+      if (xhr.status >= HTTP_STATE_OK && xhr.status < HTTP_STATE_ERROR) {
+        try {
+          resolve(JSON.parse(xhr.responseText));
+        } catch (e) {
+          resolve();
+        }
+      } else {
+        try {
+          reject({
+            xhr,
+            error: JSON.parse(xhr.responseText),
+          });
+        } catch (e) {
+          reject({
+            xhr,
+          });
         }
       }
     };
@@ -96,5 +107,3 @@ function requestData<T = {}>(url: string, options?: RequestDataOptions<T>): Prom
     }
   });
 }
-
-export default requestData;

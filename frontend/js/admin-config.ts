@@ -1,10 +1,16 @@
+/*
+ * Entry point of the Admin Options page
+ */
 const GROUP_CLOSED_CLASS = 'closed';
 
 interface AppWindow extends Window {
   run(): void;
 }
 
-function enableTogglers() {
+/**
+ * Add functionality to the h4 title elements to toggle groups (visible/hidden)
+ */
+function enableTogglers(): void {
   document.querySelectorAll('h4[data-toggle]').forEach((button: HTMLElement) => {
     const contents = document.getElementById(button.dataset.toggle);
     button.addEventListener('click', () => {
@@ -19,7 +25,10 @@ function enableTogglers() {
   });
 }
 
-function enableUpdateButton() {
+/**
+ * Add functionality to the update button, to submit the options to update
+ */
+function enableUpdateButton(): void {
   const form = document.forms[0];
   const button = document.getElementById('update-button');
 
@@ -28,7 +37,7 @@ function enableUpdateButton() {
   });
 }
 
-(window as AppWindow).run = () => {
+(window as AppWindow).run = (): void => {
   enableTogglers();
   enableUpdateButton();
 };
