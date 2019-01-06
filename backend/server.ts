@@ -66,13 +66,19 @@ export class Server extends EventEmitter {
       Object.keys(helpers).forEach((fileName) => {
         try {
           const helper = helpers[fileName].default;
+
+          if (!helper.fn.name || helper.fn.name === 'fn') {
+            log.warn('Server', `HBS helper from file "${fileName}" should have a proper name`);
+          }
+
           if (helper.async) {
             throw new Error('HBS async helper not supported!');
           } else {
             hbs.registerHelper(helper.fn.name, helper.fn);
+            log.verbose('Server', `HBS helper registered: ${helper.fn.name}`);
           }
         } catch (error) {
-          log.error('Server', `Error registering template ${fileName}`);
+          log.error('Server', `Error registering HBS helper ${fileName}`);
         }
       });
 
