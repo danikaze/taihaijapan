@@ -16,7 +16,6 @@ linterOptions:
 rulesDirectory:
     - ./node_modules/tslint-consistent-codestyle/rules
     - ./node_modules/tslint-microsoft-contrib
-    - ./node_modules/tslint-react/rules
     - ./node_modules/tslint-eslint-rules/dist/rules
     - ./node_modules/tslint-lines-between-class-members
 
@@ -163,9 +162,6 @@ rules:
     # We can't use this because it don't handle the case when method is bound in constructor
     # In react it's a good practice. Ohterwise it would be binded/recreated in every re-render.
     # no-unbound-method: true
-
-    # https://palantir.github.io/tslint/rules/no-unused-variable/
-    no-unused-variable: true
 
     # https://palantir.github.io/tslint/rules/prefer-conditional-expression/
     prefer-conditional-expression: true
@@ -391,51 +387,6 @@ rules:
     # https://palantir.github.io/tslint/rules/no-redundant-jsdoc/
     no-redundant-jsdoc: true
 
-    # https://github.com/palantir/tslint-react
-    jsx-alignment: true
-
-    # https://github.com/palantir/tslint-react
-    jsx-curly-spacing:
-        - true
-        - never
-
-    # https://github.com/palantir/tslint-react
-    jsx-equals-spacing:
-        - true
-        - never
-
-    # https://github.com/palantir/tslint-react
-    jsx-no-multiline-js: true
-
-    # https://github.com/palantir/tslint-react
-    # to many flase positives for example for children, in container components
-    # jsx-key: true
-
-    # https://github.com/palantir/tslint-react
-    jsx-no-bind: true
-
-    # https://github.com/palantir/tslint-react
-    jsx-no-lambda: true
-
-    # https://github.com/palantir/tslint-react
-    jsx-no-string-ref: true
-
-    # https://github.com/palantir/tslint-react
-    jsx-self-close: true
-
-    # https://github.com/palantir/tslint-react
-    jsx-space-before-trailing-slash: true
-
-    # https://github.com/palantir/tslint-react
-    jsx-wrap-multiline: true
-
     # https://palantir.github.io/tslint/rules/no-implicit-dependencies/
     no-implicit-dependencies:
       - true
-      - dev
-      # Our custom aliases/absolute-pathes
-      -
-        - test
-        - app
-        - components
-        - components-library

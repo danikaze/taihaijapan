@@ -6,6 +6,7 @@
     "baseUrl": ".",
     "pretty": true,
     "sourceMap": true,
+    "noUnusedLocals": true,
     "jsx": "react",
     "removeComments": false,
     "resolveJsonModule": true,
