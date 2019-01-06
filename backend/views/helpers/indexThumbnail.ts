@@ -1,4 +1,4 @@
-const getSrcsetTag = require('../utils/getSrcsetTag');
+import { getSrcsetTag } from '../utils/get-srcset-tags';
 
 function indexThumbnail(index, options) {
   return `<li class="img-${index}"><div><a href="/photo/${this.slug}/">`

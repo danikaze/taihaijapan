@@ -1,8 +1,7 @@
 import Photoswipe from 'photoswipe/';
 import '../polyfills/array-find-index';
-import { PhotoSwipeUi } from './PhotoswipeUi';
-import { html as photoswipeHtml } from './PhotoswipeHtml';
-import '../../styles/photoswipe/index.scss';
+import { PhotoSwipeUi } from './photoswipe-ui';
+import { html as photoswipeHtml } from './photoswipe-html';
 import { chooseBestSize } from './choose-best-size';
 
 const asArray = Array.prototype.slice;

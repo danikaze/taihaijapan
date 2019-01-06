@@ -1,5 +1,3 @@
-import '../../styles/photoswipe/skin/default-skin.scss';
-
 interface VendorDocument extends Document {
 	mozCancelFullScreen?;
 	webkitExitFullscreen?;

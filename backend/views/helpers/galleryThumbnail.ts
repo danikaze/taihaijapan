@@ -1,4 +1,4 @@
-const getSrcsetTag = require('../utils/getSrcsetTag');
+import { getSrcsetTag } from '../utils/get-srcset-tags';
 
 const sizesMediaTags = [
   '(min-width: 300) 50vw',

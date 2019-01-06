@@ -1,5 +1,6 @@
-import requestData from './util/requestData';
 import '../styles/admin.scss';
+
+import requestData from './util/request-data';
 
 interface AppWindow extends Window {
   run(data): void;
@@ -228,7 +229,7 @@ function prepareEditDialog() {
 }
 
 /**
- * Prepare the page dyncamic behavior
+ * Prepare the page dynamic behavior
  */
 (window as AppWindow).run = (data) => {
   galleryData = data;

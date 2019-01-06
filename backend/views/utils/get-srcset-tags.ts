@@ -1,9 +1,9 @@
 /**
- * @param   {Object[]} imgs    List of images as { w, h, src }
- * @param   {string[]} [sizes] List of CSS media sizes to use with srcset
- * @returns {String}           <img> srcset tag as `srcset="url1 w h, ..., urln w h"`
+ * @param   imgs  List of images as { w, h, src }
+ * @param   sizes List of CSS media sizes to use with srcset
+ * @returns       <img> srcset tag as `srcset="url1 w h, ..., urln w h"`
  */
-export function getSrcsetTag(imgs, sizes) {
+export function getSrcsetTag(imgs, sizes?): string {
   if (imgs.length < 2) {
     return '';
   }
