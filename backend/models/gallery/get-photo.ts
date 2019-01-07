@@ -1,11 +1,11 @@
 import { log } from '../../utils/log';
-import { default as db } from '../index';
+import { model } from '../index';
 import { Photo } from '../interfaces';
 /**
  * Return all the information of the photo with the specified id
  */
 export function getPhoto(id: number): Promise<Photo> {
-  return db.ready.then(({ stmt }) => new Promise<Photo>((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise<Photo>((resolve, reject) => {
     const photoData: Photo = {} as Photo;
     let leftStmt = 3;
 
@@ -21,7 +21,7 @@ export function getPhoto(id: number): Promise<Photo> {
     // get basic photo data
     stmt.selectPhoto.get(stmtParams, (error, row) => {
       if (error) {
-        log.error('sqlite: getPhoto.basic', error);
+        log.error('sqlite: getPhoto.basic', error.message);
         reject(error);
       }
 
@@ -33,7 +33,7 @@ export function getPhoto(id: number): Promise<Photo> {
     // get tags
     stmt.selectTagsByPhoto.all(stmtParams, (error, rows) => {
       if (error) {
-        log.error('sqlite: getPhoto.tags', error);
+        log.error('sqlite: getPhoto.tags', error.message);
         reject(error);
       }
 
@@ -44,7 +44,7 @@ export function getPhoto(id: number): Promise<Photo> {
     // get images
     stmt.getImageSrcs.all(stmtParams, (error, rows) => {
       if (error) {
-        log.error('sqlite: getPhoto.images', error);
+        log.error('sqlite: getPhoto.images', error.message);
         reject(error);
         return;
       }

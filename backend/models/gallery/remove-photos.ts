@@ -1,7 +1,7 @@
 import { unlink } from 'fs';
 import * as path from 'path';
 import { log } from '../../utils/log';
-import { default as db } from '../index';
+import { model } from '../index';
 import { getPhoto } from './get-photo';
 
 /**
@@ -9,10 +9,10 @@ import { getPhoto } from './get-photo';
  * @param photoId
  */
 function getImageSrcs(photoId): Promise<string[]> {
-  return db.ready.then(({ stmt }) => new Promise<string[]>((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise<string[]>((resolve, reject) => {
     stmt.getImageSrcs.all([photoId], (error, rows) => {
       if (error) {
-        log.error('sqlite: getImageSrcs', error);
+        log.error('sqlite: getImageSrcs', error.message);
         reject(error);
         return;
       }
@@ -31,7 +31,7 @@ function deleteFiles(filePaths) {
   return new Promise((resolve, reject) => {
     function checkDone(error) {
       if (error) {
-        log.error('deleteFiles', error);
+        log.error('deleteFiles', error.message);
         reject(error);
         return;
       }
@@ -53,10 +53,10 @@ function deleteFiles(filePaths) {
  * @param photoId
  */
 function deletePhoto(photoId) {
-  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.deletePhoto.run([photoId], (error, row) => {
       if (error) {
-        log.error('sqlite: deletePhoto', error);
+        log.error('sqlite: deletePhoto', error.message);
         reject(error);
         return;
       }

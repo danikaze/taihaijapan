@@ -1,8 +1,10 @@
 import * as multer from 'multer';
 import * as path from 'path';
+import { Request, Response } from 'express';
 import { stripExtension } from '../../utils/strip-extension';
 import { addPhoto as modelAddPhoto } from '../../models/gallery/add-photo';
 import { getConfig } from '../../models/config/get-config';
+import { ServerSettings } from '../../settings';
 
 let upload;
 
@@ -17,7 +19,7 @@ function getUploadFilename(req, file, cb) {
 /**
  * Process the request to upload a new photo
  */
-export function addPhoto(serverSettings, request, response) {
+export function addPhoto(serverSettings: ServerSettings, request: Request, response: Response): void {
   getConfig().then((config) => {
     const routeAdmin = serverSettings.adminUrl;
 
@@ -34,12 +36,12 @@ export function addPhoto(serverSettings, request, response) {
                              : [];
 
       const photo = {
+        tags,
+        visible,
         original: request.file.path,
         title: body.title,
         slug: body.slug,
-        tags,
         keywords: body.keywords,
-        visible,
       };
 
       modelAddPhoto(photo).then(() => {
@@ -54,7 +56,7 @@ export function addPhoto(serverSettings, request, response) {
 /**
  * Set the proper parameters based on the server settings
  */
-export function init(serverSettings) {
+export function init(serverSettings: ServerSettings) {
   const uploadStorage = multer({
     storage: multer.diskStorage({
       destination: serverSettings.imagesOriginalPath,

@@ -1,23 +1,34 @@
-import * as sqlite3 from "sqlite3";
+import * as sqlite3 from 'sqlite3';
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { sync as mkdirp } from 'mkdirp';
 import { join, dirname } from 'path';
 
 import { log } from '../utils/log';
-import { prepareStatements } from './prepare-statements';
+import { prepareStatements, Statements } from './prepare-statements';
+
+export interface DbReady {
+  db: sqlite3.Database;
+  stmt: Statements;
+}
 
 export interface Model {
-  ready: Promise<{ stmt, db }>;
-  instance: any;
-  init: (settings) => Promise<{ stmt, db }>;
-  updateStatements: () => Promise<{ stmt, db }>;
+  ready: Promise<DbReady>;
+  instance: sqlite3.Database;
+  init: (settings) => Promise<DbReady>;
+  updateStatements: () => Promise<DbReady>;
+}
+
+interface UpdateData {
+  version: number;
+  filename: string;
+  sql: string;
 }
 
 const exportedData: Model = {
-  ready: undefined,
-  instance: undefined,
   init,
   updateStatements,
+  ready: undefined,
+  instance: undefined,
 };
 
 let sqlite = sqlite3;
@@ -27,9 +38,9 @@ let dbInstance: sqlite3.Database;
  * Initialize the database.
  * Needs to be called before anything else.
  *
- * @param {string} dbPath Path to the file to use as database
+ * @param dbPath Path to the file to use as database
  */
-export function init(settings) {
+export function init(settings): Promise<DbReady> {
   if (settings.db.debugMode) {
     sqlite = sqlite.verbose();
   }
@@ -39,7 +50,7 @@ export function init(settings) {
     mkdirp(dbFolder);
   }
 
-  exportedData.ready = new Promise((resolve, reject) => {
+  exportedData.ready = new Promise<DbReady>((resolve, reject) => {
     dbInstance = new sqlite.Database(settings.db.path, (error) => {
       if (error) {
         log.error('sqlite: error opening the database', JSON.stringify(error, null, 2));
@@ -63,7 +74,7 @@ export function init(settings) {
  *
  * @param file Path to the file with SQL code
  */
-function getSql(file) {
+function getSql(file: string): string {
   return readFileSync(file)
     .toString()
     .replace(/-- .*\n/gm, '');
@@ -74,21 +85,24 @@ function getSql(file) {
  *
  * @param currentVersion only updates with a higher version than this will be returned
  */
-function getUpdateFiles(currentVersion) {
-  const list = [];
+function getUpdateFiles(currentVersion: number): UpdateData[] {
+  const list: UpdateData[] = [];
 
   readdirSync(__dirname).forEach((file) => {
     const match = /\.(\d+)\.sql$/.exec(file);
-    if (match) {
-      const version = Number(match[1]);
-      if (version > currentVersion) {
-        list.push({
-          version,
-          fliename: file,
-          sql: getSql(join(__dirname, file)),
-        });
-      }
+    if (!match) {
+      return;
     }
+
+    const version = Number(match[1]);
+    if (version <= currentVersion) {
+      return;
+    }
+    list.push({
+      version,
+      filename: file,
+      sql: getSql(join(__dirname, file)),
+    });
   });
 
   list.sort((a, b) => a.version - b.version);
@@ -99,8 +113,8 @@ function getUpdateFiles(currentVersion) {
 /**
  * Retrieve the current schema version, stored in the db
  */
-function getCurrentSchemaVersion(db) {
-  return new Promise((resolve) => {
+function getCurrentSchemaVersion(db: sqlite3.Database): Promise<number> {
+  return new Promise<number>((resolve) => {
     const getVersionSql = 'SELECT value FROM config WHERE name = ?';
     db.get(getVersionSql, ['schema.version'], (err, row) => {
       const currentVersion = row && Number(row.value);
@@ -113,7 +127,7 @@ function getCurrentSchemaVersion(db) {
  * Apply all the found updates (files in this directory ending with `{.versionNumber}.sql`)
  * updating the `schema.version` sequentially
  */
-function applyUpdates(db) {
+function applyUpdates(db: sqlite3.Database): Promise<sqlite3.Database> {
   return new Promise((resolve) => {
     let updates;
     let appliedUpdates = 0;
@@ -153,12 +167,12 @@ function applyUpdates(db) {
  * Try to open the database. If it doesn't exist, create it.
  * If it's not the latest version, apply the updates.
  */
-function openDb(): Promise<{ db, stmt }> {
+function openDb(): Promise<DbReady> {
   /**
    * If the DB was just created, initialize it with `schema.version = 0` and default data
    */
-  function initDb(db) {
-    return new Promise((resolve, reject) => {
+  function initDb(db: sqlite3.Database): Promise<sqlite3.Database> {
+    return new Promise<sqlite3.Database>((resolve, reject) => {
       getCurrentSchemaVersion(db)
         .then((version) => {
           if (version !== undefined) {
@@ -170,7 +184,7 @@ function openDb(): Promise<{ db, stmt }> {
           log.info('sqlite', 'Inserting default data');
           db.exec(sql, (error) => {
             if (error) {
-              log.error('sqlite: insert default data', error);
+              log.error('sqlite: insert default data', error.message);
               reject(error);
               return;
             }
@@ -180,7 +194,7 @@ function openDb(): Promise<{ db, stmt }> {
     });
   }
 
-  return new Promise<{ db, stmt }>((resolve, reject) => {
+  return new Promise<DbReady>((resolve, reject) => {
     const sql = getSql(join(__dirname, 'sql', 'schema.sql'));
 
     dbInstance.exec(sql, (error) => {
@@ -194,7 +208,7 @@ function openDb(): Promise<{ db, stmt }> {
         .then(prepareStatements)
         .then((stmt) => {
           log.info('sqlite', 'Database ready');
-          resolve({ db: dbInstance, stmt });
+          resolve({ stmt, db: dbInstance });
         })
         .catch(reject);
     });
@@ -204,8 +218,8 @@ function openDb(): Promise<{ db, stmt }> {
 /**
  * Update the database prepared statements and the `ready` value to resolve to the new ones
  */
-export function updateStatements(): Promise<{ stmt, db }> {
-  const promise = new Promise<{ stmt, db }>((resolve, reject) => {
+export function updateStatements(): Promise<DbReady> {
+  const promise = new Promise<DbReady>((resolve, reject) => {
     exportedData.ready.then(({ db }) => {
       exportedData.ready = promise;
       prepareStatements(db).then(
@@ -223,4 +237,6 @@ export function updateStatements(): Promise<{ stmt, db }> {
  * If it doesn't exist, creates it
  * It applies any existing update based on the `schema.version` seting
  */
-export default exportedData;
+export {
+  exportedData as model,
+};

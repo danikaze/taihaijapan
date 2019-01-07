@@ -1,14 +1,13 @@
-import { getConfig } from'../../models/config/get-config';
-import { getSizes } from'../../models/gallery/get-sizes';
-import { getUsers } from'../../models/users/get-users';
+import { Request, Response } from 'express';
+import { getConfig } from '../../models/config/get-config';
+import { getSizes } from '../../models/gallery/get-sizes';
+import { getUsers } from '../../models/users/get-users';
+import { ServerSettings } from '../../settings';
 
 /**
  * Display the options in the admin page
- *
- * @param {*} request
- * @param {*} response
  */
-export function displayOptions(serverSettings, request, response) {
+export function displayOptions(serverSettings: ServerSettings, request: Request, response: Response): void {
   const promises = [
     getConfig(),
     getSizes(),
@@ -20,18 +19,18 @@ export function displayOptions(serverSettings, request, response) {
     const routeOptions = `${routeAdmin}/options`;
 
     response.render('admin-options', {
+      sizes,
+      config,
+      routeAdmin,
+      routeOptions,
       fullUrl: `${config['site.baseUrl']}${routeOptions}`,
       bodyId: 'page-admin-options',
       siteGlobalTitle: config['site.title'],
-      routeAdmin,
-      routeOptions,
       admin: {
         id: users[0].id,
         username: users[0].username,
         email: users[0].email,
       },
-      config,
-      sizes,
     });
   });
 }

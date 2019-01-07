@@ -1,4 +1,5 @@
 import { log } from '../utils/log';
+import { Database, Statement } from 'sqlite3';
 
 interface SqlQueries {
   getConfig: string;
@@ -29,39 +30,39 @@ interface SqlQueries {
   deleteUser: string;
 }
 
-export type Statements = { [K in keyof SqlQueries]: { all } }
+export type Statements = { [K in keyof SqlQueries]: Statement };
 
-const stmt: Statements = {} as Statements;
+const stmt = {} as Statements;
 
-function getConfig(config, name) {
+function getConfig<T>(config, name: string): T {
   const s = config.filter((item) => item.name === name)[0];
   if (!s) {
-    return undefined;
+    return;
   }
 
-  return s.value;
+  return s.value as T;
 }
 
 function getSqls(): Promise<SqlQueries> {
   return new Promise<SqlQueries>((resolve, reject) => {
     stmt.getConfig.all((error, config) => {
       if (error) {
-        log.error('sqlite: getSqls.getConfig', error);
+        log.error('sqlite: getSqls.getConfig', error.message);
         reject(error);
         return;
       }
 
-      const pageIndexLimit = getConfig(config, 'page.index.maxImages');
-      const pageIndexSortField = getConfig(config, 'page.index.orderBy');
-      const pageIndexSortDirection = getConfig(config, 'page.index.reverse') === 'true' ? 'DESC' : 'ASC';
+      const pageIndexLimit = getConfig<number>(config, 'page.index.maxImages');
+      const pageIndexSortField = getConfig<string>(config, 'page.index.orderBy');
+      const pageIndexSortDirection = getConfig<string>(config, 'page.index.reverse') === 'true' ? 'DESC' : 'ASC';
 
-      const pageGalleryLimit = getConfig(config, 'page.gallery.imagesPerPage');
-      const pageGallerySortField = getConfig(config, 'page.gallery.orderBy');
-      const pageGallerySortDirection = getConfig(config, 'page.gallery.reverse') === 'true' ? 'DESC' : 'ASC';
+      const pageGalleryLimit = getConfig<number>(config, 'page.gallery.imagesPerPage');
+      const pageGallerySortField = getConfig<string>(config, 'page.gallery.orderBy');
+      const pageGallerySortDirection = getConfig<string>(config, 'page.gallery.reverse') === 'true' ? 'DESC' : 'ASC';
 
-      const pageAdminLimit = getConfig(config, 'page.admin.imagesPerPage');
-      const pageAdminSortField = getConfig(config, 'page.admin.orderBy');
-      const pageAdminSortDirection = getConfig(config, 'page.admin.reverse') === 'true' ? 'DESC' : 'ASC';
+      const pageAdminLimit = getConfig<number>(config, 'page.admin.imagesPerPage');
+      const pageAdminSortField = getConfig<string>(config, 'page.admin.orderBy');
+      const pageAdminSortDirection = getConfig<string>(config, 'page.admin.reverse') === 'true' ? 'DESC' : 'ASC';
 
       // list of STMTs that need to be updated with config values
       const sqls = {
@@ -141,7 +142,7 @@ function getSqls(): Promise<SqlQueries> {
 /**
  * getConfig is a bit special because it's used to create other SQLs, so it's prepared apart
  */
-function prepareGetConfig(db) {
+function prepareGetConfig(db: Database): Promise<void> {
   return new Promise((resolve, reject) => {
     if (stmt.getConfig) {
       resolve();
@@ -151,7 +152,7 @@ function prepareGetConfig(db) {
     const sql = 'SELECT * FROM config;';
     stmt.getConfig = db.prepare(sql, (error) => {
       if (error) {
-        log.error('sqlite: preparing getConfig statement', error);
+        log.error('sqlite: preparing getConfig statement', error.message);
         reject(error);
         return;
       }
@@ -163,12 +164,12 @@ function prepareGetConfig(db) {
 /**
  * Prepare the statements for the queries to use
  */
-export function prepareStatements(db) {
-  return prepareGetConfig(db).then(() => getSqls().then((sqls) => {
-    const keys = Object.keys(sqls);
-    let left = keys.length;
+export function prepareStatements(db: Database): Promise<Statements> {
+  return new Promise<Statements>((resolve, reject) => {
+    prepareGetConfig(db).then(() => getSqls().then((sqls) => {
+      const keys = Object.keys(sqls);
+      let left = keys.length;
 
-    return new Promise((resolve, reject) => {
       function checkDone(key, sql, error) {
         if (error) {
           reject({ key, sql, error });
@@ -187,8 +188,8 @@ export function prepareStatements(db) {
         const s = db.prepare(sql, checkDone.bind(null, key, sql));
         stmt[key] = s;
       });
+    })).catch((error) => {
+      log.error('sqlite', `preparing statements ${JSON.stringify(error, null, 2)}`);
     });
-  })).catch((error) => {
-    log.error('sqlite', `preparing statements ${JSON.stringify(error, null, 2)}`);
   });
 }

@@ -1,6 +1,6 @@
 import { log } from '../../utils/log';
-import { createThumbnails } from '../../utils/create-thumbnails';
-import { default as db } from '../index';
+import { createThumbnails, CreateThumbnailsOptions } from '../../utils/create-thumbnails';
+import { model } from '../index';
 import { Config, Size } from '../interfaces';
 import { getConfig } from '../config/get-config';
 import { getSizes } from './get-sizes';
@@ -15,7 +15,7 @@ let serverSettings;
  * @param data
  */
 function insertPhoto(photoData) {
-  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     const data = [
       photoData.original,
       photoData.slug,
@@ -25,7 +25,7 @@ function insertPhoto(photoData) {
     ];
     stmt.insertPhoto.run(data, function callback(error) {
       if (error) {
-        log.error('sqlite: addPhoto', error);
+        log.error('sqlite: addPhoto', error.message);
         reject(error);
         return;
       }
@@ -36,15 +36,15 @@ function insertPhoto(photoData) {
 
 /**
  * Insert images related to the specified photo into the database
- * @param {*} photoId
- * @param {*} thumbs
+ * @param photoId
+ * @param thumbs
  */
 function insertImages(photoId, thumbs) {
-  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     const promises = thumbs.map((image) => new Promise((resolveOne, rejectOne) => {
       stmt.insertImage.run([photoId, image.width, image.height, image.src], (error) => {
         if (error) {
-          log.error('sqlite: insertImages', error);
+          log.error('sqlite: insertImages', error.message);
           rejectOne(error);
           return;
         }
@@ -64,7 +64,7 @@ function insertImages(photoId, thumbs) {
  * @param photoData
  */
 export function addPhoto(photoData): Promise<void> {
-  const configPromises: Promise<Config | Size[]>[] = [
+  const configPromises: [Promise<Config>, Promise<Size[]>] = [
     getConfig(),
     getSizes(),
   ];
@@ -76,15 +76,11 @@ export function addPhoto(photoData): Promise<void> {
       const tagsPromise = updatePhotoTags(photoId, photoData.tags);
       imagePromises.push(tagsPromise);
 
-      const thumbnailsOptions = {
+      const thumbnailsOptions: CreateThumbnailsOptions = {
         sizes,
         path: serverSettings.imagesThumbPath,
         temporalPath: serverSettings.imagesTemporalPath,
-        resize: {
-          policy: 'inside',
-          outputFile: '{id:3}/{size}-{hash:16}.jpg',
-          format: 'jpeg',
-        },
+        outputFile: '{id:3}/{size}-{hash:16}.jpg',
         baseUrl: serverSettings.imagesBaseUrl,
       };
 

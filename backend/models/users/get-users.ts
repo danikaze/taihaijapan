@@ -1,11 +1,11 @@
 import { log } from '../../utils/log';
-import { default as db } from '../index';
+import { model } from '../index';
 
 export function getUsers() {
-  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.selectUsers.all([], (error, users) => {
       if (error) {
-        log.error('sqlite: getUsers', error);
+        log.error('sqlite: getUsers', error.message);
         reject(error);
         return;
       }

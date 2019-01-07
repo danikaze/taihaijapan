@@ -1,8 +1,8 @@
 import { log } from '../../utils/log';
-import { default as db } from '../index';
+import { model } from '../index';
 
 export function updateUser(id, data): Promise<void> {
-  return db.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
     const params = [
       data.username,
       data.password,
@@ -12,7 +12,7 @@ export function updateUser(id, data): Promise<void> {
 
     stmt.updateUser.run(params, (error) => {
       if (error) {
-        log.error('sqlite: updateUser', error);
+        log.error('sqlite: updateUser', error.message);
         reject(error);
         return;
       }

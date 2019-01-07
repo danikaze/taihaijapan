@@ -1,18 +1,15 @@
-import * as net from 'net';
+import { Socket, createServer } from 'net';
 import * as path from 'path';
 import { sync as mkdirp } from 'mkdirp';
+import { CtlSettings } from '../settings';
 import { log } from '../utils/log';
 import { ctlEmitter } from './ctl-emitter';
 
 export class CtlServer {
-  private settings;
+  private readonly settings;
   private ctlServer;
 
-  /**
-   *
-   * @param {object} settings
-   */
-  constructor(settings) {
+  constructor(settings: CtlSettings) {
     this.settings = settings;
     this.ctlServer = null;
   }
@@ -20,8 +17,8 @@ export class CtlServer {
   /**
    * Basic TCP server based on the settings
    */
-  start() {
-    const ctlServer = net.createServer(connectionListener.bind(this));
+  public start() {
+    const ctlServer = createServer(connectionListener.bind(this));
     this.ctlServer = ctlServer;
     const unixSocket = this.settings.unixSocket;
 
@@ -52,13 +49,13 @@ export class CtlServer {
 /**
  * Handler for the incoming TCP connection
  *
- * @param {net.Socket} socket incoming connection
+ * @param socket incoming connection
  */
-function connectionListener(socket) {
+function connectionListener(socket: Socket) {
   socket.on('data', (data) => {
     // data is a Buffer object
     try {
-      const json = JSON.parse(data);
+      const json = JSON.parse(data.toString());
       const options = json.options;
       const commands = json.commands;
 

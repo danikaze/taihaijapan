@@ -1,10 +1,9 @@
 import * as bodyParser from 'body-parser';
 import { auth } from '../utils/auth';
-import { EndPointsGetter } from './index';
+import { EndPointsGetter, EndPoint } from './index';
 
 import { displayGallery } from './admin/display-gallery';
-import { addPhoto } from './admin/add-photo';
-import { init as initUpload } from './admin/add-photo';
+import { addPhoto, init as initUpload } from './admin/add-photo';
 import { updatePhoto } from './admin/update-photo';
 import { deletePhoto } from './admin/delete-photo';
 
@@ -61,5 +60,5 @@ export const adminControllers: EndPointsGetter = (app, serverSettings, config) =
       callback: updateOptions.bind(null, serverSettings),
       middleware: [auth.middleware(), bodyParser.urlencoded({ extended: true })],
     },
-  ];
+  ] as EndPoint[];
 };

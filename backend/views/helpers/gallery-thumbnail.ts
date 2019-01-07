@@ -11,7 +11,7 @@ function galleryThumbnail() {
   return `<div><img src="${this.imgs[0].src}" ${getSrcsetTag([this.imgs[0]], sizesMediaTags)} alt="${this.id}"></div>`;
 }
 
-export default {
+export const helper = {
   fn: galleryThumbnail,
   async: false,
 };

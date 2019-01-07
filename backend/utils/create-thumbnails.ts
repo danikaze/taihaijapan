@@ -2,15 +2,23 @@ import { existsSync, renameSync } from 'fs';
 import * as path from 'path';
 import { sync as mkdirp } from 'mkdirp';
 
+import { Size, Photo, Image } from '../models/interfaces';
 import { generateFileName } from './generate-file-name';
 import { resizeImage } from './resize-image';
+
+export interface CreateThumbnailsOptions {
+  sizes: Size[];
+  path: string;
+  temporalPath: string;
+  outputFile: string;
+  baseUrl: string;
+}
 
 /**
  * Get a photo data with the path to the original image, and create thumbnails resizing and
  * storing them in the adecuate folders, returning a Promise resolved to an array of thumbnail data
- * @returns {Promise<Array<object>>}
  */
-export function createThumbnails(data, options) {
+export function createThumbnails(data: Photo, options: CreateThumbnailsOptions): Promise<Image[]> {
   return new Promise((resolve, reject) => {
     const thumbs = [];
     let remainingSizes = options.sizes.length;
@@ -30,7 +38,7 @@ export function createThumbnails(data, options) {
               slug: data.slug,
               size: size.label,
             };
-            generateFileName(options.resize.outputFile, thumbInfo.path, replaceValues)
+            generateFileName(options.outputFile, thumbInfo.path, replaceValues)
             .then((outputFile) => {
               const outputPath = path.resolve(__dirname, '..', path.join(options.path, outputFile));
               const outputFolder = path.dirname(outputPath);

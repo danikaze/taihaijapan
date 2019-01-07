@@ -16,47 +16,43 @@ const generators = {
 const generatorKeys = Object.keys(generators);
 
 /**
- * @param {Number} min
- * @param {Number} max
- * @returns {Number} Random number between [min, max)
+ * @returns Random number between [min, max)
  */
-function randomInt(min, max) {
+function randomInt(min: number, max: number): number {
   const r = Number(String(Math.random()).substring(2));
   return (r % (max - min)) + min;
 }
 
 /**
- * @param {String} filePath
- * @returns {String} Extension of the file (including '.')
+ * @returns Extension of the file (including '.')
  */
-function getExt(filePath) {
+function getExt(filePath: string): string {
   return path.extname(filePath);
 }
 
 /**
- * @param {String} filePath
- * @returns {String} Name of the file without the extension
+ * @returns Name of the file without the extension
  */
-function getBasename(filePath) {
+function getBasename(filePath: string): string {
   const basename = path.basename(filePath);
   return basename.substring(0, basename.lastIndexOf('.'));
 }
 
 /**
- * @returns {String} Timestamp in seconds
+ * @returns Timestamp in seconds
  */
-function getTimestamp() {
+function getTimestamp(): string {
   return String(new Date().getTime() / 1000);
 }
 
 /**
  * Get a unique random string.
  *
- * @param {Number} size Size of the string to return
- * @returns {String} Random string of `size` size
+ * @param size Size of the string to return
+ * @returns Random string of `size` size
  */
-function getRandomString(size) {
-  let res;
+function getRandomString(size: number): string {
+  let res: string;
   const A_CHR = 'A'.charCodeAt(0);
   const Z_CHR = 'Z'.charCodeAt(0);
   const LOWER = 'a'.charCodeAt(0) - A_CHR;
@@ -80,12 +76,12 @@ function getRandomString(size) {
  * Custom values `{key}` can be padded with '0' if specified as `{key:N}`, being `N` the total size,
  * or with a custom character `C` if specified as `{key:N,C}`
  *
- * @param {String} pattern    Pattern for the new name, with the accepted placeholders
- * @param {String} [filePath] Path to the original file
- * @param {Object} values     Extra values to use in the pattern as `{ key: value }`
- * @returns {Promise}         Promise resolved to the file name
+ * @param pattern  Pattern for the new name, with the accepted placeholders
+ * @param filePath Path to the original file
+ * @param values   Extra values to use in the pattern as `{ key: value }`
+ * @returns        Promise resolved to the file name
  */
-export function generateFileName(pattern, filePath, values?): Promise<string> {
+export function generateFileName(pattern: string, filePath?: string, values?: {}): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     let newFileName = pattern;
     const hashPromise: Promise<void | string> = !filePath
@@ -110,9 +106,9 @@ export function generateFileName(pattern, filePath, values?): Promise<string> {
         Object.keys(values).forEach((key) => {
           newFileName = newFileName.replace(new RegExp(`{${key}(:((\\d+)(,(.))?))?}`, 'gi'), (...match) => {
             const value = values[key];
-            const padStr = match[5] || '0';
-            if (match[3]) {
-              return String(value).padStart(match[3], padStr);
+            const padStr = match[5] || '0'; // tslint:disable-line:no-magic-numbers
+            if (match[3]) { // tslint:disable-line:no-magic-numbers
+              return String(value).padStart(match[3], padStr); // tslint:disable-line:no-magic-numbers
             }
             return value;
           });

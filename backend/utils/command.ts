@@ -45,4 +45,3 @@ yargs
   .options(options);
 
 export const parse = yargs.parse;
-

@@ -33,7 +33,7 @@ export function displayGallery(request, response) {
       });
     })
     .catch((error) => {
-      log.error('index', error);
+      log.error('index', error.message);
       response.status(500).send('Unexpected Error');
     });
 }

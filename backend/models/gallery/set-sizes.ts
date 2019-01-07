@@ -1,5 +1,5 @@
 import { log } from '../../utils/log';
-import { default as db } from '../index';
+import { model } from '../index';
 import { Size } from '../interfaces';
 import { getSizes } from './get-sizes';
 
@@ -9,7 +9,7 @@ import { getSizes } from './get-sizes';
  * @param {*} size { label, width, height }
  */
 function addSize(size) {
-  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     const params = [
       size.label || '',
       size.width,
@@ -19,7 +19,7 @@ function addSize(size) {
 
     stmt.insertSize.run(params, (error) => {
       if (error) {
-        log.error('sqlite: addSize', error);
+        log.error('sqlite: addSize', error.message);
         reject(error);
         return;
       }
@@ -34,7 +34,7 @@ function addSize(size) {
  * @param {*} size { id, label, width, height }
  */
 function updateSize(size) {
-  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     const params = [
       size.label || '',
       size.width,
@@ -45,7 +45,7 @@ function updateSize(size) {
 
     stmt.updateSize.run(params, (error) => {
       if (error) {
-        log.error('sqlite: updateSize', error);
+        log.error('sqlite: updateSize', error.message);
         reject(error);
         return;
       }
@@ -61,10 +61,10 @@ function updateSize(size) {
  * @param {*} size { id, label, width, height }
  */
 function removeSize(sizeId) {
-  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.updateSize.run([sizeId], (error) => {
       if (error) {
-        log.error('sqlite: removeSize', error);
+        log.error('sqlite: removeSize', error.message);
         reject(error);
         return;
       }

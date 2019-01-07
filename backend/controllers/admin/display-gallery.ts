@@ -16,12 +16,12 @@ export function displayGallery(serverSettings, request, response) {
     const routeOptions = `${routeAdmin}/options`;
 
     response.render('admin', {
+      photos,
+      routeAdmin,
+      routeOptions,
       fullUrl: `${config['site.baseUrl']}${routeAdmin}`,
       bodyId: 'page-admin',
       siteGlobalTitle: config['site.title'],
-      routeAdmin,
-      routeOptions,
-      photos,
     });
   });
 }

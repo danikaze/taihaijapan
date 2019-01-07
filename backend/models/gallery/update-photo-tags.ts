@@ -1,15 +1,15 @@
 import { log } from '../../utils/log';
-import { default as db } from '../index';
+import { model } from '../index';
 import { Tag } from '../interfaces';
 
 /**
  * Get the current tags of a photo
  */
 function getTags(photoId): Promise<Tag[]> {
-  return db.ready.then(({ stmt }) => new Promise<Tag[]>((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise<Tag[]>((resolve, reject) => {
     stmt.selectTagsByPhoto.all([photoId], (error, tags) => {
       if (error) {
-        log.error('sqlite: getTags', error);
+        log.error('sqlite: getTags', error.message);
         reject(error);
         return;
       }
@@ -23,11 +23,11 @@ function getTags(photoId): Promise<Tag[]> {
  * Insert a new tag or get the ID of the existing one
  */
 function insertOneTag(text) {
-  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     // try to insert a new tag
     stmt.insertTag.run([text], function insertCallback(error) {
       if (error) {
-        log.error('sqlite: insertOneTag', error);
+        log.error('sqlite: insertOneTag', error.message);
         reject(error);
         return;
       }
@@ -40,7 +40,7 @@ function insertOneTag(text) {
       // if not inserted (was already there, get its id)
       stmt.selectTag.get([text], (selectError, row) => {
         if (selectError) {
-          log.error('sqlite: insertOneTag.select', selectError);
+          log.error('sqlite: insertOneTag.select', selectError.message);
           reject(selectError);
           return;
         }
@@ -55,10 +55,10 @@ function insertOneTag(text) {
  * Associate a tag with the given photoId
  */
 function linkOneTag(photoId, tagId) {
-  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.linkTag.run([photoId, tagId], (error) => {
       if (error) {
-        log.error('sqlite: linkOneTag', error);
+        log.error('sqlite: linkOneTag', error.message);
         reject(error);
         return;
       }
@@ -74,10 +74,10 @@ function linkOneTag(photoId, tagId) {
  * @param {*} tagId
  */
 function unlinkOneTag(photoId, tagId) {
-  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     stmt.unlinkTag.run([photoId, tagId], (error) => {
       if (error) {
-        log.error('sqlite: unlinkOneTag', error);
+        log.error('sqlite: unlinkOneTag', error.message);
         reject(error);
         return;
       }
@@ -95,7 +95,7 @@ function unlinkOneTag(photoId, tagId) {
  * @param {string[]} tags
  */
 export function updatePhotoTags(photoId, newTags) {
-  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     getTags(photoId).then((currentTags) => {
       const toAdd = [];
       for (const tagText of newTags) {

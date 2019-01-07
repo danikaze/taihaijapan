@@ -2,12 +2,10 @@ import { createHash } from 'crypto';
 import { createReadStream } from 'fs';
 
 /**
- * Get a hash based on a file.
+ * Get a hash based on a file contents.
  * It will return always the same for the same entry
- *
- * @param {String} filePath
  */
-export function getFileHash(filePath): Promise<string> {
+export function getFileHash(filePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const fd = createReadStream(filePath);
     const hash = createHash('sha1');

@@ -2,6 +2,15 @@
 import { isBoolean } from 'vanilla-type-check/isBoolean';
 import { isString } from 'vanilla-type-check/isString';
 
+export interface TypifySchema {
+  [key: string]: 'int' | 'num' | 'bool' | 'json' | 'str';
+}
+
+export interface TypifyOptions {
+  copy: boolean;
+  includeExternal: boolean;
+}
+
 /**
  * Typify the properties of an object.
  * Don't include a key:type pair in the schema the value doesn't need any transformation
@@ -13,7 +22,7 @@ import { isString } from 'vanilla-type-check/isString';
  *         the result when `protect` is `true`. When `false`, they will be
  *         included without any transformation.
  */
-export function typify(values, schema, options?) {
+export function typify<T = {}>(values: {}, schema: TypifySchema, options?: Partial<TypifyOptions>): T {
   const opt = {
     copy: false,
     includeExternal: true,
@@ -24,11 +33,11 @@ export function typify(values, schema, options?) {
   Object.keys(values).forEach((key) => {
     const value = values[key];
     const type = schema[key];
-    let str;
+    let n: number;
 
     switch (type) {
       case 'int':
-        res[key] = parseInt(value, 10);
+        res[key] = Number(value) | 0;
         break;
 
       case 'num':
@@ -36,13 +45,13 @@ export function typify(values, schema, options?) {
         break;
 
       case 'bool':
-        str = Number(value);
-        if (!isNaN(str)) {
-          res[key] = (str | 0) !== 0;
+        n = Number(value);
+        if (!isNaN(n)) {
+          res[key] = (n | 0) !== 0;
         } else if (isString(value)) {
           res[key] = value.toLowerCase() === 'true';
         } else if (!isBoolean(value)) {
-          res[key] = (str | 0) !== 0;
+          res[key] = (n | 0) !== 0;
         }
         break;
 
@@ -67,5 +76,5 @@ export function typify(values, schema, options?) {
     }
   });
 
-  return res;
+  return res as T;
 }

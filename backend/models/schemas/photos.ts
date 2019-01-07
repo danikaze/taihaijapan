@@ -1,4 +1,6 @@
-export const schema = {
+import { TypifySchema } from '../../utils/typify';
+
+export const schema: TypifySchema = {
   id: 'int',
   slug: 'str',
   title: 'str',

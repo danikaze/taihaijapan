@@ -4,12 +4,10 @@ import { schema as sizesSchema } from '../../models/schemas/sizes';
 import { updateConfig } from '../../models/config/update-config';
 import { setSizes } from '../../models/gallery/set-sizes';
 import { updateUser } from '../../models/users/update-user';
+import { Config } from '../../models/interfaces';
 
 /**
  * Update the options in the admin page
- *
- * @param {*} request
- * @param {*} response
  */
 export function updateOptions(serverSettigs, request, response) {
   const { sizes, admin, ...config } = request.body;
@@ -19,7 +17,7 @@ export function updateOptions(serverSettigs, request, response) {
     'page.index.reverse': false,
     'page.gallery.reverse': false,
     'images.hiddenByDefault': false,
-    ...typify(config, configSchema),
+    ...typify<Config>(config, configSchema),
   };
   const typedSizes = sizes.map((size) => typify(size, sizesSchema));
   const promises = [

@@ -2,9 +2,9 @@ import * as path from 'path';
 import { existsSync } from 'fs';
 import { parse as parseCommand } from './command';
 import { readJsonSync } from './read-json-sync';
-import { ctlEmitter } from '../ctl/ctl-emitter';
+// import { ctlEmitter } from '../ctl/ctl-emitter';
 import { log, setLogDate } from './log';
-import { Settings } from '../settings/index';
+import { Settings, ServerSettings } from '../settings/index';
 
 /*
  * Settings are initialized to this values, from less to higher priority:
@@ -12,7 +12,7 @@ import { Settings } from '../settings/index';
  * - file specified in the 1st argument (if any)
  * - commands options (if any)
  */
-export const settings: Settings = {} as Settings;
+export const settings = {} as Settings;
 
 init();
 
@@ -40,7 +40,7 @@ function locateSettingsFile(file) {
 /**
  * Initialize the settings object
  */
-function init() {
+function init(): void {
   reset();
 
   const args = parseCommand();
@@ -67,10 +67,10 @@ function init() {
  * paths from the folder where the settings json file is stored, or from `process.cwd()` in case of
  * options given in the arguments
  *
- * @param {object} values     map of values to fix
- * @param {string} relativeTo path to append to each path option
+ * @param values     map of values to fix
+ * @param relativeTo path to append to each path option
  */
-function fixPaths(values, relativeTo) {
+function fixPaths(values: ServerSettings, relativeTo: string): void {
   const settingsPath = {
     server: [
       'viewsPath',
@@ -122,9 +122,9 @@ export function reset() {
 /**
  * Extend the current settings with the new ones.
  *
- * @param {object} options new options to set (an object as `{ section: { key: value } }`)
+ * @param options new options to set (an object as `{ section: { key: value } }`)
  */
-export function set(options) {
+export function set(options: ServerSettings): void {
   Object.keys(options).forEach((section) => {
     if (!settings[section]) {
       settings[section] = {};
@@ -136,44 +136,44 @@ export function set(options) {
 /**
  * Extend the current settings with the ones specified in a json file.
  *
- * @param {string} filePath path of the json file with the options
+ * @param filePath path of the json file with the options
  */
-export function setFile(filePath) {
-  filePath = locateSettingsFile(filePath);
+export function setFile(filePath: string): void {
+  const realFilePath = locateSettingsFile(filePath);
 
-  if (!filePath) {
-    log.warn('ServerSettings', `Couldn't find settings file in ${filePath}`);
+  if (!realFilePath) {
+    log.warn('ServerSettings', `Couldn't find settings file in ${realFilePath}`);
     return;
   }
 
-  const options = readJsonSync(filePath);
-  fixPaths(options, path.dirname(filePath));
+  const options = readJsonSync<ServerSettings>(realFilePath);
+  fixPaths(options, path.dirname(realFilePath));
   set(options);
 }
 
 /**
  * Extend the current settings with the ones specified by command line arguments
  *
- * @param {object} commandOptions options in an object as returned by `yargs.parse()`
- * @param {string} relativeTo     base path for the options of type "path"
+ * @param commandOptions options in an object as returned by `yargs.parse()`
+ * @param relativeTo     base path for the options of type "path"
  */
-function setCommandOptions(commandOptions, relativeTo?) {
-  const options = {};
-  const definitions = commandOptions;
+// function setCommandOptions(commandOptions: {}, relativeTo?: string): void {
+//   const options = {} as ServerSettings;
+//   const definitions = commandOptions;
 
-  Object.keys(definitions).forEach((key) => {
-    const value = commandOptions[key];
-    if (value === undefined) {
-      return;
-    }
+//   Object.keys(definitions).forEach((key) => {
+//     const value = commandOptions[key];
+//     if (value === undefined) {
+//       return;
+//     }
 
-    const group = definitions[key].group.toLowerCase().replace(/:/g, '');
-    if (!options[group]) {
-      options[group] = {};
-    }
-    options[group][key] = value;
-  });
+//     const group = definitions[key].group.toLowerCase().replace(/:/g, '');
+//     if (!options[group]) {
+//       options[group] = {};
+//     }
+//     options[group][key] = value;
+//   });
 
-  fixPaths(options, relativeTo || process.cwd());
-  set(options);
-}
+//   fixPaths(options, relativeTo || process.cwd());
+//   set(options);
+// }

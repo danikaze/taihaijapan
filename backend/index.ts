@@ -1,12 +1,10 @@
 import { settings } from './utils/server-settings';
 import { Server } from './server';
-import { CtlServer } from './ctl/ctl-server';
-import { ctlEmitter } from './ctl/ctl-emitter';
+import { CtlServer /*, ctlEmitter */ } from './ctl/ctl-server';
 import { log } from './utils/log';
 import { init as modelInit } from './models/index';
 import { init as addPhotoInit } from './models/gallery/add-photo';
-import { init as configInit } from './models/config/get-config';
-import { getConfig } from './models/config/get-config';
+import { init as configInit, getConfig } from './models/config/get-config';
 
 function initExpressServer(config) {
   const server = new Server(settings);
@@ -15,7 +13,7 @@ function initExpressServer(config) {
   server.start(config);
 }
 
-function initCtlServer() {
+function initCtlServer(): void {
   const ctlSettings = settings.ctl;
   if (ctlSettings.enabled) {
     const ctlServer = new CtlServer(ctlSettings);

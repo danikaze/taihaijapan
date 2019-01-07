@@ -1,5 +1,5 @@
 import { log } from '../../utils/log';
-import { default as db } from '../index';
+import { model } from '../index';
 import { Photo } from '../interfaces';
 
 /**
@@ -8,7 +8,7 @@ import { Photo } from '../interfaces';
  * @param query name of the stmt to get the photo list base data
  */
 function getPhotos(query): Promise<Photo[]> {
-  return db.ready.then(({ stmt }) => new Promise<Photo[]>((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise<Photo[]>((resolve, reject) => {
     stmt[query].all([0], (errorSelect, photos) => {
       if (errorSelect) {
         reject(errorSelect);
@@ -32,7 +32,7 @@ function getPhotos(query): Promise<Photo[]> {
         // get tags
         stmt.selectTagsByPhoto.all([photo.id], (error, rows) => {
           if (error) {
-            log.error('sqlite: getPhotos.tags', error);
+            log.error('sqlite: getPhotos.tags', error.message);
             reject(error);
             return;
           }
@@ -44,7 +44,7 @@ function getPhotos(query): Promise<Photo[]> {
         // get images
         stmt.getImagesByPhoto.all([photo.id], (error, rows) => {
           if (error) {
-            log.error('sqlite: getPhotos.images', error);
+            log.error('sqlite: getPhotos.images', error.message);
             reject(error);
             return;
           }

@@ -1,11 +1,11 @@
 /* eslint-disable */
-const db = require('../backend/models');
+const model = require('../backend/models');
 const getConfig = require('../backend/models/config/get-config').getConfig;
 
 /*
  * test
  */
-db.ready.then(({ stmt }) => {
+model.ready.then(({ stmt }) => {
   stmt.insertTag.run(['tag1'], function cb1(error1) {
     console.log('tag1.id', this.lastID, error1);
     stmt.insertTag.run(['tag2'], function cb2(error2) {

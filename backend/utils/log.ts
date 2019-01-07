@@ -1,17 +1,17 @@
 import * as npmlog from 'npmlog';
-const ctlEmitter = require('../ctl/ctl-emitter');
+// const ctlEmitter = require('../ctl/ctl-emitter');
 
-function getDateString() {
-  const d = new Date();
-  return `${d.getFullYear()}-`
-    + `${String(d.getMonth() + 1).padStart(2, '0')}-`
-    + `${String(d.getDate()).padStart(2, '0')} `
-    + `${String(d.getHours()).padStart(2, '0')}:`
-    + `${String(d.getMinutes()).padStart(2, '0')}:`
-    + `${String(d.getSeconds()).padStart(2, '0')}.`
-    + `${String(d.getMilliseconds()).padStart(2, '0')}`
-    ;
-}
+// function getDateString(): string {
+//   const d = new Date();
+//   return `${d.getFullYear()}-`
+//     + `${String(d.getMonth() + 1).padStart(2, '0')}-`
+//     + `${String(d.getDate()).padStart(2, '0')} `
+//     + `${String(d.getHours()).padStart(2, '0')}:`
+//     + `${String(d.getMinutes()).padStart(2, '0')}:`
+//     + `${String(d.getSeconds()).padStart(2, '0')}.`
+//     + `${String(d.getMilliseconds()).padStart(2, '0')}`
+//     ;
+// }
 
 /*
  * Which level to use when logging?
@@ -26,14 +26,13 @@ function getDateString() {
  *  silent  | Infinity  |
  */
 
-
-export function setLogDate(format) {
+export function setLogDate(format: boolean): void {
   // if (format) {
   //   npmlog.on('log', (data) => {
   //     data.message = `[${getDateString()}] ${data.message}`;
   //   });
   // }
-};
+}
 
 // ctlEmitter.on('option.log.logLevel', (logLevel) => {
   // npmlog.level = logLevel;

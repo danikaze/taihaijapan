@@ -1,4 +1,4 @@
-import { ServerSettings } from "backend/settings/index";
+import { ServerSettings } from '../../backend/settings/index';
 
 export interface EndPoint {
   method: 'get' | 'post' | 'put' | 'delete';

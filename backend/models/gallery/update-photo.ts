@@ -1,5 +1,5 @@
 import { log } from '../../utils/log';
-import { default as db } from '../index';
+import { model } from '../index';
 import { getPhoto } from './get-photo';
 import { updatePhotoTags } from './update-photo-tags';
 
@@ -8,7 +8,7 @@ import { updatePhotoTags } from './update-photo-tags';
  * All of them is required
  */
 function updatePhotoBaseData(photoId, newData) {
-  return db.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
     const data = [
       newData.slug,
       newData.title,
@@ -19,7 +19,7 @@ function updatePhotoBaseData(photoId, newData) {
 
     stmt.updatePhoto.run(data, (error) => {
       if (error) {
-        log.error('sqlite: updatePhotoBaseData', error);
+        log.error('sqlite: updatePhotoBaseData', error.message);
         reject(error);
         return;
       }

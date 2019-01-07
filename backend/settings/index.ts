@@ -37,7 +37,7 @@ export interface CtlSettings {
   host: string;
   port: number;
   unixSocket: string;
-};
+}
 
 export interface Settings {
   server: ServerSettings;
@@ -45,4 +45,4 @@ export interface Settings {
   cacheTtl: CacheSettings;
   log: LogSettings;
   ctl: CtlSettings;
-};
+}

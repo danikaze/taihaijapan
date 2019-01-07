@@ -1,10 +1,10 @@
 import { log } from '../../utils/log';
 import { typify } from '../../utils/typify';
-import { default as db } from '../index';
+import { model } from '../index';
 import { Config } from '../interfaces';
 import { schema } from '../schemas/config';
 
-let updatePromise;
+let updatePromise: Promise<Config>;
 let cachedConfig: Config;
 let cacheTtl = 0;
 let cachedUntil = 0;
@@ -26,10 +26,10 @@ function configToObject<T>(configArray): T {
  * Update the cached config with values from the database
  */
 function refreshConfig(): Promise<Config> {
-  return db.ready.then(({ stmt }) => new Promise<Config>((resolve, reject) => {
+  return model.ready.then(({ stmt }) => new Promise<Config>((resolve, reject) => {
     stmt.getConfig.all((error, rows) => {
       if (error) {
-        log.error('sqlite: refreshConfig', error);
+        log.error('sqlite: refreshConfig', error.message);
         reject(error);
         return;
       }

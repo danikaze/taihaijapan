@@ -5,7 +5,7 @@ function version() {
   return v;
 }
 
-export default {
+export const helper = {
   fn: version,
   async: false,
 };

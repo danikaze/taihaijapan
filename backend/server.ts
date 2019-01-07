@@ -1,4 +1,3 @@
-import { Express } from 'express-serve-static-core';
 import * as express from 'express';
 import * as compress from 'compression';
 import * as morgan from 'morgan';
@@ -6,21 +5,24 @@ import * as requireAll from 'require-all';
 import * as EventEmitter from 'events';
 import * as hbs from 'hbs';
 
-import { ServerSettings, LogSettings } from "./settings/index";
+import { HTTP_CODE_NOT_FOUND } from './constants';
+import { ServerSettings, LogSettings, Settings } from './settings';
 import { galleryControllers } from './controllers/gallery';
 import { adminControllers } from './controllers/admin';
 import { log } from './utils/log';
 import { auth } from './utils/auth';
+import { Config } from './models/interfaces';
+
 
 export class Server extends EventEmitter {
-  private serverSettings: ServerSettings;
-  private logSettings: LogSettings;
-  private app: Express;
+  private readonly serverSettings: ServerSettings;
+  private readonly logSettings: LogSettings;
+  private app: express.Application;
 
   /**
-   * @param {object} settings Settings object as `{ server, log }`
+   * @param settings Settings object as `{ server, log }`
    */
-  constructor(settings) {
+  constructor(settings: Settings) {
     super();
 
     this.serverSettings = settings.server;
@@ -29,43 +31,70 @@ export class Server extends EventEmitter {
   }
 
   /**
-  * Set and start the HTTP server
-  * @param {object} config Configuration of the page from the database
-  */
-  start(config) {
-    this.app = express();
-    this.app.disable('x-powered-by');
-    this.app.use(this.serverSettings.publicUrl, express.static(this.serverSettings.publicPath));
+   * Error 404 handler
+   */
+  protected static error404handler(request: express.Request, response: express.Response): void {
+    response.status(HTTP_CODE_NOT_FOUND);
+    const msg = `${request.url} not found`;
 
-    this.app.use(compress());
-    this.app.use(morgan(this.logSettings.logRequests));
+    // respond with html page
+    if (request.accepts('html')) {
+      response.send(msg);
+      return;
+    }
 
-    this.app.set('view engine', 'hbs');
-    this.app.set('views', this.serverSettings.viewsPath);
+    // respond with json
+    if (request.accepts('json')) {
+      response.send({ error: msg });
+      return;
+    }
 
-    this.loadEndPoints(config);
-    this.app.use(error404handler);
-
-    this.setHbs().then(() => {
-      this.app.listen(this.serverSettings.port, this.serverSettings.host, () => {
-        log.info('Server', `Ready on ${this.serverSettings.host}:${this.serverSettings.port}`);
-        this.emit('ready');
-      });
-    });
-
-    /*
-     * TODO: Define listeners for Express events
-     */
+    // default to plain-text. send()
+    response.type('txt').send(msg);
   }
 
-  setHbs() {
-    return new Promise((resolve, reject) => {
+  /**
+   * Set and start the HTTP server
+   *
+   * @param config Configuration of the page from the database
+   */
+  public start(config: Config): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.app = express();
+      this.app.disable('x-powered-by');
+      this.app.use(this.serverSettings.publicUrl, express.static(this.serverSettings.publicPath));
+
+      this.app.use(compress());
+      this.app.use(morgan(this.logSettings.logRequests));
+
+      this.app.set('view engine', 'hbs');
+      this.app.set('views', this.serverSettings.viewsPath);
+
+      this.loadEndPoints(config);
+      this.app.use(Server.error404handler);
+
+      this.setHbs().then(() => {
+        this.app.listen(this.serverSettings.port, this.serverSettings.host, () => {
+          log.info('Server', `Ready on ${this.serverSettings.host}:${this.serverSettings.port}`);
+          this.emit('ready');
+          resolve();
+        });
+      });
+
+      /*
+      * TODO: Define listeners for Express events
+      */
+    });
+  }
+
+  protected setHbs(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
       // register helpers
       const helpers = requireAll({ dirname: this.serverSettings.helpersPath });
 
       Object.keys(helpers).forEach((fileName) => {
         try {
-          const helper = helpers[fileName].default;
+          const helper = helpers[fileName].helper;
 
           if (!helper.fn.name || helper.fn.name === 'fn') {
             log.warn('Server', `HBS helper from file "${fileName}" should have a proper name`);
@@ -73,10 +102,9 @@ export class Server extends EventEmitter {
 
           if (helper.async) {
             throw new Error('HBS async helper not supported!');
-          } else {
-            hbs.registerHelper(helper.fn.name, helper.fn);
-            log.verbose('Server', `HBS helper registered: ${helper.fn.name}`);
           }
+          hbs.registerHelper(helper.fn.name, helper.fn);
+          log.verbose('Server', `HBS helper registered: ${helper.fn.name}`);
         } catch (error) {
           log.error('Server', `Error registering HBS helper ${fileName}`);
         }
@@ -91,7 +119,7 @@ export class Server extends EventEmitter {
    * Create all the end points defined in the routes folder as modules returning
    * { method, path, callback(request, response) }
    */
-  loadEndPoints(config) {
+  protected loadEndPoints(config: Config): void {
     [
       adminControllers,
       galleryControllers,
@@ -108,27 +136,4 @@ export class Server extends EventEmitter {
       });
     });
   }
-}
-
-/**
- * Error 404 handler
- */
-function error404handler(request, response, next) {
-  response.status(404);
-  const msg = `${request.url} not found`;
-
-  // respond with html page
-  if (request.accepts('html')) {
-    response.send(msg);
-    return;
-  }
-
-  // respond with json
-  if (request.accepts('json')) {
-    response.send({ error: msg });
-    return;
-  }
-
-  // default to plain-text. send()
-  response.type('txt').send(msg);
 }

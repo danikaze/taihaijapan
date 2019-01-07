@@ -1,27 +1,28 @@
+/** Available values in the database config and their types */
 export interface Config {
   // internal
-  'schema.version': number,
-  'config.cache': number,
+  'schema.version': number;
+  'config.cache': number;
   // global
-  'site.title': string,
-  'site.realm': string,
-  'google.analytics': string,
+  'site.title': string;
+  'site.realm': string;
+  'google.analytics': string;
   // page.admin
-  'page.admin.route': string,
-  'page.admin.imagesPerPage': number,
-  'page.admin.orderBy': string,
-  'page.admin.reverse': boolean,
+  'page.admin.route': string;
+  'page.admin.imagesPerPage': number;
+  'page.admin.orderBy': string;
+  'page.admin.reverse': boolean;
   // page.index
-  'page.index.maxImages': number,
-  'page.index.orderBy': string,
-  'page.index.reverse': boolean,
+  'page.index.maxImages': number;
+  'page.index.orderBy': string;
+  'page.index.reverse': boolean;
   // page.gallery
-  'page.gallery.imagesPerPage': number,
-  'page.gallery.orderBy': string,
-  'page.gallery.reverse': boolean,
+  'page.gallery.imagesPerPage': number;
+  'page.gallery.orderBy': string;
+  'page.gallery.reverse': boolean;
   // images
-  'images.hiddenByDefault': boolean,
-  'images.resize.quality': number,
+  'images.hiddenByDefault': boolean;
+  'images.resize.quality': number;
 }
 
 export interface Tag {

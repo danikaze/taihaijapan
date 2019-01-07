@@ -8,7 +8,7 @@ import { log } from '../utils/log';
 const autorun = process.argv.indexOf('autorun') !== -1;
 
 class CtlClient {
-  start() {
+  public start() {
     const connectTo = settings.ctl.unixSocket || settings.ctl.port;
     const client = new Socket();
 
@@ -50,7 +50,7 @@ class CtlClient {
 }
 
 function constructOptions() {
-  return undefined;
+  return;
   // {
   //   log: { logLevel: 'silly' },
   // };

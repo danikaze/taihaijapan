@@ -16,7 +16,7 @@ function adminPhoto() {
   return `<li data-photo-id="${this.id}" class="${liClasses}">${preview}</li>`;
 }
 
-export default {
+export const helper = {
   fn: adminPhoto,
   async: false,
 };

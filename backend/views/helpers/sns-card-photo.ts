@@ -6,7 +6,7 @@ function snsCardPhoto(photo) {
   return 'https://taihaijapan.com/public/img/logo.jpg';
 }
 
-export default {
+export const helper = {
   fn: snsCardPhoto,
   async: false,
 };

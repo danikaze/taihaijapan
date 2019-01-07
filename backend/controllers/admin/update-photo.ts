@@ -1,17 +1,21 @@
+import { Request, Response } from 'express';
+import { HTTP_CODE_BAD_REQUEST } from '../../constants';
 import { typify } from '../../utils/typify';
 import { schema } from '../../models/schemas/photos';
+import { Photo } from '../../models/interfaces';
 import { updatePhoto as modelUpdatePhoto } from '../../models/gallery/update-photo';
+import { ServerSettings } from '../../settings';
 
 /**
  * Receive a list of photos to update as { id: newPhotoData }
  * Return the same list with the updated data
  */
-export function updatePhoto(serverSettings, request, response) {
+export function updatePhoto(serverSettings: ServerSettings, request: Request, response: Response) {
   try {
     const rawData = JSON.parse(request.query.photos);
     const promises = Object.keys(rawData).map((key) => {
       const id = Number(key);
-      const photo = typify(rawData[key], schema, { copy: true, includeExternal: false });
+      const photo = typify<Photo>(rawData[key], schema, { copy: true, includeExternal: false });
       const rawTags = rawData[key].tags;
       photo.tags = rawTags ? rawTags.split(',').map((tag) => tag.trim()).filter((tag) => tag.length > 0)
                            : [];
@@ -26,12 +30,12 @@ export function updatePhoto(serverSettings, request, response) {
       });
       response.send(updatedData);
     }).catch((error) => {
-      response.status(400).send({
+      response.status(HTTP_CODE_BAD_REQUEST).send({
         error: 'Wrong data',
         data: error,
       });
     });
   } catch (error) {
-    response.status(400).send('Wrong data');
+    response.status(HTTP_CODE_BAD_REQUEST).send('Wrong data');
   }
 }

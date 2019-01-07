@@ -8,6 +8,9 @@ export interface ResizeInfo extends sharp.OutputInfo {
   path: string;
 }
 
+const MAX = 10000;
+const MIN = 1;
+
 const DEFAULT_OPTIONS = {
   resizePolicy: 'inside',  // cover, contain, fill, inside or outside
   format: 'jpeg',
@@ -27,8 +30,8 @@ export function resizeImage(inputPath, outputPath, width, height, options): Prom
   return new Promise<ResizeInfo>((resolve, reject) => {
     const resizeProcess = sharp(inputPath);
     const resizeOptions: sharp.ResizeOptions = {
-      width: opt.resizePolicy === 'inside' ? (width || 10000) : (width || 1),
-      height: opt.resizePolicy === 'inside' ? (height || 10000) : (height || 1),
+      width: opt.resizePolicy === 'inside' ? (width || MAX) : (width || MIN),
+      height: opt.resizePolicy === 'inside' ? (height || MAX) : (height || MIN),
       withoutEnlargement: opt.doNotEnlarge,
       fit: opt.resizePolicy,
     };

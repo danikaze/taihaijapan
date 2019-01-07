@@ -6,7 +6,7 @@ function stringify(obj, pretty) {
   return JSON.stringify(obj);
 }
 
-export default {
+export const helper = {
   fn: stringify,
   async: false,
 };

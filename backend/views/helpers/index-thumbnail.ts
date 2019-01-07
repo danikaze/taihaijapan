@@ -6,7 +6,7 @@ function indexThumbnail(index, options) {
     + '</a></div></li>';
 }
 
-export default {
+export const helper = {
   fn: indexThumbnail,
   async: false,
 };
