@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "allowJs": false,
+    "module": "commonjs",
+    "baseUrl": ".",
+    "pretty": true,
+    "sourceMap": true,
+    "noUnusedLocals": true,
+    "jsx": "react",
+    "removeComments": false,
+    "resolveJsonModule": true,
+    "target": "es5",
+    "lib": [
+      "dom",
+      "es2017"
+    ]
+  },
+  "include": [
+    "frontend/**/*.ts",
+  ],
+  "exclude": [
+  ]
+}
