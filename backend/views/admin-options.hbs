@@ -1,167 +1,166 @@
 {{> admin.header}}
-<!--
-config = {{{stringify config true}}}
+<section id="config-site">
+  <h4 data-toggle="config-site-content">Site options</h4>
 
-admin = {{{stringify admin true}}}
-
-sizes = {{{stringify sizes true}}}
--->
-<form action="{{routeOptions}}" method="POST" enctype="application/x-www-form-urlencoded">
-  <section id="config-site">
-    <h4 data-toggle="config-site-content">Site options</h4>
-
-    <div id="config-site-content">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-site-title" name="site.title" value="{{lookup config 'site.title'}}">
-        <label class="mdl-textfield__label" for="config-site-title">Site name or title</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-google-analytics" name="google.analytics" value="{{lookup config 'google.analytics'}}">
-        <label class="mdl-textfield__label" for="config-google-analytics">Google Analytics account</label>
-      </div>
-    </div>
-  </section>
-
-  <section id="config-page-admin">
-    <h4 data-toggle="page-admin-content">Admin page options</h4>
-
-    <div id="page-admin-content">
-      <input type="hidden" name="admin[id]" value="{{admin.id}}" />
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-admin-user" name="admin[username]" value="{{admin.username}}">
-        <label class="mdl-textfield__label" for="config-admin-username">User for the admin page</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="password" id="config-admin-password" name="admin[password]">
-        <label class="mdl-textfield__label" for="config-admin-password">Password for the admin page</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="password" id="config-admin-password-confirm" name="admin[passwordConfirmation]">
-        <label class="mdl-textfield__label" for="config-admin-password-confirm">Confirm password for the admin page</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="number" min="0" id="page-admin-imagesPerPage" name="page.admin.imagesPerPage" value="{{lookup config 'page.admin.imagesPerPage'}}">
-        <label class="mdl-textfield__label" for="page-admin-imagesPerPage">Images Per Page (0 means no limit)</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="page-admin-orderBy" name="page.admin.orderBy" pattern="(created)|(updated)|(slug)|(title)" value="{{lookup config 'page.admin.orderBy'}}">
-        <label class="mdl-textfield__label" for="page-admin-orderBy">Sort By (created, updated, slug, title)</label>
-      </div>
-
-      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="page-admin-reverse">
-        <input type="checkbox" value="true" id="page-admin-reverse" class="mdl-checkbox__input" name="page.admin.reverse"{{#if (lookup config 'page.admin.reverse')}} checked{{/if}}>
-        <span class="mdl-checkbox__label">Reverse sorting</span>
-      </label>
+  <div id="config-site-content">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="config-site-title" name="site.title" value="{{lookup config 'site.title'}}">
+      <label class="mdl-textfield__label" for="config-site-title">Site name or title</label>
     </div>
 
-    <h4 data-toggle="index-page-content">Index page options</h4>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="config-google-analytics" name="google.analytics" value="{{lookup config 'google.analytics'}}">
+      <label class="mdl-textfield__label" for="config-google-analytics">Google Analytics account</label>
+    </div>
+  </div>
+</section>
 
-    <div id="index-page-content">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="number" min="0" id="config-page-index-maxImages" name="page.index.maxImages" value="{{lookup config 'page.index.maxImages'}}">
-        <label class="mdl-textfield__label" for="config-page-index-maxImages">Maximum numberof images to display (0 means no limit)</label>
-      </div>
+<section id="config-admin">
+  <h4 data-toggle="page-content">Admin user options</h4>
 
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-controllers-index-orderBy" name="page.index.orderBy" pattern="(created)|(updated)|(slug)|(title)" value="{{lookup config 'page.index.orderBy'}}">
-        <label class="mdl-textfield__label" for="config-page-index-orderBy">Sort By (created, updated, slug, title)</label>
-      </div>
+  <input type="hidden" name="admin.id" value="{{admin.id}}" />
 
-      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-page-index-reverse">
-        <input type="checkbox" value="true" id="config-page-index-reverse" class="mdl-checkbox__input" name="page.index.reverse"{{#if (lookup config 'page.index.reverse')}} checked{{/if}}>
-        <span class="mdl-checkbox__label">Reverse sorting</span>
-      </label>
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="config-admin-user" name="admin.username" value="{{admin.username}}">
+      <label class="mdl-textfield__label" for="config-admin-username">User for the admin page</label>
     </div>
 
-    <h4 data-toggle="gallery-options-content">Gallery page options options</h4>
-
-    <div id="gallery-options-content">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="number" min="0" id="config-page-gallery-imagesPerPage" name="page.gallery.imagesPerPage" value="{{lookup config 'page.gallery.imagesPerPage'}}">
-        <label class="mdl-textfield__label" for="config-page-gallery-imagesPerPage">Images Per Page (0 means no limit)</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="config-page-gallery-orderBy" name="page.gallery.orderBy" pattern="(created)|(updated)|(slug)|(title)" value="{{lookup config 'page.gallery.orderBy'}}">
-        <label class="mdl-textfield__label" for="config-page-gallery-orderBy">Sort By (created, updated, slug, title)</label>
-      </div>
-
-      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-page-gallery-reverse">
-        <input type="checkbox" value="true" id="config-page-gallery-reverse" class="mdl-checkbox__input" name="page.gallery.reverse"{{#if (lookup config 'page.gallery.reverse')}} checked{{/if}}>
-        <span class="mdl-checkbox__label">Reverse sorting</span>
-      </label>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="password" id="config-admin-password" name="admin.password">
+      <label class="mdl-textfield__label" for="config-admin-password">Password for the admin page</label>
     </div>
 
-  </section>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="password" id="config-admin-password-confirm" name="admin.passwordConfirmation">
+      <label class="mdl-textfield__label" for="config-admin-password-confirm">Confirm password for the admin page</label>
+    </div>
+</section>
 
-  <section id="images-options">
-    <h4 data-toggle="images-options-content">Image options</h4>
+<section id="config-page-admin">
+  <h4 data-toggle="page-admin-content">Admin page options</h4>
 
-    <div id="images-options-content">
-      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-images-hiddenByDefault">
-        <input type="checkbox" value="true" id="config-images-hiddenByDefault" class="mdl-checkbox__input" name="images.hiddenByDefault"{{#if (lookup config 'images.hiddenByDefault')}} checked{{/if}}>
-        <span class="mdl-checkbox__label">Hidden by default</span>
-      </label>
+  <div id="page-admin-content">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="number" min="0" id="page-admin-imagesPerPage" name="page.admin.imagesPerPage" value="{{lookup config 'page.admin.imagesPerPage'}}">
+      <label class="mdl-textfield__label" for="page-admin-imagesPerPage">Images Per Page (0 means no limit)</label>
     </div>
 
-    <h4 data-toggle="thumbnails-options-content">Thumbnail sizes</h4>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="page-admin-orderBy" name="page.admin.orderBy" pattern="(created)|(updated)|(slug)|(title)" value="{{lookup config 'page.admin.orderBy'}}">
+      <label class="mdl-textfield__label" for="page-admin-orderBy">Sort By (created, updated, slug, title)</label>
+    </div>
 
-    <div id="thumbnails-options-content">
-      <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-        <thead>
-          <tr>
-            <th class="mdl-data-table__cell--non-numeric">Size Id</th>
-            <th>Width</th>
-            <th>Height</th>
-            <th>Quality</th>
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="page-admin-reverse">
+      <input type="checkbox" value="true" id="page-admin-reverse" class="mdl-checkbox__input" name="page.admin.reverse"{{#if (lookup config 'page.admin.reverse')}} checked{{/if}}>
+      <span class="mdl-checkbox__label">Reverse sorting</span>
+    </label>
+  </div>
+</section>
+
+<section id="config-page-index">
+  <h4 data-toggle="page-index-content">Index page options</h4>
+
+  <div id="page-index-content">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="number" min="0" id="config-page-index-maxImages" name="page.index.maxImages" value="{{lookup config 'page.index.maxImages'}}">
+      <label class="mdl-textfield__label" for="config-page-index-maxImages">Maximum number of images to display (0 means no limit)</label>
+    </div>
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="config-controllers-index-orderBy" name="page.index.orderBy" pattern="(created)|(updated)|(slug)|(title)" value="{{lookup config 'page.index.orderBy'}}">
+      <label class="mdl-textfield__label" for="config-page-index-orderBy">Sort By (created, updated, slug, title)</label>
+    </div>
+
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-page-index-reverse">
+      <input type="checkbox" value="true" id="config-page-index-reverse" class="mdl-checkbox__input" name="page.index.reverse"{{#if (lookup config 'page.index.reverse')}} checked{{/if}}>
+      <span class="mdl-checkbox__label">Reverse sorting</span>
+    </label>
+  </div>
+</section>
+
+<section id="config-gallery-options">
+  <h4 data-toggle="gallery-options-content">Gallery page options options</h4>
+
+  <div id="gallery-options-content">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="number" min="0" id="config-page-gallery-imagesPerPage" name="page.gallery.imagesPerPage" value="{{lookup config 'page.gallery.imagesPerPage'}}">
+      <label class="mdl-textfield__label" for="config-page-gallery-imagesPerPage">Images Per Page (0 means no limit)</label>
+    </div>
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="config-page-gallery-orderBy" name="page.gallery.orderBy" pattern="(created)|(updated)|(slug)|(title)" value="{{lookup config 'page.gallery.orderBy'}}">
+      <label class="mdl-textfield__label" for="config-page-gallery-orderBy">Sort By (created, updated, slug, title)</label>
+    </div>
+
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-page-gallery-reverse">
+      <input type="checkbox" value="true" id="config-page-gallery-reverse" class="mdl-checkbox__input" name="page.gallery.reverse"{{#if (lookup config 'page.gallery.reverse')}} checked{{/if}}>
+      <span class="mdl-checkbox__label">Reverse sorting</span>
+    </label>
+  </div>
+</section>
+
+<section id="config-images-options">
+  <h4 data-toggle="images-options-content">Image options</h4>
+
+  <div id="images-options-content">
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-images-hiddenByDefault">
+      <input type="checkbox" value="true" id="config-images-hiddenByDefault" class="mdl-checkbox__input" name="images.hiddenByDefault"{{#if (lookup config 'images.hiddenByDefault')}} checked{{/if}}>
+      <span class="mdl-checkbox__label">Hidden by default</span>
+    </label>
+  </div>
+</section>
+
+<section id="config-thumbnails-options">
+  <h4 data-toggle="thumbnails-options-content">Thumbnail sizes</h4>
+
+  <div id="thumbnails-options-content">
+    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+      <thead>
+        <tr>
+          <th class="mdl-data-table__cell--non-numeric">Size Id</th>
+          <th>Width</th>
+          <th>Height</th>
+          <th>Quality</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each sizes}}
+          <tr class="thumb-size">
+            <input type="hidden" name="id" value="{{this.id}}"/>
+            <td class="mdl-data-table__cell--non-numeric">
+              <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" type="text" id="config-sizes-label-{{@key}}" name="label" pattern="[a-zA-Z][a-zA-Z0-9_.-]?" value="{{this.label}}">
+              </div>
+            </td>
+            <td>
+              <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" type="number" min="0" id="config-sizes-w-{{@key}}" name="width" value="{{this.width}}">
+              </div>
+            </td>
+            <td>
+              <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" type="number" min="0" id="config-sizes-h-{{@key}}" name="height" value="{{this.height}}">
+              </div>
+            </td>
+            <td>
+              <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" type="number" min="0" max="100" id="config-sizes-quality-{{@key}}" name="quality" value="{{this.quality}}">
+              </div>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {{#each sizes}}
-            <input type="hidden" name="sizes[{{@key}}][id]" value="{{this.id}}"/>
-            <tr>
-              <td class="mdl-data-table__cell--non-numeric">
-                <div class="mdl-textfield mdl-js-textfield">
-                  <input class="mdl-textfield__input" type="text" id="config-sizes-label-{{@key}}" name="sizes[{{@key}}][label]" pattern="[a-zA-Z][a-zA-Z0-9_.-]?" value="{{this.label}}">
-                </div>
-              </td>
-              <td>
-                <div class="mdl-textfield mdl-js-textfield">
-                  <input class="mdl-textfield__input" type="number" min="0" id="config-sizes-w-{{@key}}" name="sizes[{{@key}}][width]" value="{{this.width}}">
-                </div>
-              </td>
-              <td>
-                <div class="mdl-textfield mdl-js-textfield">
-                  <input class="mdl-textfield__input" type="number" min="0" id="config-sizes-h-{{@key}}" name="sizes[{{@key}}][height]" value="{{this.height}}">
-                </div>
-              </td>
-              <td>
-                <div class="mdl-textfield mdl-js-textfield">
-                  <input class="mdl-textfield__input" type="number" min="0" max="100" id="config-sizes-quality-{{@key}}" name="sizes[{{@key}}][quality]" value="{{this.quality}}">
-                </div>
-              </td>
-            </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-  </section>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</section>
 
-  <button id="update-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-    Update settings
-  </button>
-
-</form>
+<button id="update-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+  Update settings
+</button>
 
 <script src="/public/js/admin-config-{{version}}.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-  run();
+  run("{{routeOptions}}");
 </script>
 
 {{> admin.footer}}

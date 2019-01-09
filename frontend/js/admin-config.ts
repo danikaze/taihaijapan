@@ -1,10 +1,12 @@
+import { requestData } from './util/request-data';
+
 /*
  * Entry point of the Admin Options page
  */
 const GROUP_CLOSED_CLASS = 'closed';
 
 interface AppWindow extends Window {
-  run(): void;
+  run(url: string): void;
 }
 
 /**
@@ -28,16 +30,52 @@ function enableTogglers(): void {
 /**
  * Add functionality to the update button, to submit the options to update
  */
-function enableUpdateButton(): void {
-  const form = document.forms[0];
-  const button = document.getElementById('update-button');
+function enableUpdateButton(url: string): void {
+  const button = document.getElementById('update-button') as HTMLButtonElement;
+
+  function enableButton() {
+    button.disabled = false;
+  }
 
   button.addEventListener('click', () => {
-    form.submit();
+    const body = {
+      admin: {
+        id: (document.querySelector('#config-admin input[name="admin.id"]') as HTMLInputElement).value,
+        password: (document.querySelector('#config-admin input[name="admin.password"]') as HTMLInputElement).value,
+        passwordConfirmation: (document.querySelector('#config-admin input[name="admin.passwordConfirmation"]') as HTMLInputElement).value,
+      },
+      sizes: [],
+    };
+
+    // get the "normal" options
+    [
+      'config-site',
+      'config-page-admin',
+      'config-page-index',
+      'config-gallery-options',
+      'config-images-options',
+    ].forEach((sectionId) => {
+      Array.from(document.getElementById(sectionId).querySelectorAll('input')).forEach((elem) => {
+        body[elem.name] = elem.value;
+      });
+    });
+
+    Array.from(document.getElementsByClassName('thumb-size')).forEach((elem) => {
+      body.sizes.push({
+        id: (elem.querySelector('[name=id]') as HTMLInputElement).value,
+        label: (elem.querySelector('[name=label]') as HTMLInputElement).value,
+        width: (elem.querySelector('[name=width]') as HTMLInputElement).value,
+        height: (elem.querySelector('[name=height]') as HTMLInputElement).value,
+        quality: (elem.querySelector('[name=quality]') as HTMLInputElement).value,
+      });
+    });
+
+    button.disabled = true;
+    requestData(url, { body, method: 'put', cache: false }).then(enableButton, enableButton);
   });
 }
 
-(window as AppWindow).run = (): void => {
+(window as AppWindow).run = (url) => {
   enableTogglers();
-  enableUpdateButton();
+  enableUpdateButton(url);
 };

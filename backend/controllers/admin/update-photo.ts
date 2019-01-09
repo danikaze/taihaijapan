@@ -13,7 +13,7 @@ import { ServerSettings } from '../../settings';
  */
 export function updatePhoto(serverSettings: ServerSettings, request: Request, response: Response) {
   try {
-    const rawData = JSON.parse(request.query.photos);
+    const rawData = request.body.photos;
     const promises = Object.keys(rawData).map((key) => {
       const id = Number(key);
       const photo = typify<NewPhoto>(rawData[key], schema, { copy: true, includeExternal: false });

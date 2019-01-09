@@ -20,6 +20,9 @@ function getUploadFilename(req, file, cb) {
 
 /**
  * Process the request to upload a new photo
+ *
+ * - params: none
+ * - body: `NewPhoto` (tags is a csv list of tags)
  */
 export function addPhoto(serverSettings: ServerSettings, request: Request, response: Response): void {
   getConfig().then((config) => {

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { HTTP_CODE_400_BAD_REQUEST } from '../../../constants/http';
 import { typify } from '../../utils/typify';
 import { schema as configSchema } from '../../models/schemas/config';
 import { schema as sizesSchema } from '../../models/schemas/sizes';
@@ -10,6 +11,8 @@ import { ServerSettings } from '../../settings';
 
 /**
  * Update the options in the admin page
+ *
+ * - body: Config
  */
 export function updateOptions(serverSettings: ServerSettings, request: Request, response: Response) {
   const { sizes, admin, ...config } = request.body;
@@ -31,8 +34,9 @@ export function updateOptions(serverSettings: ServerSettings, request: Request, 
     promises.push(updateUser(admin.id, admin));
   }
 
-  const routeConfig = `${serverSettings.adminUrl}/options`;
   Promise.all(promises)
-    .then(() => response.redirect(routeConfig))
-    .catch(() => response.redirect(`${routeConfig}?error`));
+    .then(() => response.send())
+    .catch(() => {
+      response.status(HTTP_CODE_400_BAD_REQUEST).send('Wrong data');
+    });
 }

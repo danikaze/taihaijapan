@@ -7,6 +7,9 @@ import { ServerSettings } from '../../settings';
 
 /**
  * Display the options in the admin page
+ *
+ * - params: none
+ * - body: none
  */
 export function displayOptions(serverSettings: ServerSettings, request: Request, response: Response): void {
   const promises: Promise<Config | Size[] | User[]>[] = [

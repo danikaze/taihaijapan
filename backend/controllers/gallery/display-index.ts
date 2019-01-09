@@ -7,8 +7,7 @@ import { getConfig } from '../../models/config/get-config';
 /**
  * Display the index page
  *
- * @param request
- * @param response
+ * This is a basic GET request that accepts no parameters
  */
 export function displayIndex(request, response) {
   const promises = [
@@ -20,12 +19,12 @@ export function displayIndex(request, response) {
   Promise.all(promises)
     .then(([sizes, newPhotos, config]) => {
       response.render('index', {
+        sizes,
+        newPhotos,
         bodyId: 'page-index',
         fullUrl: config['site.baseUrl'],
         siteGlobalTitle: config['site.title'],
         googleAnalyticsAccount: config['google.analytics'],
-        newPhotos,
-        sizes,
       });
     })
     .catch((error) => {

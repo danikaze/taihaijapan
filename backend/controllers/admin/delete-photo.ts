@@ -3,6 +3,9 @@ import { removePhotos } from '../../models/gallery/remove-photos';
 
 /**
  * Process the request to delete a photo
+ *
+ * - params.photoId: id of the photo to remove
+ * - body: none
  */
 export function deletePhoto(serverSettings, request, response) {
   try {
