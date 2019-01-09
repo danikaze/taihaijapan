@@ -1,6 +1,6 @@
 import { HTTP_CODE_500_INTERNAL_SERVER_ERROR } from '../../../constants/http';
 import { log } from '../../utils/log';
-import { getPhotosIndex } from '../../models/gallery/get-photos';
+import { getPhotosPage } from '../../models/gallery/get-photos';
 import { getSizes } from '../../models/gallery/get-sizes';
 import { getConfig } from '../../models/config/get-config';
 
@@ -12,7 +12,7 @@ import { getConfig } from '../../models/config/get-config';
 export function displayGallery(request, response) {
   const promises = [
     getSizes(),
-    getPhotosIndex(),
+    getPhotosPage(),
     getConfig(),
   ];
 

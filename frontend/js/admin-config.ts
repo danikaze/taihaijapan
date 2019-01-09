@@ -4,6 +4,9 @@ import { requestData } from './util/request-data';
  * Entry point of the Admin Options page
  */
 const GROUP_CLOSED_CLASS = 'closed';
+const SELECTOR_ID = '#config-admin input[name="admin.id"]';
+const SELECTOR_PWD = '#config-admin input[name="admin.password"]';
+const SELECTOR_PWD2 = '#config-admin input[name="admin.passwordConfirmation"]';
 
 interface AppWindow extends Window {
   run(url: string): void;
@@ -39,10 +42,11 @@ function enableUpdateButton(url: string): void {
 
   button.addEventListener('click', () => {
     const body = {
+      // admin config
       admin: {
-        id: (document.querySelector('#config-admin input[name="admin.id"]') as HTMLInputElement).value,
-        password: (document.querySelector('#config-admin input[name="admin.password"]') as HTMLInputElement).value,
-        passwordConfirmation: (document.querySelector('#config-admin input[name="admin.passwordConfirmation"]') as HTMLInputElement).value,
+        id: (document.querySelector(SELECTOR_ID) as HTMLInputElement).value,
+        password: (document.querySelector(SELECTOR_PWD) as HTMLInputElement).value,
+        passwordConfirmation: (document.querySelector(SELECTOR_PWD2) as HTMLInputElement).value,
       },
       sizes: [],
     };
@@ -60,6 +64,7 @@ function enableUpdateButton(url: string): void {
       });
     });
 
+    // thumb sizes
     Array.from(document.getElementsByClassName('thumb-size')).forEach((elem) => {
       body.sizes.push({
         id: (elem.querySelector('[name=id]') as HTMLInputElement).value,
