@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { HTTP_CODE_400_BAD_REQUEST } from '../../../constants/http';
 import { typify } from '../../utils/typify';
+import { splitCsv } from '../../utils/split-csv';
 import { schema } from '../../models/schemas/photos';
 import { NewPhoto } from '../../../interfaces/controllers';
 import { updatePhoto as modelUpdatePhoto } from '../../models/gallery/update-photo';
@@ -17,8 +18,7 @@ export function updatePhoto(serverSettings: ServerSettings, request: Request, re
       const id = Number(key);
       const photo = typify<NewPhoto>(rawData[key], schema, { copy: true, includeExternal: false });
       const rawTags = rawData[key].tags;
-      photo.tags = rawTags ? rawTags.split(',').map((tag) => tag.trim()).filter((tag) => tag.length > 0)
-                           : [];
+      photo.tags = splitCsv(rawTags);
 
       return modelUpdatePhoto(id, photo);
     });

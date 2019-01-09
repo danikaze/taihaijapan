@@ -2,6 +2,7 @@ import * as multer from 'multer';
 import * as path from 'path';
 import { Request, Response } from 'express';
 import { stripExtension } from '../../utils/strip-extension';
+import { splitCsv } from '../../utils/split-csv';
 import { NewPhoto } from '../../../interfaces/controllers';
 import { addPhoto as modelAddPhoto } from '../../models/gallery/add-photo';
 import { getConfig } from '../../models/config/get-config';
@@ -33,8 +34,7 @@ export function addPhoto(serverSettings: ServerSettings, request: Request, respo
       const body = request.body;
       const visible = body.visible === undefined ? !config['images.hiddenByDefault']
                                                  : request.body.visible;
-      const tags = body.tags ? body.tags.split(',').map((tag) => tag.trim()).filter((tag) => tag.length > 0)
-                             : [];
+      const tags = splitCsv(body.tags);
 
       const photo: NewPhoto = {
         tags,
