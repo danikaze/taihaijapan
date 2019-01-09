@@ -1,4 +1,6 @@
-export interface RequestDataOptions<T> {
+import { HTTP_CODE_200_OK, HTTP_CODE_400_BAD_REQUEST } from '../../../constants/http';
+
+export interface RequestDataOptions<B, T> {
   /** Query data to send */
   data?: {};
   /** Method of the request */
@@ -9,11 +11,11 @@ export interface RequestDataOptions<T> {
   timeout?: number;
   /** If `false`, `_t` won't be appended (default `true`) */
   cache?: boolean;
+  /** Body to send */
+  body?: B;
 }
 
 const STATE_READY = 4;
-const HTTP_STATE_OK = 200;
-const HTTP_STATE_ERROR = 400;
 
 /**
  * Add the specified data to a url
@@ -39,7 +41,7 @@ function urlAddParams(url: string, data): string {
  *
  * @returns Promise resolved to the response JSON
  */
-export function requestData<T = {}>(url: string, options?: RequestDataOptions<T>): Promise<T> {
+export function requestData<B = {}, T = {}>(url: string, options?: RequestDataOptions<B, T>): Promise<T> {
   const opt = {
     method: 'get',
     cache: true,
@@ -54,11 +56,7 @@ export function requestData<T = {}>(url: string, options?: RequestDataOptions<T>
 
     let requestUrl = url;
     if (typeof opt.data === 'object') {
-      if (opt.method === 'post') {
-        //
-      } else {
-        requestUrl = urlAddParams(requestUrl, opt.data);
-      }
+      requestUrl = urlAddParams(requestUrl, opt.data);
     }
 
     if (!opt.cache) {
@@ -67,6 +65,11 @@ export function requestData<T = {}>(url: string, options?: RequestDataOptions<T>
 
     const xhr = new XMLHttpRequest();
     xhr.open(opt.method, requestUrl, true);
+
+    const body = typeof opt.body === 'object' ? JSON.stringify(opt.body) : null;
+    if (body) {
+      xhr.setRequestHeader('Content-Type', 'application/json');
+    }
 
     if (opt.timeout) {
       xhr.timeout = opt.timeout;
@@ -77,7 +80,7 @@ export function requestData<T = {}>(url: string, options?: RequestDataOptions<T>
         return;
       }
 
-      if (xhr.status >= HTTP_STATE_OK && xhr.status < HTTP_STATE_ERROR) {
+      if (xhr.status >= HTTP_CODE_200_OK && xhr.status < HTTP_CODE_400_BAD_REQUEST) {
         try {
           resolve(JSON.parse(xhr.responseText));
         } catch (e) {
@@ -98,7 +101,7 @@ export function requestData<T = {}>(url: string, options?: RequestDataOptions<T>
     };
 
     try {
-      xhr.send();
+      xhr.send(body);
     } catch (error) {
       reject({
         xhr,
