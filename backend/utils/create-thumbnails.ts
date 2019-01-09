@@ -14,11 +14,13 @@ export interface CreateThumbnailsOptions {
   baseUrl: string;
 }
 
+export type ThumbnailPhotoData = Pick<Photo, 'id' | 'original' | 'slug'>;
+
 /**
  * Get a photo data with the path to the original image, and create thumbnails resizing and
  * storing them in the adecuate folders, returning a Promise resolved to an array of thumbnail data
  */
-export function createThumbnails(data: Photo, options: CreateThumbnailsOptions): Promise<Image[]> {
+export function createThumbnails(data: ThumbnailPhotoData, options: CreateThumbnailsOptions): Promise<Image[]> {
   return new Promise((resolve, reject) => {
     const thumbs = [];
     let remainingSizes = options.sizes.length;

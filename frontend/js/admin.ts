@@ -11,7 +11,7 @@ interface AppWindow extends Window {
     downgradeElements(HTMLElement): void;
     upgradeElement(HTMLElement): void;
   };
-  run(data): void;
+  run(apiUrl: string, data: AdminPhoto[]): void;
 }
 
 interface MdlElement extends HTMLElement {

@@ -5,6 +5,7 @@ import { join, dirname } from 'path';
 
 import { log } from '../utils/log';
 import { prepareStatements, Statements } from './prepare-statements';
+import { Settings } from '../settings';
 
 export interface DbReady {
   db: sqlite3.Database;
@@ -14,7 +15,7 @@ export interface DbReady {
 export interface Model {
   ready: Promise<DbReady>;
   instance: sqlite3.Database;
-  init: (settings) => Promise<DbReady>;
+  init: (settings: Settings) => Promise<DbReady>;
   updateStatements: () => Promise<DbReady>;
 }
 
@@ -40,7 +41,7 @@ let dbInstance: sqlite3.Database;
  *
  * @param dbPath Path to the file to use as database
  */
-export function init(settings): Promise<DbReady> {
+export function init(settings: Settings): Promise<DbReady> {
   if (settings.db.debugMode) {
     sqlite = sqlite.verbose();
   }

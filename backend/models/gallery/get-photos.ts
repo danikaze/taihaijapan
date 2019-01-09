@@ -1,13 +1,14 @@
 import { log } from '../../utils/log';
 import { model } from '../index';
 import { Photo } from '../../../interfaces/model';
+import { Statements } from '../prepare-statements';
 
 /**
  * Get a list of photos, with their tags and images, based on a main query
  *
  * @param query name of the stmt to get the photo list base data
  */
-function getPhotos(query): Promise<Photo[]> {
+function getPhotos(query: keyof Statements): Promise<Photo[]> {
   return model.ready.then(({ stmt }) => new Promise<Photo[]>((resolve, reject) => {
     stmt[query].all([0], (errorSelect, photos) => {
       if (errorSelect) {

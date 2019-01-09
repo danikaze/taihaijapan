@@ -6,9 +6,8 @@ import { getPhoto } from './get-photo';
 
 /**
  * Get the list of the paths for the images associated to a photo
- * @param photoId
  */
-function getImageSrcs(photoId): Promise<string[]> {
+function getImageSrcs(photoId: number): Promise<string[]> {
   return model.ready.then(({ stmt }) => new Promise<string[]>((resolve, reject) => {
     stmt.getImageSrcs.all([photoId], (error, rows) => {
       if (error) {
@@ -23,12 +22,11 @@ function getImageSrcs(photoId): Promise<string[]> {
 
 /**
  * Remove a list of files
- * @param filePaths
  */
-function deleteFiles(filePaths) {
+function deleteFiles(filePaths: string[]): Promise<void> {
   let left = filePaths.length;
 
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     function checkDone(error) {
       if (error) {
         log.error('deleteFiles', error.message);
@@ -50,10 +48,9 @@ function deleteFiles(filePaths) {
 
 /**
  * Remove a photo from the PHOTOS table
- * @param photoId
  */
-function deletePhoto(photoId) {
-  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+function deletePhoto(photoId: number): Promise<void> {
+  return model.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
     stmt.deletePhoto.run([photoId], (error, row) => {
       if (error) {
         log.error('sqlite: deletePhoto', error.message);
@@ -68,10 +65,9 @@ function deletePhoto(photoId) {
 
 /**
  * Remove a list of photos from the gallery (and all its related data)
- * @param photoIds
  */
-export function removePhotos(photoIds) {
-  const promises = photoIds.map((photoId) => new Promise((resolve, reject) => {
+export function removePhotos(photoIds: number[]): Promise<void> {
+  const promises = photoIds.map((photoId) => new Promise<void>((resolve, reject) => {
     Promise.all([
       getPhoto(photoId),
       getImageSrcs(photoId),
@@ -89,5 +85,5 @@ export function removePhotos(photoIds) {
     .catch(reject);
   }));
 
-  return Promise.all(promises);
+  return Promise.all(promises).then(() => { return; });
 }

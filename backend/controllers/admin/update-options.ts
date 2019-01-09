@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import { typify } from '../../utils/typify';
 import { schema as configSchema } from '../../models/schemas/config';
 import { schema as sizesSchema } from '../../models/schemas/sizes';
@@ -5,11 +6,12 @@ import { updateConfig } from '../../models/config/update-config';
 import { setSizes } from '../../models/gallery/set-sizes';
 import { updateUser } from '../../models/users/update-user';
 import { Config, Size } from '../../../interfaces/model';
+import { ServerSettings } from '../../settings';
 
 /**
  * Update the options in the admin page
  */
-export function updateOptions(serverSettigs, request, response) {
+export function updateOptions(serverSettings: ServerSettings, request: Request, response: Response) {
   const { sizes, admin, ...config } = request.body;
 
   const typedConfig = {
@@ -29,7 +31,7 @@ export function updateOptions(serverSettigs, request, response) {
     promises.push(updateUser(admin.id, admin));
   }
 
-  const routeConfig = `${serverSettigs.adminUrl}/options`;
+  const routeConfig = `${serverSettings.adminUrl}/options`;
   Promise.all(promises)
     .then(() => response.redirect(routeConfig))
     .catch(() => response.redirect(`${routeConfig}?error`));

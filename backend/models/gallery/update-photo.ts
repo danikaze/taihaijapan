@@ -34,11 +34,8 @@ function updatePhotoBaseData(photoId: number, newData: NewPhoto): Promise<void> 
 /**
  * Update a photo with new data.
  * Resolves with the updated one.
- *
- * @param photoId
- * @param newData
  */
-export function updatePhoto(photoId, newData) {
+export function updatePhoto(photoId: number, newData: NewPhoto): Promise<Photo> {
   return Promise.all([
     updatePhotoBaseData(photoId, newData),
     updatePhotoTags(photoId, newData.tags),

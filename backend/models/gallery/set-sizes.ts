@@ -6,8 +6,6 @@ import { getSizes } from './get-sizes';
 
 /**
  * Add a new size to the database and return its id
- *
- * @param {*} size { label, width, height }
  */
 function addSize(size: NewSize): Promise<number> {
   return model.ready.then(({ stmt }) => new Promise<number>((resolve, reject) => {
@@ -31,11 +29,9 @@ function addSize(size: NewSize): Promise<number> {
 
 /**
  * Update the values of an existing size
- *
- * @param {*} size { id, label, width, height }
  */
-function updateSize(size) {
-  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+function updateSize(size: Size): Promise<void> {
+  return model.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
     const params = [
       size.label || '',
       size.width,
@@ -58,11 +54,9 @@ function updateSize(size) {
 
 /**
  * Update the values of an existing size
- *
- * @param {*} size { id, label, width, height }
  */
-function removeSize(sizeId) {
-  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+function removeSize(sizeId: number): Promise<void> {
+  return model.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
     stmt.updateSize.run([sizeId], (error) => {
       if (error) {
         log.error('sqlite: removeSize', error.message);
@@ -77,11 +71,8 @@ function removeSize(sizeId) {
 
 /**
  * Compare two sizes and check if they are the same by value
- *
- * @param {*} a
- * @param {*} b
  */
-function isEqualSize(a, b) {
+function isEqualSize(a: Size, b: Size): boolean {
   return a.label === b.label
     && a.width === b.width
     && a.height === b.height
@@ -90,17 +81,15 @@ function isEqualSize(a, b) {
 
 /**
  * Set the thumbnail sizes, updating, removing and adding the needed ones
- *
- * @param {*} sizes Array<{ id, label, width, height }>
  */
 export function setSizes(newSizes: Size[]): Promise<void> {
   return getSizes().then((currentSizes) => new Promise<void>((resolve, reject) => {
-    function toBeDeleted(size) {
+    function toBeDeleted(size: Size): boolean {
       return newSizes.findIndex((newSize) => newSize.id === size.id) === -1;
     }
 
     const toDelete = currentSizes.filter(toBeDeleted);
-    const promises = toDelete.map((size) => removeSize(size.id));
+    const promises: Promise<void | number>[] = toDelete.map((size) => removeSize(size.id));
 
     newSizes.forEach((newSize) => {
       if (newSize.id) {
