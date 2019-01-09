@@ -1,3 +1,4 @@
+import { HTTP_CODE_500_INTERNAL_SERVER_ERROR } from '../../../constants/http';
 import { log } from '../../utils/log';
 import { getPhotosIndex } from '../../models/gallery/get-photos';
 import { getSizes } from '../../models/gallery/get-sizes';
@@ -29,6 +30,6 @@ export function displayIndex(request, response) {
     })
     .catch((error) => {
       log.error('index', error.message);
-      response.status(500).send('Unexpected Error');
+      response.status(HTTP_CODE_500_INTERNAL_SERVER_ERROR).send('Unexpected Error');
     });
 }

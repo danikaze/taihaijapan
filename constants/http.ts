@@ -1,0 +1,4 @@
+export const HTTP_CODE_200_OK = 200;
+export const HTTP_CODE_400_BAD_REQUEST = 400;
+export const HTTP_CODE_404_NOT_FOUND = 404;
+export const HTTP_CODE_500_INTERNAL_SERVER_ERROR = 500;

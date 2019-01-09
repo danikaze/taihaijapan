@@ -1,4 +1,4 @@
-import { HTTP_CODE_BAD_REQUEST } from '../../constants';
+import { HTTP_CODE_400_BAD_REQUEST } from '../../../constants/http';
 import { removePhotos } from '../../models/gallery/remove-photos';
 
 /**
@@ -11,12 +11,12 @@ export function deletePhoto(serverSettings, request, response) {
         response.send();
       })
       .catch((errorData) => {
-        response.status(HTTP_CODE_BAD_REQUEST).send({
+        response.status(HTTP_CODE_400_BAD_REQUEST).send({
           error: 'Wrong data',
           data: errorData,
         });
       });
   } catch (error) {
-    response.status(HTTP_CODE_BAD_REQUEST).send(error);
+    response.status(HTTP_CODE_400_BAD_REQUEST).send(error);
   }
 }
