@@ -1,6 +1,6 @@
 import { log } from '../../utils/log';
 import { model } from '../index';
-import { Photo } from '../interfaces';
+import { Photo } from '../../../interfaces/model';
 
 /**
  * Get a list of photos, with their tags and images, based on a main query

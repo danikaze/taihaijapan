@@ -4,7 +4,7 @@
 import 'es6-object-assign/auto';
 import 'es6-promise/auto';
 
-import { Size, PublicPhoto } from './interfaces';
+import { Size, PublicPhoto } from '../../interfaces/frontend';
 
 interface AppWindow extends Window {
   start(sizes: Size[], photos: PublicPhoto[], activeSlug?: string): void;

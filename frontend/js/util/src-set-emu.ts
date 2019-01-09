@@ -1,4 +1,4 @@
-import { Size, Dict, Image, Viewport as ViewPort } from '../interfaces';
+import { Size, Dict, Image, Viewport as ViewPort } from '../../../interfaces/frontend';
 import { chooseBestSize } from './choose-best-size';
 
 export interface SrcSetEmuOptions {

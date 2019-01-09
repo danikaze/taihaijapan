@@ -4,7 +4,7 @@ import { schema as sizesSchema } from '../../models/schemas/sizes';
 import { updateConfig } from '../../models/config/update-config';
 import { setSizes } from '../../models/gallery/set-sizes';
 import { updateUser } from '../../models/users/update-user';
-import { Config } from '../../models/interfaces';
+import { Config, Size } from '../../../interfaces/model';
 
 /**
  * Update the options in the admin page
@@ -19,7 +19,7 @@ export function updateOptions(serverSettigs, request, response) {
     'images.hiddenByDefault': false,
     ...typify<Config>(config, configSchema),
   };
-  const typedSizes = sizes.map((size) => typify(size, sizesSchema));
+  const typedSizes = sizes.map((size) => typify<Size>(size, sizesSchema));
   const promises = [
     updateConfig(typedConfig),
     setSizes(typedSizes),

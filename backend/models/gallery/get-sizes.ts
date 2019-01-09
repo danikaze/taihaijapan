@@ -1,6 +1,6 @@
 import { log } from '../../utils/log';
 import { model } from '../index';
-import { Size } from '../interfaces';
+import { Size } from '../../../interfaces/model';
 /**
  * Get the different thumbnail sizes set in the database, ordered ASC by width
  */

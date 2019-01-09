@@ -5,7 +5,7 @@ import '../styles/index.scss';
 import '../styles/photoswipe/index.scss';
 import '../styles/photoswipe/skin/default-skin.scss';
 
-import { Size, PublicPhoto } from './interfaces';
+import { Size, PublicPhoto } from '../../interfaces/frontend';
 import { fitRects } from './util/fit-rects';
 import { SrcSetEmu } from './util/src-set-emu';
 

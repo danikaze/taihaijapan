@@ -1,6 +1,6 @@
 import '../polyfills/array-find-index';
 import * as PhotoSwipe from 'photoswipe/';
-import { Dict } from '../interfaces';
+import { Dict } from '../../../interfaces/frontend';
 import { PhotoSwipeUi } from './photoswipe-ui';
 import { html as photoswipeHtml } from './photoswipe-html';
 import { chooseBestSize } from './choose-best-size';
@@ -136,8 +136,8 @@ export class ListGallery {
 
     let bestSize = 0;
 
-    // beforeResize + gettingData listeners, allows to load the correct size depending on the gallery viewport (as srcset)
-    // http://photoswipe.com/documentation/responsive-images.html
+    // beforeResize + gettingData listeners, allows to load the correct size depending on the gallery viewport
+    // (as srcset) http://photoswipe.com/documentation/responsive-images.html
     gallery.listen('beforeResize', () => {
       const newSize = chooseBestSize(gallery.viewportSize, this.sizes, this.options);
       if (bestSize !== newSize) {

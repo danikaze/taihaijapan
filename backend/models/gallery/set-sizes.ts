@@ -1,6 +1,7 @@
 import { log } from '../../utils/log';
 import { model } from '../index';
-import { Size } from '../interfaces';
+import { Size } from '../../../interfaces/model';
+import { NewSize } from '../../../interfaces/model-ops';
 import { getSizes } from './get-sizes';
 
 /**
@@ -8,8 +9,8 @@ import { getSizes } from './get-sizes';
  *
  * @param {*} size { label, width, height }
  */
-function addSize(size) {
-  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+function addSize(size: NewSize): Promise<number> {
+  return model.ready.then(({ stmt }) => new Promise<number>((resolve, reject) => {
     const params = [
       size.label || '',
       size.width,

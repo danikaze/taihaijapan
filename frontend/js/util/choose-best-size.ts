@@ -1,4 +1,4 @@
-import { Size, Viewport as ViewPort } from '../interfaces';
+import { Size, Viewport as ViewPort } from '../../../interfaces/frontend';
 
 export interface Options {
   /** Percentage of the viewport to fit */

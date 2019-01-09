@@ -2,7 +2,7 @@ import { existsSync, renameSync } from 'fs';
 import * as path from 'path';
 import { sync as mkdirp } from 'mkdirp';
 
-import { Size, Photo, Image } from '../models/interfaces';
+import { Size, Photo, Image } from '../../interfaces/model';
 import { generateFileName } from './generate-file-name';
 import { resizeImage } from './resize-image';
 

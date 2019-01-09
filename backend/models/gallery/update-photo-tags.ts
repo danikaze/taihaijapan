@@ -1,6 +1,7 @@
 import { log } from '../../utils/log';
 import { model } from '../index';
-import { Tag } from '../interfaces';
+import { Tag } from '../../../interfaces/model';
+import { InsertUniqueResult } from '../../../interfaces/model-ops';
 
 /**
  * Get the current tags of a photo

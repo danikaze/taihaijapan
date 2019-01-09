@@ -1,8 +1,8 @@
 import { log } from '../../utils/log';
 import { createThumbnails, CreateThumbnailsOptions } from '../../utils/create-thumbnails';
 import { model } from '../index';
-import { Config, Size } from '../interfaces';
-import { getConfig } from '../config/get-config';
+import { Image } from '../../../interfaces/model';
+import { NewPhoto } from '../../../interfaces/model-ops';
 import { getSizes } from './get-sizes';
 import { updatePhotoTags } from './update-photo-tags';
 

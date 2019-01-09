@@ -11,8 +11,7 @@ import { galleryControllers } from './controllers/gallery';
 import { adminControllers } from './controllers/admin';
 import { log } from './utils/log';
 import { auth } from './utils/auth';
-import { Config } from './models/interfaces';
-
+import { Config } from '../interfaces/model';
 
 export class Server extends EventEmitter {
   private readonly serverSettings: ServerSettings;

@@ -4,7 +4,7 @@
 import '../styles/admin.scss';
 
 import { requestData } from './util/request-data';
-import { AdminPhoto } from './interfaces';
+import { AdminPhoto } from '../../interfaces/frontend';
 
 interface AppWindow extends Window {
   componentHandler: {
