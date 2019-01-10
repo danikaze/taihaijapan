@@ -12,7 +12,7 @@ function adminPhoto() {
     + '</button>'
   + '</div>';
 
-  const liClasses = `mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--6-col-phone${this.deleted ? ' removed' : ''}`;
+  const liClasses = `mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--6-col-phone${this.visible ? '' : ' removed'}`;
   return `<li data-photo-id="${this.id}" class="${liClasses}">${preview}</li>`;
 }
 

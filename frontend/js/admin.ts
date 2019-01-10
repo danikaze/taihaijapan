@@ -58,10 +58,10 @@ function updateCardData(elem: HTMLElement, id: number, data): void {
   Object.assign(photoData, data);
   (preview.getElementsByClassName('slug')[0] as HTMLElement).innerText = data.slug;
   (preview.querySelector('.permalink a') as HTMLAnchorElement).href = permalink;
-  if (data.deleted) {
-    elem.classList.add(HIDDEN_CLASS);
-  } else {
+  if (data.visible) {
     elem.classList.remove(HIDDEN_CLASS);
+  } else {
+    elem.classList.add(HIDDEN_CLASS);
   }
 }
 
