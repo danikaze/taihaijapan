@@ -17,10 +17,10 @@ export function displayIndex(request, response) {
   ];
 
   Promise.all(promises)
-    .then(([sizes, newPhotos, config]) => {
+    .then(([sizes, photos, config]) => {
       response.render('index', {
         sizes,
-        newPhotos,
+        photos,
         bodyId: 'page-index',
         fullUrl: config['site.baseUrl'],
         siteGlobalTitle: config['site.title'],
