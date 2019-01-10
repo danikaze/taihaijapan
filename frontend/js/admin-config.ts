@@ -7,9 +7,17 @@ const GROUP_CLOSED_CLASS = 'closed';
 const SELECTOR_ID = '#config-admin input[name="admin.id"]';
 const SELECTOR_PWD = '#config-admin input[name="admin.password"]';
 const SELECTOR_PWD2 = '#config-admin input[name="admin.passwordConfirmation"]';
+const NOTIFICATION_TIME_OK = 2000;
+const NOTIFICATION_TIME_ERROR = 4000;
 
 interface AppWindow extends Window {
   run(url: string): void;
+}
+
+interface MdlSnackbar extends HTMLDivElement {
+  MaterialSnackbar: {
+    showSnackbar(data): void;
+  };
 }
 
 /**
@@ -31,17 +39,54 @@ function enableTogglers(): void {
 }
 
 /**
+ * Show a notification message using a [snackbar](https://getmdl.io/components/index.html#snackbar-section)
+ *
+ * @param message Message to show
+ * @param actionText If provided, the returned promise will be resolved when the action is clicked
+ */
+function showSnackbar(message: string, actionText?: string): Promise<void> {
+  return new Promise<void>((resolve) => {
+    const snackbar = document.getElementById('snackbar') as MdlSnackbar;
+    snackbar.MaterialSnackbar.showSnackbar({
+      message,
+      actionText,
+      timeout: actionText ? NOTIFICATION_TIME_ERROR : NOTIFICATION_TIME_OK,
+      actionHandler: actionText && resolve,
+    });
+  });
+}
+
+/**
+ * Send the options to update
+ */
+function updateOptions(url: string, button: HTMLButtonElement, options: {}): void {
+  function updateSuccess() {
+    button.disabled = false;
+    showSnackbar('Options updated');
+  }
+
+  function updateError() {
+    button.disabled = false;
+    showSnackbar('An error happening while updating the options.', 'Retry')
+      .then(tryUpdate);
+  }
+
+  function tryUpdate() {
+    button.disabled = true;
+    requestData(url, { body: options, method: 'put', cache: false }).then(updateSuccess, updateError);
+  }
+
+  tryUpdate();
+}
+
+/**
  * Add functionality to the update button, to submit the options to update
  */
 function enableUpdateButton(url: string): void {
   const button = document.getElementById('update-button') as HTMLButtonElement;
 
-  function enableButton() {
-    button.disabled = false;
-  }
-
   button.addEventListener('click', () => {
-    const body = {
+    const options = {
       // admin config
       admin: {
         id: (document.querySelector(SELECTOR_ID) as HTMLInputElement).value,
@@ -60,13 +105,13 @@ function enableUpdateButton(url: string): void {
       'config-images-options',
     ].forEach((sectionId) => {
       Array.from(document.getElementById(sectionId).querySelectorAll('input')).forEach((elem) => {
-        body[elem.name] = elem.value;
+        options[elem.name] = elem.value;
       });
     });
 
     // thumb sizes
     Array.from(document.getElementsByClassName('thumb-size')).forEach((elem) => {
-      body.sizes.push({
+      options.sizes.push({
         id: (elem.querySelector('[name=id]') as HTMLInputElement).value,
         label: (elem.querySelector('[name=label]') as HTMLInputElement).value,
         width: (elem.querySelector('[name=width]') as HTMLInputElement).value,
@@ -75,8 +120,7 @@ function enableUpdateButton(url: string): void {
       });
     });
 
-    button.disabled = true;
-    requestData(url, { body, method: 'put', cache: false }).then(enableButton, enableButton);
+    updateOptions(url, button, options);
   });
 }
 
