@@ -1,21 +1,20 @@
 import { log } from '../../utils/log';
-import { createThumbnails, CreateThumbnailsOptions } from '../../utils/create-thumbnails';
+import { createThumbnails, CreateThumbnailsOptions, ThumbnailPhotoData } from '../../utils/create-thumbnails';
 import { model } from '../index';
-import { Config, Size } from '../interfaces';
-import { getConfig } from '../config/get-config';
+import { Image } from '../../../interfaces/model';
+import { NewPhoto } from '../../../interfaces/model-ops';
 import { getSizes } from './get-sizes';
 import { updatePhotoTags } from './update-photo-tags';
+import { ServerSettings } from '../../settings';
 
 let serverSettings;
 
 /**
  * Insert data as a new row in the `photos` table, returning a promise resolved to the new row ID.
  * It does not insert any related data.
- *
- * @param data
  */
-function insertPhoto(photoData) {
-  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+function insertPhoto(photoData): Promise<number> {
+  return model.ready.then(({ stmt }) => new Promise<number>((resolve, reject) => {
     const data = [
       photoData.original,
       photoData.slug,
@@ -36,11 +35,9 @@ function insertPhoto(photoData) {
 
 /**
  * Insert images related to the specified photo into the database
- * @param photoId
- * @param thumbs
  */
-function insertImages(photoId, thumbs) {
-  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+function insertImages(photoId: number, thumbs: Image[]): Promise<void> {
+  return model.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
     const promises = thumbs.map((image) => new Promise((resolveOne, rejectOne) => {
       stmt.insertImage.run([photoId, image.width, image.height, image.src], (error) => {
         if (error) {
@@ -53,27 +50,20 @@ function insertImages(photoId, thumbs) {
     }));
 
     Promise.all(promises)
-      .then(resolve)
+      .then(() => resolve())
       .catch(reject);
   }));
 }
 
 /**
  * Add a new photo and all its related data to the gallery database
- *
- * @param photoData
  */
-export function addPhoto(photoData): Promise<void> {
-  const configPromises: [Promise<Config>, Promise<Size[]>] = [
-    getConfig(),
-    getSizes(),
-  ];
-
-  return Promise.all(configPromises).then(([config, sizes]) => new Promise<void>((resolve, reject) => {
+export function addPhoto(newPhoto: NewPhoto): Promise<void> {
+  return getSizes().then((sizes) => new Promise<void>((resolve, reject) => {
     const imagePromises = [];
 
-    insertPhoto(photoData).then((photoId) => {
-      const tagsPromise = updatePhotoTags(photoId, photoData.tags);
+    insertPhoto(newPhoto).then((photoId) => {
+      const tagsPromise = updatePhotoTags(photoId, newPhoto.tags);
       imagePromises.push(tagsPromise);
 
       const thumbnailsOptions: CreateThumbnailsOptions = {
@@ -84,9 +74,14 @@ export function addPhoto(photoData): Promise<void> {
         baseUrl: serverSettings.imagesBaseUrl,
       };
 
-      photoData.id = photoId;
+      const photoData: ThumbnailPhotoData = {
+        id: photoId,
+        original: newPhoto.original,
+        slug: newPhoto.slug,
+      };
+
       createThumbnails(photoData, thumbnailsOptions).then((imageData) => {
-        log.verbose('add-photo', `New photo added (id: ${photoId}, slug: ${photoData.slug})`);
+        log.verbose('add-photo', `New photo added (id: ${photoId}, slug: ${newPhoto.slug})`);
         log.silly('add-photo', `Created thumbnails for id ${photoId}: ${JSON.stringify(imageData, null, 2)}`);
 
         insertImages(photoId, imageData)
@@ -100,7 +95,7 @@ export function addPhoto(photoData): Promise<void> {
 /**
  * Initialize the configuration module with the server settings
  */
-export function init(settings) {
+export function init(settings: ServerSettings): void {
   serverSettings = {
     imagesTemporalPath: settings.imagesTemporalPath,
     imagesThumbPath: settings.imagesThumbPath,

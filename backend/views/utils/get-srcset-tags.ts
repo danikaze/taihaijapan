@@ -1,4 +1,4 @@
-import { Image } from '../../../backend/models/interfaces';
+import { Image } from '../../../interfaces/model';
 
 /**
  * @param   imgs  List of images as { w, h, src }

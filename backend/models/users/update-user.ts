@@ -1,7 +1,11 @@
+import { NewUser } from '../../../interfaces/model-ops';
 import { log } from '../../utils/log';
 import { model } from '../index';
 
-export function updateUser(id, data): Promise<void> {
+/**
+ * Update the data of a registered user
+ */
+export function updateUser(id: number, data: NewUser): Promise<void> {
   return model.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
     const params = [
       data.username,

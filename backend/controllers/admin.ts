@@ -10,7 +10,10 @@ import { deletePhoto } from './admin/delete-photo';
 import { displayOptions } from './admin/display-options';
 import { updateOptions } from './admin/update-options';
 
-export const adminControllers: EndPointsGetter = (app, serverSettings, config) => {
+const authMiddleware = auth.middleware();
+const bodyParserMiddleware = bodyParser.json();
+
+export const adminControllers: EndPointsGetter = (app, serverSettings) => {
   initUpload(serverSettings);
   const routeAdmin = serverSettings.adminUrl;
   const routePhoto = `${routeAdmin}/photos`;
@@ -23,42 +26,42 @@ export const adminControllers: EndPointsGetter = (app, serverSettings, config) =
       method: 'get',
       path: routeAdmin,
       callback: displayGallery.bind(null, serverSettings),
-      middleware: auth.middleware(),
+      middleware: authMiddleware,
     },
     // add one photo
     {
       method: 'post',
       path: routePhoto,
       callback: addPhoto.bind(null, serverSettings),
-      middleware: auth.middleware(),
+      middleware: authMiddleware,
     },
     // update one photo
     {
       method: 'put',
-      path: routePhoto,
+      path: routePhotoId,
       callback: updatePhoto.bind(null, serverSettings),
-      middleware: auth.middleware(),
+      middleware: [authMiddleware, bodyParserMiddleware],
     },
     // remove one photo
     {
       method: 'delete',
       path: routePhotoId,
       callback: deletePhoto.bind(null, serverSettings),
-      middleware: auth.middleware(),
+      middleware: authMiddleware,
     },
     // get the gallery options
     {
       method: 'get',
       path: routeOptions,
       callback: displayOptions.bind(null, serverSettings),
-      middleware: auth.middleware(),
+      middleware: authMiddleware,
     },
     // update the gallery options
     {
-      method: 'post',
+      method: 'put',
       path: routeOptions,
       callback: updateOptions.bind(null, serverSettings),
-      middleware: [auth.middleware(), bodyParser.urlencoded({ extended: true })],
+      middleware: [authMiddleware, bodyParserMiddleware],
     },
   ] as EndPoint[];
 };

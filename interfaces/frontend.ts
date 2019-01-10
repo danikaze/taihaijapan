@@ -2,7 +2,7 @@ import {
   Size,
   Photo,
   Image,
-} from '../../../backend/models/interfaces';
+} from './model';
 
 /** Generic indexed object of the specified type T */
 export interface Dict<T> {

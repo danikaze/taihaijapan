@@ -5,14 +5,13 @@ import * as requireAll from 'require-all';
 import * as EventEmitter from 'events';
 import * as hbs from 'hbs';
 
-import { HTTP_CODE_NOT_FOUND } from './constants';
+import { HTTP_CODE_404_NOT_FOUND } from '../constants/http';
 import { ServerSettings, LogSettings, Settings } from './settings';
 import { galleryControllers } from './controllers/gallery';
 import { adminControllers } from './controllers/admin';
 import { log } from './utils/log';
 import { auth } from './utils/auth';
-import { Config } from './models/interfaces';
-
+import { Config } from '../interfaces/model';
 
 export class Server extends EventEmitter {
   private readonly serverSettings: ServerSettings;
@@ -34,7 +33,7 @@ export class Server extends EventEmitter {
    * Error 404 handler
    */
   protected static error404handler(request: express.Request, response: express.Response): void {
-    response.status(HTTP_CODE_NOT_FOUND);
+    response.status(HTTP_CODE_404_NOT_FOUND);
     const msg = `${request.url} not found`;
 
     // respond with html page

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Config, Size, User } from '../../../interfaces/model';
 import { getConfig } from '../../models/config/get-config';
 import { getSizes } from '../../models/gallery/get-sizes';
 import { getUsers } from '../../models/users/get-users';
@@ -6,9 +7,12 @@ import { ServerSettings } from '../../settings';
 
 /**
  * Display the options in the admin page
+ *
+ * - params: none
+ * - body: none
  */
 export function displayOptions(serverSettings: ServerSettings, request: Request, response: Response): void {
-  const promises = [
+  const promises: Promise<Config | Size[] | User[]>[] = [
     getConfig(),
     getSizes(),
     getUsers(),

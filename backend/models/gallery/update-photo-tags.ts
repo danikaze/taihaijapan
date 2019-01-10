@@ -1,11 +1,12 @@
 import { log } from '../../utils/log';
 import { model } from '../index';
-import { Tag } from '../interfaces';
+import { Tag } from '../../../interfaces/model';
+import { InsertUniqueResult } from '../../../interfaces/model-ops';
 
 /**
  * Get the current tags of a photo
  */
-function getTags(photoId): Promise<Tag[]> {
+function getTags(photoId: number): Promise<Tag[]> {
   return model.ready.then(({ stmt }) => new Promise<Tag[]>((resolve, reject) => {
     stmt.selectTagsByPhoto.all([photoId], (error, tags) => {
       if (error) {
@@ -22,8 +23,8 @@ function getTags(photoId): Promise<Tag[]> {
 /**
  * Insert a new tag or get the ID of the existing one
  */
-function insertOneTag(text) {
-  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+function insertOneTag(text: string): Promise<InsertUniqueResult> {
+  return model.ready.then(({ stmt }) => new Promise<InsertUniqueResult>((resolve, reject) => {
     // try to insert a new tag
     stmt.insertTag.run([text], function insertCallback(error) {
       if (error) {
@@ -54,8 +55,8 @@ function insertOneTag(text) {
 /**
  * Associate a tag with the given photoId
  */
-function linkOneTag(photoId, tagId) {
-  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+function linkOneTag(photoId: number, tagId: number): Promise<void> {
+  return model.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
     stmt.linkTag.run([photoId, tagId], (error) => {
       if (error) {
         log.error('sqlite: linkOneTag', error.message);
@@ -70,11 +71,9 @@ function linkOneTag(photoId, tagId) {
 /**
  * Unlink one tag from a photo.
  * This can leave unused tags in the `tags` table (needs purge)
- *
- * @param {*} tagId
  */
-function unlinkOneTag(photoId, tagId) {
-  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+function unlinkOneTag(photoId: number, tagId: number): Promise<void> {
+  return model.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
     stmt.unlinkTag.run([photoId, tagId], (error) => {
       if (error) {
         log.error('sqlite: unlinkOneTag', error.message);
@@ -90,12 +89,9 @@ function unlinkOneTag(photoId, tagId) {
  * Set the specified list of tags to a photo.
  * Create (if not exist) tags and link them to the specified photo.
  * Remove the already linked ones not in the new list.
- *
- * @param {number} photoId
- * @param {string[]} tags
  */
-export function updatePhotoTags(photoId, newTags) {
-  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+export function updatePhotoTags(photoId: number, newTags: string[]): Promise<void> {
+  return model.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
     getTags(photoId).then((currentTags) => {
       const toAdd = [];
       for (const tagText of newTags) {

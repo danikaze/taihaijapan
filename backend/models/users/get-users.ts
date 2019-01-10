@@ -1,8 +1,12 @@
+import { User } from '../../../interfaces/model';
 import { log } from '../../utils/log';
 import { model } from '../index';
 
-export function getUsers() {
-  return model.ready.then(({ stmt }) => new Promise((resolve, reject) => {
+/**
+ * Get all users in the system
+ */
+export function getUsers(): Promise<User[]> {
+  return model.ready.then(({ stmt }) => new Promise<User[]>((resolve, reject) => {
     stmt.selectUsers.all([], (error, users) => {
       if (error) {
         log.error('sqlite: getUsers', error.message);
@@ -10,7 +14,7 @@ export function getUsers() {
         return;
       }
 
-      resolve(users);
+      resolve(users as User[]);
     });
   }));
 }

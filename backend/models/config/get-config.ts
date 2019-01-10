@@ -1,7 +1,7 @@
+import { Config } from '../../../interfaces/model';
 import { log } from '../../utils/log';
 import { typify } from '../../utils/typify';
 import { model } from '../index';
-import { Config } from '../interfaces';
 import { schema } from '../schemas/config';
 
 let updatePromise: Promise<Config>;
@@ -58,7 +58,7 @@ export function getConfig(): Promise<Config> {
   return promise.then((config) => {
     updatePromise = null;
     return config;
-  })
+  });
 }
 
 /**

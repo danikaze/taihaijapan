@@ -1,4 +1,7 @@
-/** Available values in the database config and their types */
+/*
+ * Full definition of the data as stored in the model
+ */
+
 export interface Config {
   // internal
   'schema.version': number;
@@ -25,19 +28,30 @@ export interface Config {
   'images.resize.quality': number;
 }
 
+export interface User {
+  id: number;
+  created: string;
+  updated: string;
+  username: string;
+  password: string;
+  email?: string;
+}
+
+export interface Size {
+  id: number;
+  label: Text;
+  width: number;
+  height: number;
+  quality: number;
+}
+
 export interface Tag {
-  id?: number;
+  id: number;
   text: string;
 }
 
-export interface Image {
-  src: string;
-  width: number;
-  height: number;
-}
-
 export interface Photo {
-  id?: number;
+  id: number;
   created: string;
   updated: string;
   original: string;
@@ -49,10 +63,8 @@ export interface Photo {
   imgs: Image[];
 }
 
-export interface Size {
-  id: number;
-  label: Text;
+export interface Image {
+  src: string;
   width: number;
   height: number;
-  quality?: number;
 }
