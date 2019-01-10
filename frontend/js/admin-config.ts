@@ -1,4 +1,5 @@
 import { requestData } from './util/request-data';
+import { showSnackbar } from './util/show-snackbar';
 
 /*
  * Entry point of the Admin Options page
@@ -7,17 +8,9 @@ const GROUP_CLOSED_CLASS = 'closed';
 const SELECTOR_ID = '#config-admin input[name="admin.id"]';
 const SELECTOR_PWD = '#config-admin input[name="admin.password"]';
 const SELECTOR_PWD2 = '#config-admin input[name="admin.passwordConfirmation"]';
-const NOTIFICATION_TIME_OK = 2000;
-const NOTIFICATION_TIME_ERROR = 4000;
 
 interface AppWindow extends Window {
   run(url: string): void;
-}
-
-interface MdlSnackbar extends HTMLDivElement {
-  MaterialSnackbar: {
-    showSnackbar(data): void;
-  };
 }
 
 /**
@@ -39,24 +32,6 @@ function enableTogglers(): void {
 }
 
 /**
- * Show a notification message using a [snackbar](https://getmdl.io/components/index.html#snackbar-section)
- *
- * @param message Message to show
- * @param actionText If provided, the returned promise will be resolved when the action is clicked
- */
-function showSnackbar(message: string, actionText?: string): Promise<void> {
-  return new Promise<void>((resolve) => {
-    const snackbar = document.getElementById('snackbar') as MdlSnackbar;
-    snackbar.MaterialSnackbar.showSnackbar({
-      message,
-      actionText,
-      timeout: actionText ? NOTIFICATION_TIME_ERROR : NOTIFICATION_TIME_OK,
-      actionHandler: actionText && resolve,
-    });
-  });
-}
-
-/**
  * Send the options to update
  */
 function updateOptions(url: string, button: HTMLButtonElement, options: {}): void {
@@ -67,7 +42,7 @@ function updateOptions(url: string, button: HTMLButtonElement, options: {}): voi
 
   function updateError() {
     button.disabled = false;
-    showSnackbar('An error happening while updating the options.', 'Retry')
+    showSnackbar('An error happened while trying to update the options.', 'Retry')
       .then(tryUpdate);
   }
 

@@ -3,8 +3,9 @@
  */
 import '../styles/admin.scss';
 
-import { requestData } from './util/request-data';
 import { AdminPhoto } from '../../interfaces/frontend';
+import { requestData } from './util/request-data';
+import { showSnackbar } from './util/show-snackbar';
 
 interface AppWindow extends Window {
   componentHandler: {
@@ -39,6 +40,8 @@ const ERROR_CLASS = 'error';
 const editDialog = {} as Dialog;
 /** Global gallery data */
 let galleryData;
+/** Api url to update a photo data */
+let apiUrl: string;
 
 function getPhotoDataById(id) {
   return galleryData.filter((p) => p.id === id)[0];
@@ -67,58 +70,65 @@ function updateCardData(elem: HTMLElement, id: number, data): void {
 
 /**
  * Send the data of the edit dialog
+ *
+ * @id Photo ID
+ * @data New photo data to send
  */
-function updateData(apiUrl: string): void {
-  const id = Number(editDialog.id.value);
-  const li = document.querySelector(`#thumbnails li[data-photo-id="${id}"]`) as HTMLLIElement;
-  const body = {
-    photos: {},
-  };
-  body.photos[id] = {
-    title: editDialog.title.value,
-    slug: editDialog.slug.value,
-    tags: editDialog.tags.value,
-    keywords: editDialog.keywords.value,
-    visible: editDialog.hidden.checked,
-  };
-
-  if (li) {
-    li.classList.add(UPDATE_PENDING_CLASS);
-    editDialog.elem.classList.add(UPDATE_PENDING_CLASS);
-  }
-
-  requestData(`${apiUrl}/${id}`, { body, method: 'put' }).then((newData) => {
+function updateData(id: number, data: { slug: string }): void {
+  function updateSuccess(newData) {
     if (li) {
       li.classList.remove(UPDATE_PENDING_CLASS);
       editDialog.elem.classList.remove(UPDATE_PENDING_CLASS);
-      updateCardData(li, id, newData[id]);
+      updateCardData(li, id, newData);
       editDialog.elem.close();
     }
-  }).catch((error) => {
-    if (!error || !error.error || !error.error.data) {
-      return;
+
+    showSnackbar(`Data updated for ${newData.slug}`);
+  }
+
+  function updateError() {
+    li.classList.remove(UPDATE_PENDING_CLASS);
+    editDialog.elem.classList.remove(UPDATE_PENDING_CLASS);
+
+    showSnackbar(`An error happened while trying to update the photo ${data.slug}.`);
+  }
+
+  function tryUpdate() {
+    if (li) {
+      li.classList.add(UPDATE_PENDING_CLASS);
+      editDialog.elem.classList.add(UPDATE_PENDING_CLASS);
     }
 
-    Object.keys(error.error.data).forEach((key) => {
-      const elem = editDialog[key];
-      if (elem) {
-        elem.parentElement.classList.add(ERROR_CLASS);
-      }
-    });
-  });
+    return requestData(`${apiUrl}/${id}`, { body: data, method: 'put' })
+      .then(updateSuccess, updateError);
+  }
+
+  const li = document.querySelector(`#thumbnails li[data-photo-id="${id}"]`) as HTMLLIElement;
+  tryUpdate();
 }
 
 /**
- * @param photoId ID of the photo to remove
+ * @param id ID of the photo to remove
  */
-function removePhoto(apiUrl: string, photoId: number): void {
-  const li = document.querySelector(`#thumbnails li[data-photo-id="${photoId}"]`);
-
-  requestData(`${apiUrl}/${photoId}`, { method: 'delete' }).then(() => {
+function removePhoto(id: number): void {
+  function updateSuccess() {
+    const li = document.querySelector(`#thumbnails li[data-photo-id="${id}"]`);
     if (li) {
       li.parentElement.removeChild(li);
     }
-  });
+  }
+
+  function updateError() {
+    showSnackbar('An error happened while trying to remove the photo', 'Retry')
+      .then(tryRemove);
+  }
+
+  function tryRemove() {
+    return requestData(`${apiUrl}/${id}`, { method: 'delete' })
+      .then(updateSuccess, updateError);
+  }
+
+  tryRemove();
 }
 
 /**
@@ -184,7 +194,7 @@ function addThumbnailBehavior(): void {
 /**
  * Prepare behavior for edit/remove dialogs
  */
-function prepareEditDialog(apiUrl: string): void {
+function prepareEditDialog(): void {
   const removeDialog = document.getElementById('remove-dialog') as MdlElement;
 
   editDialog.elem = document.getElementById('edit-dialog') as MdlElement;
@@ -224,7 +234,15 @@ function prepareEditDialog(apiUrl: string): void {
     editDialog.elem.close();
   });
   document.getElementById('edit-save').addEventListener('click', () => {
-    updateData(apiUrl);
+    const id = Number(editDialog.id.value);
+    const data = {
+      title: editDialog.title.value,
+      slug: editDialog.slug.value,
+      tags: editDialog.tags.value,
+      keywords: editDialog.keywords.value,
+      visible: editDialog.hidden.checked,
+    };
+    updateData(id, data);
   });
   document.getElementById('edit-remove').addEventListener('click', () => {
     removeDialog.showModal();
@@ -234,7 +252,7 @@ function prepareEditDialog(apiUrl: string): void {
     removeDialog.close();
   });
   document.getElementById('remove-accept').addEventListener('click', () => {
-    removePhoto(apiUrl, Number(editDialog.id.value));
+    removePhoto(Number(editDialog.id.value));
     removeDialog.close();
     editDialog.elem.close();
   });
@@ -243,10 +261,11 @@ function prepareEditDialog(apiUrl: string): void {
 /**
  * Prepare the page dynamic behavior
  */
-(window as AppWindow).run = (apiUrl, data): void => {
+(window as AppWindow).run = (url, data): void => {
   galleryData = data;
-  prepareEditDialog(apiUrl);
+  apiUrl = url;
 
+  prepareEditDialog();
   addThumbnailBehavior();
   document.querySelectorAll('#thumbnails li').forEach((li: HTMLLIElement) => {
     addEditDetailsBehavior(li);
