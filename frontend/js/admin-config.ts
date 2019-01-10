@@ -1,4 +1,5 @@
 import { requestData } from './util/request-data';
+import { showSnackbar } from './util/show-snackbar';
 
 /*
  * Entry point of the Admin Options page
@@ -31,17 +32,36 @@ function enableTogglers(): void {
 }
 
 /**
+ * Send the options to update
+ */
+function updateOptions(url: string, button: HTMLButtonElement, options: {}): void {
+  function updateSuccess() {
+    button.disabled = false;
+    showSnackbar('Options updated');
+  }
+
+  function updateError() {
+    button.disabled = false;
+    showSnackbar('An error happened while trying to update the options.', 'Retry')
+      .then(tryUpdate);
+  }
+
+  function tryUpdate() {
+    button.disabled = true;
+    requestData(url, { body: options, method: 'put', cache: false }).then(updateSuccess, updateError);
+  }
+
+  tryUpdate();
+}
+
+/**
  * Add functionality to the update button, to submit the options to update
  */
 function enableUpdateButton(url: string): void {
   const button = document.getElementById('update-button') as HTMLButtonElement;
 
-  function enableButton() {
-    button.disabled = false;
-  }
-
   button.addEventListener('click', () => {
-    const body = {
+    const options = {
       // admin config
       admin: {
         id: (document.querySelector(SELECTOR_ID) as HTMLInputElement).value,
@@ -60,13 +80,13 @@ function enableUpdateButton(url: string): void {
       'config-images-options',
     ].forEach((sectionId) => {
       Array.from(document.getElementById(sectionId).querySelectorAll('input')).forEach((elem) => {
-        body[elem.name] = elem.value;
+        options[elem.name] = elem.value;
       });
     });
 
     // thumb sizes
     Array.from(document.getElementsByClassName('thumb-size')).forEach((elem) => {
-      body.sizes.push({
+      options.sizes.push({
         id: (elem.querySelector('[name=id]') as HTMLInputElement).value,
         label: (elem.querySelector('[name=label]') as HTMLInputElement).value,
         width: (elem.querySelector('[name=width]') as HTMLInputElement).value,
@@ -75,8 +95,7 @@ function enableUpdateButton(url: string): void {
       });
     });
 
-    button.disabled = true;
-    requestData(url, { body, method: 'put', cache: false }).then(enableButton, enableButton);
+    updateOptions(url, button, options);
   });
 }
 

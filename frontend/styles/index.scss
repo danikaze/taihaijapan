@@ -163,14 +163,10 @@ body {
   text-decoration: none;
 }
 
-.warning {
-  width: 80%;
-  margin: auto;
-  background: #000;
+.photo-not-found,
+.empty-gallery-msg {
   text-align: center;
-  color: #71bae9;
-  padding: 0.5em 1em;
-  border: 3px double #6cb4ef;
-  border-radius: 0.85em;
-  box-shadow: 0 0 10px #8cd7f6;
-}
+  color: white;
+  margin: 2em;
+  font-family: sans-serif;
+ }

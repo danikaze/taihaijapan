@@ -1,3 +1,7 @@
-<ul id="thumbnails">
-  {{#each newPhotos}}{{{indexThumbnail @index}}}{{/each}}
-</ul>
+{{#if photos.length}}
+  <ul id="thumbnails">
+    {{#each photos}}{{{indexThumbnail @index}}}{{/each}}
+  </ul>
+{{else}}
+  <p class="empty-gallery-msg">There are no photos yet in this gallery.</p>
+{{/if}}
