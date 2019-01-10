@@ -1,17 +1,7 @@
 ---
 linterOptions:
     exclude:
-        - app/lib/**
-        - app/test/**
-        - app/routes/**
-        - app/middleware/**
-        - app/config/**
-        - app/*.ts
-        - dui-core/**
-        - components/**
-        - test/**
-        - layouts/**
-        - gulpfile.ts
+        - package.json
 
 rulesDirectory:
     - ./node_modules/tslint-consistent-codestyle/rules
