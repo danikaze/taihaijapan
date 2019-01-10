@@ -8,33 +8,25 @@ import { updatePhoto as modelUpdatePhoto } from '../../models/gallery/update-pho
 import { ServerSettings } from '../../settings';
 
 /**
- * Receive a list of photos to update as { id: newPhotoData }
- * Return the same list with the updated data
+ * Receive of photos to update as { id: newPhotoData }
+ * Return the updated data
  */
 export function updatePhoto(serverSettings: ServerSettings, request: Request, response: Response) {
   try {
-    const rawData = request.body.photos;
-    const promises = Object.keys(rawData).map((key) => {
-      const id = Number(key);
-      const photo = typify<NewPhoto>(rawData[key], schema, { copy: true, includeExternal: false });
-      const rawTags = rawData[key].tags;
-      photo.tags = splitCsv(rawTags);
+    const id = Number(request.params.photoId);
+    const photo = typify<NewPhoto>(request.body, schema, { copy: true, includeExternal: false });
+    photo.tags = splitCsv(request.body.tags);
 
-      return modelUpdatePhoto(id, photo);
-    });
-
-    Promise.all(promises).then((updatedPhotos) => {
-      const updatedData = {};
-      updatedPhotos.forEach((updatedPhoto) => {
-        updatedData[updatedPhoto.id] = updatedPhoto;
+    modelUpdatePhoto(id, photo)
+      .then((updatedData) => {
+        response.send(updatedData);
+      })
+      .catch((error) => {
+        response.status(HTTP_CODE_400_BAD_REQUEST).send({
+          error: 'Wrong data',
+          data: error,
+        });
       });
-      response.send(updatedData);
-    }).catch((error) => {
-      response.status(HTTP_CODE_400_BAD_REQUEST).send({
-        error: 'Wrong data',
-        data: error,
-      });
-    });
   } catch (error) {
     response.status(HTTP_CODE_400_BAD_REQUEST).send('Wrong data');
   }
