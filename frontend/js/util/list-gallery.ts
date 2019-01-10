@@ -75,6 +75,16 @@ export class ListGallery {
   }
 
   /**
+   * Remove the photo-not-found message
+   */
+  private static removeNotFoundMsg() {
+    const msg = document.getElementsByClassName('photo-not-found')[0];
+    if (msg) {
+      msg.parentElement.removeChild(msg);
+    }
+  }
+
+  /**
    *
    * @param HTMLElement elem
    */
@@ -94,6 +104,7 @@ export class ListGallery {
   private addThumbnailsLogic() {
     this.thumbnails.forEach((thumbnail, index) => {
       thumbnail.addEventListener('click', () => {
+        ListGallery.removeNotFoundMsg();
         this.createPhotoSwipe(index);
       });
     });

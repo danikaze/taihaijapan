@@ -30,6 +30,7 @@ export function displayGallery(request, response) {
         googleAnalyticsAccount: config['google.analytics'],
         photo: currentPhoto,
         photoSlug: currentPhoto && currentPhoto.slug,
+        photoNotFound: request.params.slug && !currentPhoto,
       });
     })
     .catch((error) => {
