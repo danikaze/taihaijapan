@@ -18,14 +18,14 @@ module.exports = (env) => merge(frontendBase(env), {
     minimizer: [
       new UglifyJsPlugin({
         test: /\.[jt]s(\?.*)?$/i,
-        cache: true,
+        cache: false,
         parallel: true,
         sourceMap: true,
         uglifyOptions: {
-          beautify: false,
-          comments: false,
-          compress: {},
-          output: {},
+          output: {
+            beautify: false,
+            comments: /^\/*~/,
+          },
         },
       }),
       new OptimizeCSSAssetsPlugin({}),
