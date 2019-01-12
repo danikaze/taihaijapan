@@ -1,6 +1,7 @@
 import * as multer from 'multer';
 import * as path from 'path';
 import { Request, Response } from 'express';
+import { PATH_IMAGES_ORIGINAL } from '../../../constants/paths';
 import { stripExtension } from '../../utils/strip-extension';
 import { splitCsv } from '../../utils/split-csv';
 import { NewPhoto } from '../../../interfaces/controllers';
@@ -63,7 +64,7 @@ export function addPhoto(serverSettings: ServerSettings, request: Request, respo
 export function init(serverSettings: ServerSettings) {
   const uploadStorage = multer({
     storage: multer.diskStorage({
-      destination: serverSettings.imagesOriginalPath,
+      destination: PATH_IMAGES_ORIGINAL,
       filename: getUploadFilename,
     }),
   });
