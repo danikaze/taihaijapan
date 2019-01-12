@@ -3,7 +3,7 @@ import { auth } from '../utils/auth';
 import { EndPointsGetter, EndPoint } from './index';
 
 import { displayGallery } from './admin/display-gallery';
-import { addPhoto, init as initUpload } from './admin/add-photo';
+import { addPhoto } from './admin/add-photo';
 import { updatePhoto } from './admin/update-photo';
 import { deletePhoto } from './admin/delete-photo';
 
@@ -14,7 +14,6 @@ const authMiddleware = auth.middleware();
 const bodyParserMiddleware = bodyParser.json();
 
 export const adminControllers: EndPointsGetter = (app, serverSettings) => {
-  initUpload(serverSettings);
   const routeAdmin = serverSettings.adminUrl;
   const routePhoto = `${routeAdmin}/photos`;
   const routePhotoId = `${routePhoto}/:photoId`;
