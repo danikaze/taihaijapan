@@ -1,1 +1,4 @@
-module.exports = require('./.webpack/frontend.dev');
+module.exports = [
+  require('./.webpack/backend.dev'),
+  require('./.webpack/frontend.dev'),
+];

@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const merge = require('webpack-merge');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -9,7 +8,6 @@ const packageJson = require('../package.json');
 const base = require('./base');
 const { getAbsPath } = require('./utils/get-abs-path');
 const { groupCssFiles } = require('./utils/group-css-files');
-const { getDateString } = require('./utils/get-date-string');
 
 const srcPath = getAbsPath('frontend/js');
 
@@ -50,12 +48,6 @@ module.exports = (env) => merge(base(env), {
       analyzerMode: 'static',
       openAnalyzer: false,
       reportFilename: getAbsPath('build/__info/frontend.html'),
-    }),
-
-    // add a header comment in each generated file
-    new webpack.BannerPlugin({
-      raw: true,
-      banner: `/*~ ${packageJson.name}/[filebase] @ ${getDateString()} ~*/`,
     }),
 
     // css

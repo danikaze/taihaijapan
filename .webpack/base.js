@@ -1,9 +1,12 @@
+const webpack = require('webpack');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 
+const packageJson = require('../package.json');
 const { getAbsPath } = require('./utils/get-abs-path');
+const { getDateString } = require('./utils/get-date-string');
 
 module.exports = (env) => ({
   // output file config
@@ -52,6 +55,14 @@ module.exports = (env) => ({
     ],
   },
 
+  plugins: [
+    // add a header comment in each generated file
+    new webpack.BannerPlugin({
+      raw: true,
+      banner: `/*~ ${packageJson.name}/[filebase] @ ${getDateString()} ~*/`,
+    }),
+  ],
+
   // misc. config
   target: 'node',
   context: path.dirname(__dirname),
@@ -63,7 +74,7 @@ module.exports = (env) => ({
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
     plugins: [
-      new TsconfigPathsPlugin({ configFile: getAbsPath('tsconfig.frontend.json') }),
+      new TsconfigPathsPlugin({ configFile: getAbsPath('tsconfig.json') }),
     ],
   },
 
