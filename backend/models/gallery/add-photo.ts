@@ -1,3 +1,4 @@
+import { PATH_IMAGES_TEMP, PATH_IMAGES_THUMBS, URL_IMAGES_BASE } from '../../../constants/paths';
 import { log } from '../../utils/log';
 import { createThumbnails, CreateThumbnailsOptions, ThumbnailPhotoData } from '../../utils/create-thumbnails';
 import { model } from '../index';
@@ -71,7 +72,7 @@ export function addPhoto(newPhoto: NewPhoto): Promise<void> {
         path: serverSettings.imagesThumbPath,
         temporalPath: serverSettings.imagesTemporalPath,
         outputFile: '{id:3}/{size}-{hash:16}.jpg',
-        baseUrl: serverSettings.imagesBaseUrl,
+        baseUrl: URL_IMAGES_BASE,
       };
 
       const photoData: ThumbnailPhotoData = {
@@ -97,8 +98,8 @@ export function addPhoto(newPhoto: NewPhoto): Promise<void> {
  */
 export function init(settings: ServerSettings): void {
   serverSettings = {
-    imagesTemporalPath: settings.imagesTemporalPath,
-    imagesThumbPath: settings.imagesThumbPath,
-    imagesBaseUrl: settings.imagesBaseUrl,
+    imagesTemporalPath: PATH_IMAGES_TEMP,
+    imagesThumbPath: PATH_IMAGES_THUMBS,
+    imagesBaseUrl: URL_IMAGES_BASE,
   };
 }

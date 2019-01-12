@@ -2,18 +2,9 @@
   "server": {
     "port": 9090,
     "host": "localhost",
-    "viewsPath": "../views",
-    "helpersPath": "../views/helpers",
-    "partialsPath": "../views/partials",
-    "publicPath": "../public",
-    "publicUrl": "/public",
     "adminUrl": "/admin",
     "adminRealm": "admin-auth",
-    "passphrase": "change-this",
-    "imagesOriginalPath": "../data/photos",
-    "imagesTemporalPath": "../data/temp",
-    "imagesThumbPath": "../public/photos",
-    "imagesBaseUrl": "/public/photos"
+    "passphrase": "change-this-to-some-random-string"
   },
   "db": {
     "path": "../data/db.sqlite",

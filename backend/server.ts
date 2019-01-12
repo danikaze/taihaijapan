@@ -5,6 +5,7 @@ import * as requireAll from 'require-all';
 import * as EventEmitter from 'events';
 import * as hbs from 'hbs';
 
+import { PATH_HBS_VIEWS, PATH_HBS_PARTIALS, PATH_HBS_HELPERS, PATH_PUBLIC, URL_PUBLIC } from '../constants/paths';
 import { HTTP_CODE_404_NOT_FOUND } from '../constants/http';
 import { ServerSettings, LogSettings, Settings } from './settings';
 import { galleryControllers } from './controllers/gallery';
@@ -61,13 +62,10 @@ export class Server extends EventEmitter {
     return new Promise<void>((resolve, reject) => {
       this.app = express();
       this.app.disable('x-powered-by');
-      this.app.use(this.serverSettings.publicUrl, express.static(this.serverSettings.publicPath));
+      this.app.use(URL_PUBLIC, express.static(PATH_PUBLIC));
 
       this.app.use(compress());
       this.app.use(morgan(this.logSettings.logRequests));
-
-      this.app.set('view engine', 'hbs');
-      this.app.set('views', this.serverSettings.viewsPath);
 
       this.loadEndPoints(config);
       this.app.use(Server.error404handler);
@@ -86,10 +84,22 @@ export class Server extends EventEmitter {
     });
   }
 
+  /**
+   * Initialize Handlebars
+   */
   protected setHbs(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
+      // register the engine
+      this.app.set('view engine', 'hbs');
+
+      // register the views
+      this.app.set('views', PATH_HBS_VIEWS);
+
+      // register partials
+      hbs.registerPartials(PATH_HBS_PARTIALS, resolve);
+
       // register helpers
-      const helpers = requireAll({ dirname: this.serverSettings.helpersPath });
+      const helpers = requireAll({ dirname: PATH_HBS_HELPERS });
 
       Object.keys(helpers).forEach((fileName) => {
         try {
@@ -108,9 +118,6 @@ export class Server extends EventEmitter {
           log.error('Server', `Error registering HBS helper ${fileName}`);
         }
       });
-
-      // register partials
-      hbs.registerPartials(this.serverSettings.partialsPath, resolve);
     });
   }
 
