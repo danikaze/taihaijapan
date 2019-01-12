@@ -1,5 +1,6 @@
 import * as path from 'path';
 import { existsSync } from 'fs';
+import { PATH_SETTINGS } from '../../constants/paths';
 import { parse as parseCommand } from './command';
 import { readJsonSync } from './read-json-sync';
 // import { ctlEmitter } from '../ctl/ctl-emitter';
@@ -25,7 +26,7 @@ function locateSettingsFile(file) {
 
     // test for relative path
     if (!existsSync(res)) {
-      res = path.join(__dirname, '../settings', file);
+      res = path.join(PATH_SETTINGS, file);
 
       // test for file located in setings folder
       if (!existsSync(res)) {
@@ -72,15 +73,6 @@ function init(): void {
  */
 function fixPaths(values: ServerSettings, relativeTo: string): void {
   const settingsPath = {
-    server: [
-      'viewsPath',
-      'helpersPath',
-      'partialsPath',
-      'publicPath',
-      'imagesOriginalPath',
-      'imagesTemporalPath',
-      'imagesThumbPath',
-    ],
     db: [
       'path',
     ],

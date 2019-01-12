@@ -1,20 +1,16 @@
 import { LogLevels } from 'npmlog';
 
 export interface ServerSettings {
+  /** port to use for the server */
   port: number;
+  /** host to use for the server */
   host: string;
-  viewsPath: string;
-  helpersPath: string;
-  partialsPath: string;
-  publicPath: string;
-  publicUrl: string;
+  /** url to use for the admin control panel */
   adminUrl: string;
+  /** realm to use for admin auth */
   adminRealm: string;
+  /** passphrase to use for encoding passwords */
   passphrase: string;
-  imagesOriginalPath: string;
-  imagesTemporalPath: string;
-  imagesThumbPath: string;
-  imagesBaseUrl: string;
 }
 
 export interface DbSettings {
