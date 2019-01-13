@@ -17,25 +17,29 @@ export const settings = {} as Settings;
 
 init();
 
-function locateSettingsFile(file) {
-  let res = file;
+/**
+ * Given a file name tries to resolve its path.
+ * It will try both as it is, or with `.json` extension (in that order), in the following locations
+ * 1. As given
+ * 2. As a relative path to `cwd`
+ * 3. As a file in the settings folder (provided by the app)
+ *
+ * @return resolved path
+ */
+function locateSettingsFile(file: string): string {
+  const paths = [
+    file,
+    path.join(process.cwd(), file),
+    path.join(PATH_SETTINGS, file),
+  ];
 
-  // test for absolute path
-  if (!existsSync(res)) {
-    res = path.join(process.cwd(), file);
+  for (const p of paths) {
+    const res = (existsSync(p) && p) || (existsSync(`${p}.json`) && `${p}.json`);
 
-    // test for relative path
-    if (!existsSync(res)) {
-      res = path.join(PATH_SETTINGS, file);
-
-      // test for file located in setings folder
-      if (!existsSync(res)) {
-        return null;
-      }
+    if (res) {
+      return res;
     }
   }
-
-  return res;
 }
 
 /**
@@ -46,9 +50,10 @@ function init(): void {
 
   const args = parseCommand();
   const settingsFile = args._[0] || process.env.SETTINGS_FILE;
+  let realSettingsFile;
 
   if (settingsFile) {
-    setFile(settingsFile);
+    realSettingsFile = setFile(settingsFile);
   }
 
   // setCommandOptions(args);
@@ -56,8 +61,8 @@ function init(): void {
   log.level = settings.log.logLevel;
   setLogDate(settings.log.logDate);
 
-  if (settingsFile) {
-    log.verbose('ServerSettings', `Loaded settings file: ${settingsFile}.`);
+  if (realSettingsFile) {
+    log.verbose('ServerSettings', `Loaded settings file: ${realSettingsFile}`);
   }
 
   // ctlEmitter.on('options', set);
@@ -114,7 +119,7 @@ export function reset() {
 /**
  * Extend the current settings with the new ones.
  *
- * @param options new options to set (an object as `{ section: { key: value } }`)
+ * @param options new options to set
  */
 export function set(options: ServerSettings): void {
   Object.keys(options).forEach((section) => {
@@ -129,8 +134,9 @@ export function set(options: ServerSettings): void {
  * Extend the current settings with the ones specified in a json file.
  *
  * @param filePath path of the json file with the options
+ * @return resolved and set file path
  */
-export function setFile(filePath: string): void {
+export function setFile(filePath: string): string {
   const realFilePath = locateSettingsFile(filePath);
 
   if (!realFilePath) {
@@ -141,6 +147,8 @@ export function setFile(filePath: string): void {
   const options = readJsonSync<ServerSettings>(realFilePath);
   fixPaths(options, path.dirname(realFilePath));
   set(options);
+
+  return realFilePath;
 }
 
 /**
