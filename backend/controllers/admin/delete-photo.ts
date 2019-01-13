@@ -1,5 +1,7 @@
+import { Request, Response } from 'express';
 import { HTTP_CODE_400_BAD_REQUEST } from '../../../constants/http';
 import { removePhotos } from '../../models/gallery/remove-photos';
+import { ServerSettings } from '../../settings';
 
 /**
  * Process the request to delete a photo
@@ -7,7 +9,7 @@ import { removePhotos } from '../../models/gallery/remove-photos';
  * - params.photoId: id of the photo to remove
  * - body: none
  */
-export function deletePhoto(serverSettings, request, response) {
+export function deletePhoto(serverSettings: ServerSettings, request: Request, response: Response) {
   try {
     removePhotos([Number(request.params.photoId)])
       .then(() => {

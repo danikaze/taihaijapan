@@ -1,7 +1,14 @@
 import * as sharp from 'sharp';
 import * as path from 'path';
-import { existsSync } from 'fs';
+import { existsSync, readFile } from 'fs';
 import { sync as mkdirp } from 'mkdirp';
+
+export interface ResizeImageOptions {
+  resizePolicy?: keyof sharp.FitEnum;
+  format?: string;
+  formatOptions?: sharp.OutputOptions;
+  doNotEnlarge?: boolean;
+}
 
 export interface ResizeInfo extends sharp.OutputInfo {
   input: string;
@@ -11,8 +18,8 @@ export interface ResizeInfo extends sharp.OutputInfo {
 const MAX = 10000;
 const MIN = 1;
 
-const DEFAULT_OPTIONS = {
-  resizePolicy: 'inside',  // cover, contain, fill, inside or outside
+const DEFAULT_OPTIONS: ResizeImageOptions = {
+  resizePolicy: 'inside',
   format: 'jpeg',
   formatOptions: {
     quality: 80,
@@ -20,7 +27,12 @@ const DEFAULT_OPTIONS = {
   doNotEnlarge: true,
 };
 
-export function resizeImage(inputPath, outputPath, width, height, options): Promise<ResizeInfo> {
+export function resizeImage(
+  inputPath: string,
+  outputPath: string,
+  width: number,
+  height: number,
+  options?: ResizeImageOptions): Promise<ResizeInfo> {
   const outputFolder = path.dirname(outputPath);
   if (!existsSync(outputFolder)) {
     mkdirp(outputFolder);
@@ -28,23 +40,29 @@ export function resizeImage(inputPath, outputPath, width, height, options): Prom
 
   const opt = { ...DEFAULT_OPTIONS, ...options };
   return new Promise<ResizeInfo>((resolve, reject) => {
-    const resizeProcess = sharp(inputPath);
-    const resizeOptions: sharp.ResizeOptions = {
-      width: opt.resizePolicy === 'inside' ? (width || MAX) : (width || MIN),
-      height: opt.resizePolicy === 'inside' ? (height || MAX) : (height || MIN),
-      withoutEnlargement: opt.doNotEnlarge,
-      fit: opt.resizePolicy,
-    };
+    // manually read the file and create the sharp object from the data instead of
+    // calling sharp with the file path (https://github.com/lovell/sharp/issues/346)
+    readFile(inputPath, (error, data) => {
+      const resizeProcess = sharp(data);
+      const resizeOptions: sharp.ResizeOptions = {
+        width: opt.resizePolicy === 'inside' ? (width || MAX) : (width || MIN),
+        height: opt.resizePolicy === 'inside' ? (height || MAX) : (height || MIN),
+        withoutEnlargement: opt.doNotEnlarge,
+        fit: opt.resizePolicy,
+      };
 
-    resizeProcess
+      resizeProcess
       .resize(null, null, resizeOptions)
       .toFormat(opt.format, opt.formatOptions)
       .toFile(outputPath, (error, info) => {
-        resolve({
-          ...info,
-          input: inputPath,
-          path: outputPath,
+        resizeProcess.end(() => {
+          resolve({
+            ...info,
+            input: inputPath,
+            path: outputPath,
+          });
         });
       });
+    });
   });
 }
