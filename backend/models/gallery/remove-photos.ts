@@ -11,7 +11,7 @@ function getImageSrcs(photoId: number): Promise<string[]> {
   return model.ready.then(({ stmt }) => new Promise<string[]>((resolve, reject) => {
     stmt.getImageSrcs.all([photoId], (error, rows) => {
       if (error) {
-        log.error('sqlite: getImageSrcs', error.message);
+        log.error('sqlite getImageSrcs', error.message);
         reject(error);
         return;
       }
@@ -24,24 +24,32 @@ function getImageSrcs(photoId: number): Promise<string[]> {
  * Remove a list of files
  */
 function deleteFiles(filePaths: string[]): Promise<void> {
+  const errors: string[] = [];
   let left = filePaths.length;
 
   return new Promise<void>((resolve, reject) => {
-    function checkDone(error) {
+    function checkDone(file: string, error: NodeJS.ErrnoException) {
+      left--;
       if (error) {
-        log.error('deleteFiles', error.message);
-        reject(error);
+        errors.push(error.message);
         return;
       }
 
-      left--;
-      if (left === 0) {
+      log.info('deleteFiles', `File deleted: ${file}`);
+
+      if (left !== 0) {
+        return;
+      }
+
+      if (errors.length === 0) {
         resolve();
+      } else {
+        reject(errors);
       }
     }
 
     filePaths.forEach((file) => {
-      unlink(file, checkDone);
+      unlink(file, checkDone.bind(null, file));
     });
   });
 }
@@ -53,11 +61,12 @@ function deletePhoto(photoId: number): Promise<void> {
   return model.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
     stmt.deletePhoto.run([photoId], (error, row) => {
       if (error) {
-        log.error('sqlite: deletePhoto', error.message);
+        log.error('sqlite deletePhoto', error.message);
         reject(error);
         return;
       }
 
+      log.info('sqlite', `Photo with id ${photoId} deleted`);
       resolve();
     });
   }));
@@ -76,8 +85,8 @@ export function removePhotos(photoIds: number[]): Promise<void> {
       imagePaths.push(photoData.original);
 
       // no need to wait for file deletion
-      deleteFiles(imagePaths).catch(() => {
-        log.error('removePhotos', `Error deleting some files of photo id ${photoId}`);
+      deleteFiles(imagePaths).catch((errors: string[]) => {
+        log.error('removePhotos', `Errors ocurred while deleting the photo id ${photoId}:\n${errors.join('\n')}`);
       });
       deletePhoto(photoId)
         .then(resolve);
