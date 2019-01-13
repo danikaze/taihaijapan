@@ -66,7 +66,25 @@ function deletePhoto(photoId: number): Promise<void> {
         return;
       }
 
-      log.info('sqlite', `Photo with id ${photoId} deleted`);
+      log.info('deletePhoto', `Photo with id ${photoId} deleted`);
+      resolve();
+    });
+  }));
+}
+
+/**
+ * Remove entries from the IMAGES table
+ */
+function deleteImages(photoId: number): Promise<void> {
+  return model.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
+    stmt.deleteImagesByPhoto.run([photoId], (error, row) => {
+      if (error) {
+        log.error('sqlite deleteImages', error.message);
+        reject(error);
+        return;
+      }
+
+      log.info('deleteImages', `Images from photo with id ${photoId} deleted`);
       resolve();
     });
   }));
@@ -88,8 +106,10 @@ export function removePhotos(photoIds: number[]): Promise<void> {
       deleteFiles(imagePaths).catch((errors: string[]) => {
         log.error('removePhotos', `Errors ocurred while deleting the photo id ${photoId}:\n${errors.join('\n')}`);
       });
-      deletePhoto(photoId)
-        .then(resolve);
+      Promise.all([
+        deletePhoto(photoId),
+        deleteImages(photoId),
+      ]).then(() => resolve());
     })
     .catch(reject);
   }));
