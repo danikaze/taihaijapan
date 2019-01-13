@@ -3,6 +3,13 @@ import * as path from 'path';
 import { existsSync, readFile } from 'fs';
 import { sync as mkdirp } from 'mkdirp';
 
+export interface ResizeImageOptions {
+  resizePolicy?: keyof sharp.FitEnum;
+  format?: string;
+  formatOptions?: sharp.OutputOptions;
+  doNotEnlarge?: boolean;
+}
+
 export interface ResizeInfo extends sharp.OutputInfo {
   input: string;
   path: string;
@@ -11,8 +18,8 @@ export interface ResizeInfo extends sharp.OutputInfo {
 const MAX = 10000;
 const MIN = 1;
 
-const DEFAULT_OPTIONS = {
-  resizePolicy: 'inside',  // cover, contain, fill, inside or outside
+const DEFAULT_OPTIONS: ResizeImageOptions = {
+  resizePolicy: 'inside',
   format: 'jpeg',
   formatOptions: {
     quality: 80,
@@ -25,7 +32,7 @@ export function resizeImage(
   outputPath: string,
   width: number,
   height: number,
-  options): Promise<ResizeInfo> {
+  options?: ResizeImageOptions): Promise<ResizeInfo> {
   const outputFolder = path.dirname(outputPath);
   if (!existsSync(outputFolder)) {
     mkdirp(outputFolder);
@@ -39,7 +46,7 @@ export function resizeImage(
       const resizeProcess = sharp(data);
       const resizeOptions: sharp.ResizeOptions = {
         width: opt.resizePolicy === 'inside' ? (width || MAX) : (width || MIN),
-         height: opt.resizePolicy === 'inside' ? (height || MAX) : (height || MIN),
+        height: opt.resizePolicy === 'inside' ? (height || MAX) : (height || MIN),
         withoutEnlargement: opt.doNotEnlarge,
         fit: opt.resizePolicy,
       };

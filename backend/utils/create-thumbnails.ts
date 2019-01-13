@@ -4,7 +4,7 @@ import { sync as mkdirp } from 'mkdirp';
 
 import { Size, Photo, Image } from '../../interfaces/model';
 import { generateFileName } from './generate-file-name';
-import { resizeImage } from './resize-image';
+import { resizeImage, ResizeImageOptions } from './resize-image';
 
 export interface CreateThumbnailsOptions {
   sizes: Size[];
@@ -32,7 +32,7 @@ export function createThumbnails(data: ThumbnailPhotoData, options: CreateThumbn
         `${options.temporalPath}/{random}${path.extname(data.original)}`,
       );
       generateFileName(tempNameTemplate, data.original).then((resizeTargetPath) => {
-        const resizeOptions = { formatOptions: { quality: size.quality } };
+        const resizeOptions: ResizeImageOptions = { formatOptions: { quality: size.quality } };
         resizeImage(data.original, resizeTargetPath, size.width, size.height, resizeOptions)
           .then((thumbInfo) => {
             const replaceValues = {
