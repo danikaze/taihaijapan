@@ -13,7 +13,7 @@ import { updateOptions } from './admin/update-options';
 const authMiddleware = auth.middleware();
 const bodyParserMiddleware = bodyParser.json();
 
-export const adminControllers: EndPointsGetter = (app, serverSettings) => {
+export const adminControllers: EndPointsGetter = (i18n, serverSettings) => {
   const routeAdmin = serverSettings.adminUrl;
   const routePhoto = `${routeAdmin}/photos`;
   const routePhotoId = `${routePhoto}/:photoId`;
@@ -24,7 +24,7 @@ export const adminControllers: EndPointsGetter = (app, serverSettings) => {
     {
       method: 'get',
       path: routeAdmin,
-      callback: displayGallery.bind(null, serverSettings),
+      callback: displayGallery.bind(null, i18n, serverSettings),
       middleware: authMiddleware,
     },
     // add one photo
@@ -52,7 +52,7 @@ export const adminControllers: EndPointsGetter = (app, serverSettings) => {
     {
       method: 'get',
       path: routeOptions,
-      callback: displayOptions.bind(null, serverSettings),
+      callback: displayOptions.bind(null, i18n, serverSettings),
       middleware: authMiddleware,
     },
     // update the gallery options
