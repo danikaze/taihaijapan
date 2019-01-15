@@ -34,6 +34,8 @@ export class I18n {
   private readonly translations: Translations = {};
   /** default language to fallback if the requested doesn't exist */
   private readonly defaultLang: string;
+  /** cached */
+  private readonly cachedTranslations: { [key: string]: Polyglot[] } = {};
 
   /**
    * @param defaultLanguage Default language to fallback if the requested doesn't exist
@@ -80,35 +82,55 @@ export class I18n {
   }
 
   /**
-   * Get a namespace
+   * Get an object with the combined values of the provided namespaces
    *
    * @param lang Language to provide translations
-   * @param namespace Especified namespace
+   * @param namespaces Especified namespaces
    */
-  public getNamespace(lang: string, namespace: string): (key: string, n?: number) => string {
-    let locale = this.translations[lang];
-    let translations: Polyglot;
+  public getNamespace(lang: string, namespaces: string | string[]): (key: string, n?: number) => string {
+    const cacheKey = `${lang}:${isString(namespaces) ? namespaces : (namespaces as string[]).join(',')}`;
+    let translations = this.cachedTranslations[cacheKey];
 
-    if (!locale) {
-      locale = this.translations[this.defaultLang];
-      log.warn('i18n', `"${lang}" translation not found. Falling back to default "${this.defaultLang}"`);
-    }
-
-    if (namespace) {
-      translations = locale[namespace];
+    {
       if (!translations) {
-        log.warn('i18n', `Namespace "${namespace}" not found for "${lang}" locale. `);
-        return (key) => key;
+        translations = [];
+        const defaultLocale = this.translations[this.defaultLang];
+        let locale = this.translations[lang];
+
+        if (!locale) {
+          locale = this.translations[this.defaultLang];
+          log.warn('i18n', `"${lang}" translation not found. Falling back to default "${this.defaultLang}"`);
+        }
+
+        const ns = (isString(namespaces) ? [namespaces] : namespaces) as string[];
+        ns.forEach((namespace) => {
+          let t = locale[namespace];
+
+          if (!t) {
+            log.warn('i18n', `Namespace "${namespace}" not found for "${lang}" locale`);
+            t = defaultLocale && defaultLocale[namespace];
+          }
+
+          if (!t) {
+            return;
+          }
+
+          translations.push(t);
+        });
+        this.cachedTranslations[cacheKey] = translations;
       }
     }
 
     return (key, n?) => {
-      const text = translations.t(key, n);
-      if (!text) {
-        log.warn('i18n', `"${lang}" translation not found. Falling back to default "${this.defaultLang}"`);
-        return key;
+      for (const p of translations) {
+        const text = p.t(key, n);
+        if (text !== undefined) {
+          return text;
+        }
       }
-      return text;
+
+      log.warn('i18n', `"${lang}" translation not found"`);
+      return key;
     };
   }
 
