@@ -1,5 +1,5 @@
 <dialog id="edit-dialog" class="mdl-dialog">
-  <h4 class="mdl-dialog__title">Edit photo</h4>
+  <h4 class="mdl-dialog__title">{{{t 'editPhoto'}}}</h4>
 
   <div class="mdl-dialog_content mdl-grid">
     <input type="hidden" id="edit-id">
@@ -13,47 +13,47 @@
     <div id="edit-info-side" class="mdl-cell--8-col mdl-cell--4-col-tablet">
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input class="mdl-textfield__input" type="text" id="edit-title" name="title">
-        <label class="mdl-textfield__label" for="edit-title">Title or description</label>
+        <label class="mdl-textfield__label" for="edit-title">{{{t 'editDialog.title'}}}</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input class="mdl-textfield__input" type="text" id="edit-slug" name="slug">
-        <label class="mdl-textfield__label" for="edit-slug">Slug</label>
+        <label class="mdl-textfield__label" for="edit-slug">{{{t 'editDialog.slug'}}}</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input class="mdl-textfield__input" type="text" id="edit-tags" name="tags">
-        <label class="mdl-textfield__label" for="edit-tags">Tags</label>
+        <label class="mdl-textfield__label" for="edit-tags">{{{t 'editDialog.tags'}}}</label>
       </div>
 
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input class="mdl-textfield__input" type="text" id="edit-keywords" name="keywords">
-        <label class="mdl-textfield__label" for="edit-keywords">Keywords</label>
+        <label class="mdl-textfield__label" for="edit-keywords">{{{t 'editDialog.keywords'}}}</label>
       </div>
 
       <label class="hide-button mdl-switch mdl-js-switch mdl-js-ripple-effect">
         <input id="edit-hidden" type="checkbox" class="mdl-switch__input">
-        <span class="switch-text">Display</span>
+        <span class="switch-text">{{{t 'editDialog.display'}}}</span>
       </label>
     </div>
   </div>
 
   <div class="mdl-dialog__actions">
-    <button id="edit-save" type="button" class="mdl-button">Save</button>
-    <button id="edit-cancel" type="button" class="mdl-button">Cancel</button>
-    <button id="edit-remove" type="button" class="mdl-button mdl-button--accent mdl-button-colored">Remove</button>
+    <button id="edit-save" type="button" class="mdl-button">{{{t 'editDialog.save'}}}</button>
+    <button id="edit-cancel" type="button" class="mdl-button">{{{t 'editDialog.cancel'}}}</button>
+    <button id="edit-remove" type="button" class="mdl-button mdl-button--accent mdl-button-colored">{{{t 'editDialog.remove'}}}</button>
   </div>
 </dialog>
 
 <dialog id="remove-dialog" class="mdl-dialog">
-  <h4 class="mdl-dialog__title">Remove photo</h4>
+  <h4 class="mdl-dialog__title">{{{t 'removeDialog.title'}}}</h4>
 
   <div class="mdl-dialog_content">
-    <p>Are you sure you want to delete this photo? This cannot be undone.</p>
+    <p>{{{t 'removeDialog.confirmation'}}}</p>
   </div>
 
   <div class="mdl-dialog__actions">
-    <button id="remove-cancel" type="button" class="mdl-button">Cancel</button>
-    <button id="remove-accept" type="button" class="mdl-button mdl-button--accent mdl-button-colored">Remove</button>
+    <button id="remove-cancel" type="button" class="mdl-button">{{{t 'removeDialog.cancel'}}}</button>
+    <button id="remove-accept" type="button" class="mdl-button mdl-button--accent mdl-button-colored">{{{t 'removeDialog.remove'}}}</button>
   </div>
 </dialog>

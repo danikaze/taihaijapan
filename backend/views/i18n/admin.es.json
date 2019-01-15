@@ -1,0 +1,82 @@
+{
+  "lang": "es",
+  "namespaces": [{
+    "id": "admin",
+    "phrases": {
+      "pages": {
+        "gallery": "Galería",
+        "options": "Opciones"
+      },
+      "editPhoto": "Editar foto",
+      "editDialog": {
+        "title": "Título o descripción",
+        "slug": "Slug",
+        "tags": "Tags",
+        "keywords": "Palabras clave",
+        "display": "Visible",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "remove": "Eliminar"
+      },
+      "removeDialog": {
+        "title": "Eliminar foto",
+        "confirmation": "¿Estás seguro de querer eliminar esta foto? Esta acción no puede deshacerse.",
+        "cancel": "Cancelar",
+        "remove": "Eliminar"
+      },
+      "photoGallery": "Galería de fotos",
+      "uploadNewPhoto": "Subir nueva foto",
+      "newPhoto": {
+        "title": "Título o descripción",
+        "slug": "Slug",
+        "tags": "Tags",
+        "keywords": "Palabras clave",
+        "upload": "Subir nueva foto"
+      },
+      "options": {
+        "site": {
+          "sectionTitle": "Opciones del sitio web",
+          "title": "Nombre o descripción",
+          "ga": "Cuenta de Google Analytics"
+        },
+        "adminUser": {
+          "sectionTitle": "Opciones del administrador",
+          "username": "Nombre de usuario",
+          "language": "Idioma",
+          "password": "Contraseña para la página de administración",
+          "passwordConfirm": "Confirmación de la contraseña"
+        },
+        "adminPage": {
+          "sectionTitle": "Opciones de la página de administración",
+          "imgsPerPage": "Imágenes por página (0 significa sin límite)",
+          "orderBy": "Ordenar por (created, updated, slug, title)",
+          "orderReverse": "Orden descendiente"
+        },
+        "indexPage": {
+          "sectionTitle": "Opciones de la página de inicio",
+          "imgsPerPage": "Máximo número de imágenes para mostrar (0 significa sin límite)",
+          "orderBy": "Ordenar por (created, updated, slug, title)",
+          "orderReverse": "Orden descendiente"
+        },
+        "galleryPage": {
+          "sectionTitle": "Opciones de la página de galería",
+          "imgsPerPage": "Imágenes por página (0 significa sin límite)",
+          "orderBy": "Ordenar por (created, updated, slug, title)",
+          "orderReverse": "Orden descendiente"
+        },
+        "imageOptions": {
+          "sectionTitle": "Opciones de imagen",
+          "hiddenByDefault": "Ocultas por defecto"
+        },
+        "thumbnailOptions": {
+          "sectionTitle": "Tamaño de las imágenes",
+          "id": "Id",
+          "width": "Ancho",
+          "height": "Alto",
+          "quality": "Calidad"
+        }
+      },
+      "updateSettings": "Actualizar opciones"
+    }
+  }]
+}

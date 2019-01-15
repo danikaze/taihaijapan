@@ -120,7 +120,7 @@ export class Server extends EventEmitter {
           hbs.registerHelper(helper.fn.name, helper.fn);
           log.verbose('Server', `HBS helper registered: ${helper.fn.name}`);
         } catch (error) {
-          log.error('Server', `Error registering HBS helper ${fileName}`);
+          log.error('Server', `Error registering HBS helper ${fileName} (${error})`);
         }
       });
     });

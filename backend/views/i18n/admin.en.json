@@ -1,0 +1,82 @@
+{
+  "lang": "en",
+  "namespaces": [{
+    "id": "admin",
+    "phrases": {
+      "pages": {
+        "gallery": "Gallery",
+        "options": "Options"
+      },
+      "editPhoto": "Edit photo",
+      "editDialog": {
+        "title": "Title or description",
+        "slug": "Slug",
+        "tags": "Tags",
+        "keywords": "Keywords",
+        "display": "Display",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove"
+      },
+      "removeDialog": {
+        "title": "Remove photo",
+        "confirmation": "Are you sure you want to delete this photo? This cannot be undone.",
+        "cancel": "Cancel",
+        "remove": "Remove"
+      },
+      "photoGallery": "Photo Gallery",
+      "uploadNewPhoto": "Upload new photo",
+      "newPhoto": {
+        "title": "Title or description",
+        "slug": "Slug",
+        "tags": "Tags",
+        "keywords": "Keywords",
+        "upload": "Upload new photo"
+      },
+      "options": {
+        "site": {
+          "sectionTitle": "Site options",
+          "title": "Site name or title",
+          "ga": "Google Analytics account"
+        },
+        "adminUser": {
+          "sectionTitle": "Admin user options",
+          "username": "Username for the admin page",
+          "language": "Language",
+          "password": "Password for the admin page",
+          "passwordConfirm": "Confirm password for the admin page"
+        },
+        "adminPage": {
+          "sectionTitle": "Admin page options",
+          "imgsPerPage": "Images Per Page (0 means no limit)",
+          "orderBy": "Sort By (created, updated, slug, title)",
+          "orderReverse": "Reverse sorting"
+        },
+        "indexPage": {
+          "sectionTitle": "Index page options",
+          "imgsPerPage": "Maximum number of images to display (0 means no limit)",
+          "orderBy": "Sort By (created, updated, slug, title)",
+          "orderReverse": "Reverse sorting"
+        },
+        "galleryPage": {
+          "sectionTitle": "Gallery page options",
+          "imgsPerPage": "Images Per Page (0 means no limit)",
+          "orderBy": "Sort By (created, updated, slug, title)",
+          "orderReverse": "Reverse sorting"
+        },
+        "imageOptions": {
+          "sectionTitle": "Image options",
+          "hiddenByDefault": "Hidden by default"
+        },
+        "thumbnailOptions": {
+          "sectionTitle": "Thumbnail sizes",
+          "id": "Size Id",
+          "width": "Width",
+          "height": "Height",
+          "quality": "Quality"
+        }
+      },
+      "updateSettings": "Update settings"
+    }
+  }]
+}
