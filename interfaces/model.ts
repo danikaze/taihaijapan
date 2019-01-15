@@ -34,6 +34,7 @@ export interface User {
   updated: string;
   username: string;
   password: string;
+  lang: string;
   email?: string;
 }
 

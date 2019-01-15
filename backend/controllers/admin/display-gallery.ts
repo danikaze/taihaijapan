@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { getConfig } from '../../models/config/get-config';
 import { getPhotosAdmin } from '../../models/gallery/get-photos';
+import { getUsers } from '../../models/users/get-users';
 import { I18n } from '../../utils/i18n';
 import { ServerSettings } from '../../settings';
 
@@ -19,19 +20,21 @@ export function displayGallery(
   const promises = [
     getConfig(),
     getPhotosAdmin(),
+    getUsers(),
   ];
 
-  Promise.all(promises).then(([config, photos]) => {
+  Promise.all(promises).then(([config, photos, users]) => {
     const routeAdmin = serverSettings.adminUrl;
     const routeOptions = `${routeAdmin}/options`;
     const routePhoto = `${routeAdmin}/photos`;
+    const lang = users[0].lang;
 
     response.render('admin', {
       photos,
       routeAdmin,
       routeOptions,
       routePhoto,
-      t: i18n.getNamespace('en', 'admin'),
+      t: i18n.getNamespace(lang, 'admin'),
       languages: i18n.getAvailableLanguages(),
       fullUrl: `${config['site.baseUrl']}${routeAdmin}`,
       bodyId: 'page-admin',

@@ -11,6 +11,7 @@ export function updateUser(id: number, data: NewUser): Promise<void> {
       data.username,
       data.password,
       '',
+      data.lang,
       id,
     ];
 

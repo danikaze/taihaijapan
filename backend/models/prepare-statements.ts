@@ -125,12 +125,13 @@ function getSqls(): Promise<SqlQueries> {
           deleteImagesByPhoto: 'DELETE FROM images WHERE photo_id = ?;',
           // users
           authUser: 'SELECT id, username FROM users WHERE username = ? AND password = ?;',
-          selectUsers: 'SELECT id, username, email, updated, created FROM users;',
+          selectUsers: 'SELECT id, username, email, lang, updated, created FROM users;',
           updateUser: `UPDATE users
                        SET updated = (datetime("now", "utc")),
                            username = ?,
                            password = ?,
-                           email = ?
+                           email = ?,
+                           lang = ?
                        WHERE id = ?;`,
           deleteUser: 'DELETE FROM users WHERE id = ?;',
         });

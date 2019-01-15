@@ -12,4 +12,4 @@ export interface InsertUniqueResult {
   isNew: boolean;
 }
 
-export type NewUser = Pick<User, 'username' | 'password' | 'email'>;
+export type NewUser = Pick<User, 'username' | 'password' | 'email' | 'lang'>;

@@ -5,7 +5,9 @@ import { showSnackbar } from './util/show-snackbar';
  * Entry point of the Admin Options page
  */
 const GROUP_CLOSED_CLASS = 'closed';
+const SELECTOR_USERNAME = '#config-admin input[name="admin.username"]';
 const SELECTOR_ID = '#config-admin input[name="admin.id"]';
+const SELECTOR_LANG = '#config-admin input[name="admin.lang"]';
 const SELECTOR_PWD = '#config-admin input[name="admin.password"]';
 const SELECTOR_PWD2 = '#config-admin input[name="admin.passwordConfirmation"]';
 
@@ -64,7 +66,9 @@ function enableUpdateButton(url: string): void {
     const options = {
       // admin config
       admin: {
+        username: (document.querySelector(SELECTOR_USERNAME) as HTMLInputElement).value,
         id: (document.querySelector(SELECTOR_ID) as HTMLInputElement).value,
+        lang: (document.querySelector(SELECTOR_LANG) as HTMLInputElement).value,
         password: (document.querySelector(SELECTOR_PWD) as HTMLInputElement).value,
         passwordConfirmation: (document.querySelector(SELECTOR_PWD2) as HTMLInputElement).value,
       },

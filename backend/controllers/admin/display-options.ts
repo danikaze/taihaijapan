@@ -26,22 +26,24 @@ export function displayOptions(
   Promise.all(promises).then(([config, sizes, users]) => {
     const routeAdmin = serverSettings.adminUrl;
     const routeOptions = `${routeAdmin}/options`;
+    const admin = {
+      id: users[0].id,
+      username: users[0].username,
+      email: users[0].email,
+      lang: users[0].lang,
+    };
 
     response.render('admin-options', {
+      admin,
       sizes,
       config,
       routeAdmin,
       routeOptions,
-      t: i18n.getNamespace('en', 'admin'),
+      t: i18n.getNamespace(admin.lang, 'admin'),
       languages: i18n.getAvailableLanguages(),
       fullUrl: `${config['site.baseUrl']}${routeOptions}`,
       bodyId: 'page-admin-options',
       siteGlobalTitle: config['site.title'],
-      admin: {
-        id: users[0].id,
-        username: users[0].username,
-        email: users[0].email,
-      },
     });
   });
 }

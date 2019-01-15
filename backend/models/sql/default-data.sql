@@ -1,6 +1,6 @@
 -- users
-INSERT INTO users(username, password) VALUES
-  ('admin', '1234');
+INSERT INTO users(username, password, lang) VALUES
+  ('admin', '1234', 'en');
 
 -- config
 INSERT INTO config(name, value) VALUES
