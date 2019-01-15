@@ -3,7 +3,6 @@
     "moduleResolution": "node",
     "allowJs": false,
     "module": "commonjs",
-    "baseUrl": ".",
     "pretty": true,
     "noUnusedLocals": true,
     "resolveJsonModule": true,
