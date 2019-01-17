@@ -1,0 +1,15 @@
+{
+  "lang": "en",
+  "namespaces": [{
+    "id": "frontend",
+    "phrases": {
+      "passwordsDontMatch": "Password not updated. They don't match.",
+      "optionsUpdated": "Options updated.",
+      "optionsUpdateError": "An error happened while trying to update the options.",
+      "actionRetry": "Retry",
+      "errorRemove": "An error happened while trying to remove the photo.",
+      "photoUpdate": "Data updated for {slug}.",
+      "photoUpdateError": "An error happened while trying to update the photo {slug}."
+    }
+  }]
+}

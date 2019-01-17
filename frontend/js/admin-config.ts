@@ -1,8 +1,9 @@
 import { requestData } from './util/request-data';
 import { showSnackbar } from './util/show-snackbar';
+import { Dict } from '../../interfaces/frontend';
 
 interface AppWindow extends Window {
-  run(url: string): void;
+  run(url: string, i18n: Dict<string>): void;
 }
 
 interface UserOptions {
@@ -24,6 +25,8 @@ const SELECTOR_PWD = '#config-admin input[name="admin.password"]';
 const SELECTOR_PWD2 = '#config-admin input[name="admin.passwordConfirmation"]';
 
 let originalAdminOptions: UserOptions;
+/** Localized messages */
+let i18n: Dict<string>;
 
 /**
  * @return `true` if values from `b` are not the same as values from `b`
@@ -71,18 +74,22 @@ function enableTogglers(): void {
  * Send the options to update
  */
 function updateOptions(url: string, button: HTMLButtonElement, options: { admin: UserOptions }): void {
-  function updateSuccess() {
+  function updateSuccess(data) {
     button.disabled = false;
-    if (equalUsers(originalAdminOptions, options.admin)) {
-      showSnackbar('Options updated');
-    } else {
+    if (data.errors.length !== 0) {
+      showSnackbar(i18n.passwordsDontMatch);
+    } else if (equalUsers(originalAdminOptions, options.admin)) {
+      showSnackbar(i18n.optionsUpdated);
+    } else if (location.search.indexOf('updated') !== -1){
       location.reload();
+    } else {
+      location.href = `${location.origin}${location.pathname}?updated`;
     }
   }
 
   function updateError() {
     button.disabled = false;
-    showSnackbar('An error happened while trying to update the options.', 'Retry')
+    showSnackbar(i18n.optionsUpdateError, i18n.actionRetry)
       .then(tryUpdate);
   }
 
@@ -135,8 +142,10 @@ function enableUpdateButton(url: string): void {
   });
 }
 
-(window as AppWindow).run = (url) => {
+(window as AppWindow).run = (url, translations) => {
   originalAdminOptions = getAdminObject();
+  i18n = translations;
+
   enableTogglers();
   enableUpdateButton(url);
 };
