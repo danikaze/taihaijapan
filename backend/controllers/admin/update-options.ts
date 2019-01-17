@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { HTTP_CODE_400_BAD_REQUEST } from '../../../constants/http';
+import { ERROR_PASSWORDS_DONT_MATCH } from '../../../constants/errors';
 import { typify } from '../../utils/typify';
 import { schema as configSchema } from '../../models/schemas/config';
 import { schema as sizesSchema } from '../../models/schemas/sizes';
@@ -42,6 +43,7 @@ export function updateOptions(serverSettings: ServerSettings, request: Request, 
 
     if (admin.password && admin.password !== admin.passwordConfirmation) {
       delete admin.password;
+      errors.push(ERROR_PASSWORDS_DONT_MATCH);
     }
 
     const typedUser = typify<NewUser>(admin, userSchema);

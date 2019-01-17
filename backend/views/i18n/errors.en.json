@@ -1,0 +1,10 @@
+{
+  "lang": "en",
+  "namespaces": [{
+    "id": "errors",
+    "phrases": {
+      "E001": "Passwords don't match.",
+      "E002": ""
+    }
+  }]
+}

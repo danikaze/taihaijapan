@@ -1,0 +1,1 @@
+export const ERROR_PASSWORDS_DONT_MATCH = 'E001';
