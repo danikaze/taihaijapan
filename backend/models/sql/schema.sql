@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS users (
   updated text NOT NULL DEFAULT (datetime('now', 'utc')),
   username text NOT NULL UNIQUE,
   password text NOT NULL,
-  email text NOT NULL DEFAULT ''
+  email text NOT NULL DEFAULT '',
+  lang text NOT NULL DEFAULT 'en'
 );
 
 -- Thumbnail sizes to generate for each image

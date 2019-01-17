@@ -1,0 +1,15 @@
+{
+  "lang": "en",
+  "namespaces": [{
+    "id": "frontend",
+    "phrases": {
+      "passwordsDontMatch": "La contraseña no ha sido actualizada porque no coinciden.",
+      "optionsUpdated": "Opciones actualizadas.",
+      "optionsUpdateError": "Un error ha ocurrido mientras se intentaba actualizar las opciones.",
+      "actionRetry": "Reintentar.",
+      "errorRemove": "Un error ha ocurrido mientras se intentaba borrar la foto.",
+      "photoUpdate": "Datos de la foto {slug} actualizados.",
+      "photoUpdateError": "Un error ha ocurrido mientras se intentaba actualizar los datos de la foto {slug}."
+    }
+  }]
+}

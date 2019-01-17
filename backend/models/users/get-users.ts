@@ -7,7 +7,7 @@ import { model } from '../index';
  */
 export function getUsers(): Promise<User[]> {
   return model.ready.then(({ stmt }) => new Promise<User[]>((resolve, reject) => {
-    stmt.selectUsers.all([], (error, users) => {
+    stmt.selectAllUsers.all([], (error, users) => {
       if (error) {
         log.error('sqlite: getUsers', error.message);
         reject(error);

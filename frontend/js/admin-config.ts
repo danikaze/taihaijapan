@@ -1,16 +1,55 @@
 import { requestData } from './util/request-data';
 import { showSnackbar } from './util/show-snackbar';
+import { Dict } from '../../interfaces/frontend';
+
+interface AppWindow extends Window {
+  run(url: string, i18n: Dict<string>): void;
+}
+
+interface UserOptions {
+  id: string;
+  username: string;
+  lang: string;
+  password: string;
+  passwordConfirmation: string;
+}
 
 /*
  * Entry point of the Admin Options page
  */
 const GROUP_CLOSED_CLASS = 'closed';
+const SELECTOR_USERNAME = '#config-admin input[name="admin.username"]';
 const SELECTOR_ID = '#config-admin input[name="admin.id"]';
+const SELECTOR_LANG = '#config-admin input[name="admin.lang"]';
 const SELECTOR_PWD = '#config-admin input[name="admin.password"]';
 const SELECTOR_PWD2 = '#config-admin input[name="admin.passwordConfirmation"]';
 
-interface AppWindow extends Window {
-  run(url: string): void;
+let originalAdminOptions: UserOptions;
+/** Localized messages */
+let i18n: Dict<string>;
+
+/**
+ * @return `true` if values from `b` are not the same as values from `b`
+ */
+function equalUsers(a: UserOptions, b: UserOptions): boolean {
+  return a.id === b.id
+      && a.username === b.username
+      && a.lang === b.lang
+      && a.password === b.password
+      && a.passwordConfirmation === b.passwordConfirmation;
+}
+
+/**
+ * Retrieve the admin values from the HTML and return them as an object
+ */
+function getAdminObject(): UserOptions {
+  return {
+    id: (document.querySelector(SELECTOR_ID) as HTMLInputElement).value,
+    username: (document.querySelector(SELECTOR_USERNAME) as HTMLInputElement).value,
+    lang: (document.querySelector(SELECTOR_LANG) as HTMLInputElement).value,
+    password: (document.querySelector(SELECTOR_PWD) as HTMLInputElement).value,
+    passwordConfirmation: (document.querySelector(SELECTOR_PWD2) as HTMLInputElement).value,
+  };
 }
 
 /**
@@ -34,15 +73,23 @@ function enableTogglers(): void {
 /**
  * Send the options to update
  */
-function updateOptions(url: string, button: HTMLButtonElement, options: {}): void {
-  function updateSuccess() {
+function updateOptions(url: string, button: HTMLButtonElement, options: { admin: UserOptions }): void {
+  function updateSuccess(data) {
     button.disabled = false;
-    showSnackbar('Options updated');
+    if (data.errors.length !== 0) {
+      showSnackbar(i18n.passwordsDontMatch);
+    } else if (equalUsers(originalAdminOptions, options.admin)) {
+      showSnackbar(i18n.optionsUpdated);
+    } else if (location.search.indexOf('updated') !== -1){
+      location.reload();
+    } else {
+      location.href = `${location.origin}${location.pathname}?updated`;
+    }
   }
 
   function updateError() {
     button.disabled = false;
-    showSnackbar('An error happened while trying to update the options.', 'Retry')
+    showSnackbar(i18n.optionsUpdateError, i18n.actionRetry)
       .then(tryUpdate);
   }
 
@@ -63,11 +110,7 @@ function enableUpdateButton(url: string): void {
   button.addEventListener('click', () => {
     const options = {
       // admin config
-      admin: {
-        id: (document.querySelector(SELECTOR_ID) as HTMLInputElement).value,
-        password: (document.querySelector(SELECTOR_PWD) as HTMLInputElement).value,
-        passwordConfirmation: (document.querySelector(SELECTOR_PWD2) as HTMLInputElement).value,
-      },
+      admin: getAdminObject(),
       sizes: [],
     };
 
@@ -99,7 +142,10 @@ function enableUpdateButton(url: string): void {
   });
 }
 
-(window as AppWindow).run = (url) => {
+(window as AppWindow).run = (url, translations) => {
+  originalAdminOptions = getAdminObject();
+  i18n = translations;
+
   enableTogglers();
   enableUpdateButton(url);
 };

@@ -3,16 +3,17 @@
  */
 import '../styles/admin.scss';
 
-import { AdminPhoto } from '../../interfaces/frontend';
+import { AdminPhoto, Dict } from '../../interfaces/frontend';
 import { requestData } from './util/request-data';
 import { showSnackbar } from './util/show-snackbar';
+import { t } from './util/i18n';
 
 interface AppWindow extends Window {
   componentHandler: {
     downgradeElements(HTMLElement): void;
     upgradeElement(HTMLElement): void;
   };
-  run(apiUrl: string, data: AdminPhoto[]): void;
+  run(apiUrl: string, data: AdminPhoto[], i18n: Dict<string>): void;
 }
 
 interface MdlElement extends HTMLElement {
@@ -42,6 +43,8 @@ const editDialog = {} as Dialog;
 let galleryData;
 /** Api url to update a photo data */
 let apiUrl: string;
+/** Localized messages */
+let i18n: Dict<string>;
 
 function getPhotoDataById(id) {
   return galleryData.filter((p) => p.id === id)[0];
@@ -83,14 +86,14 @@ function updateData(id: number, data: { slug: string }): void {
       editDialog.elem.close();
     }
 
-    showSnackbar(`Data updated for ${newData.slug}`);
+    showSnackbar(t(i18n.photoUpdate, { slug: newData.slug }));
   }
 
   function updateError() {
     li.classList.remove(UPDATE_PENDING_CLASS);
     editDialog.elem.classList.remove(UPDATE_PENDING_CLASS);
 
-    showSnackbar(`An error happened while trying to update the photo ${data.slug}.`);
+    showSnackbar(t(i18n.photoUpdateError, { slug: data.slug }));
   }
 
   function tryUpdate() {
@@ -119,7 +122,7 @@ function removePhoto(id: number): void {
   }
 
   function updateError() {
-    showSnackbar('An error happened while trying to remove the photo', 'Retry')
+    showSnackbar(i18n.errorRemove, i18n.actionRetry)
       .then(tryRemove);
   }
 
@@ -261,9 +264,10 @@ function prepareEditDialog(): void {
 /**
  * Prepare the page dynamic behavior
  */
-(window as AppWindow).run = (url, data): void => {
+(window as AppWindow).run = (url, data, translations): void => {
   galleryData = data;
   apiUrl = url;
+  i18n = translations;
 
   prepareEditDialog();
   addThumbnailBehavior();

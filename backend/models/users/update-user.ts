@@ -7,14 +7,29 @@ import { model } from '../index';
  */
 export function updateUser(id: number, data: NewUser): Promise<void> {
   return model.ready.then(({ stmt }) => new Promise<void>((resolve, reject) => {
-    const params = [
-      data.username,
-      data.password,
-      '',
-      id,
-    ];
+    let params;
+    let query: 'updateUser' | 'updateUserBasic';
 
-    stmt.updateUser.run(params, (error) => {
+    if (data.password) {
+      query = 'updateUser';
+      params = [
+        data.username,
+        data.password,
+        data.email,
+        data.lang,
+        id,
+      ];
+
+    } else {
+      query = 'updateUserBasic';
+      params = [
+        data.email,
+        data.lang,
+        id,
+      ];
+    }
+
+    stmt[query].run(params, (error) => {
       if (error) {
         log.error('sqlite: updateUser', error.message);
         reject(error);

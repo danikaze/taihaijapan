@@ -7,6 +7,7 @@ export const PATH_SETTINGS = join(base, 'settings');
 
 /* Handlebars paths */
 export const PATH_HBS_VIEWS = join(base, 'views');
+export const PATH_HBS_I18N = join(base, 'views', 'i18n');
 export const PATH_HBS_PARTIALS = join(base, 'views', 'partials');
 export const PATH_HBS_HELPERS = join(base, 'views', 'helpers');
 

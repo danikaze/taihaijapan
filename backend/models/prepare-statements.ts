@@ -26,8 +26,10 @@ interface SqlQueries {
   insertImage: string;
   deleteImagesByPhoto: string;
   authUser: string;
-  selectUsers: string;
+  selectUserById: string;
+  selectAllUsers: string;
   updateUser: string;
+  updateUserBasic: string;
   deleteUser: string;
 }
 
@@ -125,15 +127,22 @@ function getSqls(): Promise<SqlQueries> {
           deleteImagesByPhoto: 'DELETE FROM images WHERE photo_id = ?;',
           // users
           authUser: 'SELECT id, username FROM users WHERE username = ? AND password = ?;',
-          selectUsers: 'SELECT id, username, email, updated, created FROM users;',
+          selectUserById: 'SELECT id, username, email, lang, updated, created FROM users WHERE id =?;',
+          selectAllUsers: 'SELECT id, username, email, lang, updated, created FROM users;',
           updateUser: `UPDATE users
                        SET updated = (datetime("now", "utc")),
                            username = ?,
                            password = ?,
-                           email = ?
+                           email = ?,
+                           lang = ?
                        WHERE id = ?;`,
+          updateUserBasic: `UPDATE users
+                            SET updated = (datetime("now", "utc")),
+                                email = ?,
+                                lang = ?
+                                WHERE id = ?;`,
           deleteUser: 'DELETE FROM users WHERE id = ?;',
-        });
+        } as Partial<SqlQueries>);
       }
 
       resolve(sqls as SqlQueries);
