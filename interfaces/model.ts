@@ -36,6 +36,7 @@ export interface User {
   password: string;
   lang: string;
   email?: string;
+  salt: string;
 }
 
 export interface Size {

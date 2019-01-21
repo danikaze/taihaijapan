@@ -13,6 +13,12 @@
   "cacheTtl": {
     "config": 60
   },
+  "initialUser": {
+    "username": "admin",
+    "password": "1234",
+    "email": "",
+    "lang": "en"
+  },
   "log": {
     "logLevel": "warn",
     "logDate": true,

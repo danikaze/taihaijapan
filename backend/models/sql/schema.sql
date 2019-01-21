@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS users (
   username text NOT NULL UNIQUE,
   password text NOT NULL,
   email text NOT NULL DEFAULT '',
-  lang text NOT NULL DEFAULT 'en'
+  lang text NOT NULL DEFAULT 'en',
+  salt text NOT NULL
 );
 
 -- Thumbnail sizes to generate for each image
