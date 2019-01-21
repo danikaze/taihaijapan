@@ -8,7 +8,7 @@ import * as hbs from 'hbs';
 import { PATH_HBS_I18N, PATH_HBS_VIEWS, PATH_HBS_PARTIALS, PATH_HBS_HELPERS, PATH_PUBLIC, URL_PUBLIC } from '../constants/paths';
 import { HTTP_CODE_404_NOT_FOUND } from '../constants/http';
 import { Config } from '../interfaces/model';
-import { ServerSettings, LogSettings, Settings } from './settings';
+import { LogSettings, Settings } from './settings';
 import { galleryControllers } from './controllers/gallery';
 import { adminControllers } from './controllers/admin';
 import { log } from './utils/log';
@@ -16,7 +16,7 @@ import { auth } from './utils/auth';
 import { I18n } from './utils/i18n';
 
 export class Server extends EventEmitter {
-  private readonly serverSettings: ServerSettings;
+  private readonly settings: Settings;
   private readonly logSettings: LogSettings;
   private readonly i18n: I18n;
   private app: express.Application;
@@ -27,12 +27,12 @@ export class Server extends EventEmitter {
   constructor(settings: Settings) {
     super();
 
-    this.serverSettings = settings.server;
+    this.settings = settings;
     this.logSettings = settings.log;
     this.i18n = new I18n();
     this.i18n.loadResources([PATH_HBS_I18N]);
 
-    auth.setRealm(this.serverSettings.adminRealm);
+    auth.setRealm(this.settings.server.adminRealm);
   }
 
   /**
@@ -76,8 +76,9 @@ export class Server extends EventEmitter {
       this.app.use(Server.error404handler);
 
       this.setHbs().then(() => {
-        this.app.listen(this.serverSettings.port, this.serverSettings.host, () => {
-          log.info('Server', `Ready on ${this.serverSettings.host}:${this.serverSettings.port}`);
+        const serverSettings = this.settings.server;
+        this.app.listen(serverSettings.port, this.settings.server.host, () => {
+          log.info('Server', `Ready on ${this.settings.server.host}:${this.settings.server.port}`);
           this.emit('ready');
           resolve();
         });
@@ -135,7 +136,7 @@ export class Server extends EventEmitter {
       adminControllers,
       galleryControllers,
     ].forEach((getControllers) => {
-      const apis = getControllers(this.i18n, this.serverSettings, config);
+      const apis = getControllers(this.i18n, this.settings, config);
 
       apis.forEach((api) => {
         if (api.middleware) {

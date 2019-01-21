@@ -3,9 +3,11 @@ import { existsSync, readFileSync, readdirSync } from 'fs';
 import { sync as mkdirp } from 'mkdirp';
 import { join, dirname } from 'path';
 
+import { PATH_MODEL_INIT, PATH_MODEL_UPDATES } from '../../constants/paths';
 import { log } from '../utils/log';
+import { Settings, InitialUserSettings } from '../settings';
 import { prepareStatements, Statements } from './prepare-statements';
-import { Settings } from '../settings';
+import { hashPassword } from './users/hash-password';
 
 export interface DbReady {
   db: sqlite3.Database;
@@ -59,7 +61,7 @@ export function init(settings: Settings): Promise<DbReady> {
         return;
       }
 
-      openDb()
+      openDb(settings.initialUser)
         .then((data) => {
           exportedData.instance = data.db;
           resolve(data);
@@ -86,10 +88,14 @@ function getSql(file: string): string {
  *
  * @param currentVersion only updates with a higher version than this will be returned
  */
-function getUpdateFiles(currentVersion: number): UpdateData[] {
+function getSqlUpdateFiles(currentVersion: number): UpdateData[] {
   const list: UpdateData[] = [];
 
-  readdirSync(__dirname).forEach((file) => {
+  if (!existsSync(PATH_MODEL_UPDATES)) {
+    return list;
+  }
+
+  readdirSync(PATH_MODEL_UPDATES).forEach((file) => {
     const match = /\.(\d+)\.sql$/.exec(file);
     if (!match) {
       return;
@@ -141,7 +147,7 @@ function applyUpdates(db: sqlite3.Database): Promise<sqlite3.Database> {
     }
 
     getCurrentSchemaVersion(db).then((currentVersion) => {
-      updates = getUpdateFiles(currentVersion).filter((update) => update.version > currentVersion);
+      updates = getSqlUpdateFiles(currentVersion).filter((update) => update.version > currentVersion);
 
       if (updates.length === 0) {
         resolve(db);
@@ -168,7 +174,7 @@ function applyUpdates(db: sqlite3.Database): Promise<sqlite3.Database> {
  * Try to open the database. If it doesn't exist, create it.
  * If it's not the latest version, apply the updates.
  */
-function openDb(): Promise<DbReady> {
+function openDb(initialUser: InitialUserSettings): Promise<DbReady> {
   /**
    * If the DB was just created, initialize it with `schema.version = 0` and default data
    */
@@ -181,7 +187,7 @@ function openDb(): Promise<DbReady> {
             return;
           }
 
-          const sql = getSql(join(__dirname, 'sql', 'default-data.sql'));
+          const sql = getSql(join(PATH_MODEL_INIT, 'default-data.sql'));
           log.info('sqlite', 'Inserting default data');
           db.exec(sql, (error) => {
             if (error) {
@@ -189,14 +195,42 @@ function openDb(): Promise<DbReady> {
               reject(error);
               return;
             }
-            resolve(db);
+            createInitialUser(db).then(resolve, reject);
           });
         });
     });
   }
 
+  /**
+   * Insert the initial db in the database
+   */
+  function createInitialUser(db: sqlite3.Database): Promise<sqlite3.Database> {
+    return new Promise<sqlite3.Database>((resolve, reject) => {
+      hashPassword(initialUser.password).then((hashedPassword) => {
+        const sql = 'INSERT INTO users(username, password, email, lang) VALUES(?, ?, ?, ?);';
+        const params = [
+          initialUser.username,
+          hashedPassword,
+          initialUser.email,
+          initialUser.lang,
+        ];
+        log.info('sqlite', 'Inserting initial user');
+        db.run(sql, params, (error) => {
+          if (error) {
+            log.error('sqlite: insert initial user', error.message);
+            reject(error);
+            return;
+          }
+          resolve(db);
+        });
+      }).catch(() => {
+        log.error('createInitialUser', 'Error hashing initial password');
+      });
+    });
+  }
+
   return new Promise<DbReady>((resolve, reject) => {
-    const sql = getSql(join(__dirname, 'sql', 'schema.sql'));
+    const sql = getSql(join(PATH_MODEL_INIT, 'schema.sql'));
 
     dbInstance.exec(sql, (error) => {
       if (error) {

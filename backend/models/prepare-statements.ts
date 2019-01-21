@@ -25,7 +25,8 @@ interface SqlQueries {
   getImageSrcs: string;
   insertImage: string;
   deleteImagesByPhoto: string;
-  authUser: string;
+  insertUser: string;
+  selectUserByName: string;
   selectUserById: string;
   selectAllUsers: string;
   updateUser: string;
@@ -126,8 +127,9 @@ function getSqls(): Promise<SqlQueries> {
           insertImage: 'INSERT INTO images(photo_id, width, height, src) VALUES(?, ?, ?, ?);',
           deleteImagesByPhoto: 'DELETE FROM images WHERE photo_id = ?;',
           // users
-          authUser: 'SELECT id, username FROM users WHERE username = ? AND password = ?;',
-          selectUserById: 'SELECT id, username, email, lang, updated, created FROM users WHERE id =?;',
+          insertUser: 'INSERT INTO users(username, password, email, lang) VALUES(?, ?, ?, ?);',
+          selectUserByName: 'SELECT id, username, password FROM users WHERE username = ?',
+          selectUserById: 'SELECT id, username, password, email, lang, updated, created FROM users WHERE id =?;',
           selectAllUsers: 'SELECT id, username, email, lang, updated, created FROM users;',
           updateUser: `UPDATE users
                        SET updated = (datetime("now", "utc")),
