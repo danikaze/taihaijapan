@@ -76,7 +76,10 @@
           "quality": "Quality"
         }
       },
-      "updateSettings": "Update settings"
+      "updateSettings": "Update settings",
+      "msg": {
+        "needsPasswordChange": "It's recommended to change the initial password, or remove it from the server settings."
+      }
     }
   }]
 }

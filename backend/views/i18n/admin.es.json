@@ -76,7 +76,10 @@
           "quality": "Calidad"
         }
       },
-      "updateSettings": "Actualizar opciones"
+      "updateSettings": "Actualizar opciones",
+      "msg": {
+        "needsPasswordChange": "Se recomienda cambiar la contraseña inicial, o eliminarla del archivo de configuración del servidor."
+      }
     }
   }]
 }

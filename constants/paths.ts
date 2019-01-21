@@ -5,6 +5,10 @@ const data = join(base, 'data');
 
 export const PATH_SETTINGS = join(base, 'settings');
 
+/* Model definition paths */
+export const PATH_MODEL_INIT = join(base, 'models', 'sql');
+export const PATH_MODEL_UPDATES = join(base, 'models', 'updates');
+
 /* Handlebars paths */
 export const PATH_HBS_VIEWS = join(base, 'views');
 export const PATH_HBS_I18N = join(base, 'views', 'i18n');

@@ -13,8 +13,8 @@ import { updateOptions } from './admin/update-options';
 const authMiddleware = auth.middleware();
 const bodyParserMiddleware = bodyParser.json();
 
-export const adminControllers: EndPointsGetter = (i18n, serverSettings) => {
-  const routeAdmin = serverSettings.adminUrl;
+export const adminControllers: EndPointsGetter = (i18n, settings) => {
+  const routeAdmin = settings.server.adminUrl;
   const routePhoto = `${routeAdmin}/photos`;
   const routePhotoId = `${routePhoto}/:photoId`;
   const routeOptions = `${routeAdmin}/options`;
@@ -24,42 +24,42 @@ export const adminControllers: EndPointsGetter = (i18n, serverSettings) => {
     {
       method: 'get',
       path: routeAdmin,
-      callback: displayGallery.bind(null, i18n, serverSettings),
+      callback: displayGallery.bind(null, i18n, settings.server),
       middleware: authMiddleware,
     },
     // add one photo
     {
       method: 'post',
       path: routePhoto,
-      callback: addPhoto.bind(null, serverSettings),
+      callback: addPhoto.bind(null, settings.server),
       middleware: authMiddleware,
     },
     // update one photo
     {
       method: 'put',
       path: routePhotoId,
-      callback: updatePhoto.bind(null, serverSettings),
+      callback: updatePhoto.bind(null, settings.server),
       middleware: [authMiddleware, bodyParserMiddleware],
     },
     // remove one photo
     {
       method: 'delete',
       path: routePhotoId,
-      callback: deletePhoto.bind(null, serverSettings),
+      callback: deletePhoto.bind(null, settings.server),
       middleware: authMiddleware,
     },
     // get the gallery options
     {
       method: 'get',
       path: routeOptions,
-      callback: displayOptions.bind(null, i18n, serverSettings),
+      callback: displayOptions.bind(null, i18n, settings),
       middleware: authMiddleware,
     },
     // update the gallery options
     {
       method: 'put',
       path: routeOptions,
-      callback: updateOptions.bind(null, serverSettings),
+      callback: updateOptions.bind(null, settings.server),
       middleware: [authMiddleware, bodyParserMiddleware],
     },
   ] as EndPoint[];
