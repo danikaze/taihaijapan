@@ -9,8 +9,6 @@ export interface ServerSettings {
   adminUrl: string;
   /** realm to use for admin auth */
   adminRealm: string;
-  /** passphrase to use for encoding passwords */
-  passphrase: string;
 }
 
 export interface DbSettings {
