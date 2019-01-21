@@ -1,4 +1,9 @@
 {{> admin.header}}
+
+{{#if needsPasswordChange }}
+  {{{warningMsg (t 'msg.needsPasswordChange')}}}
+{{/if}}
+
 <section id="config-site">
   <h4 data-toggle="config-site-content">{{{t 'options.site.sectionTitle'}}}</h4>
 

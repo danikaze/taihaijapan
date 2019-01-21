@@ -130,7 +130,7 @@ function getSqls(): Promise<SqlQueries> {
           // users
           insertUser: 'INSERT INTO users(username, password, email, lang, salt) VALUES(?, ?, ?, ?, ?);',
           selectUserByName: 'SELECT id, username, salt, password FROM users WHERE username = ?',
-          selectUserById: 'SELECT id, username, email, lang, updated, created FROM users WHERE id =?;',
+          selectUserById: 'SELECT id, username, password, email, lang, updated, created FROM users WHERE id =?;',
           selectAllUsers: 'SELECT id, username, email, lang, updated, created FROM users;',
           selectUserSalt: 'SELECT salt FROM users WHERE id = ?;',
           updateUser: `UPDATE users
