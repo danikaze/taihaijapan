@@ -29,6 +29,7 @@ interface SqlQueries {
   selectUserByName: string;
   selectUserById: string;
   selectAllUsers: string;
+  selectUserSalt: string;
   updateUser: string;
   updateUserBasic: string;
   deleteUser: string;
@@ -131,6 +132,7 @@ function getSqls(): Promise<SqlQueries> {
           selectUserByName: 'SELECT id, username, salt, password FROM users WHERE username = ?',
           selectUserById: 'SELECT id, username, email, lang, updated, created FROM users WHERE id =?;',
           selectAllUsers: 'SELECT id, username, email, lang, updated, created FROM users;',
+          selectUserSalt: 'SELECT salt FROM users WHERE id = ?;',
           updateUser: `UPDATE users
                        SET updated = (datetime("now", "utc")),
                            username = ?,
