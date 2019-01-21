@@ -44,6 +44,8 @@ class Auth {
       }
 
       next();
+    }).catch((error) => {
+      this.denyAccess(response);
     });
   }
 
