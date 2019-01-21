@@ -8,14 +8,13 @@ import { hashPassword } from './hash-password';
  */
 export function addUser(user: NewUser): Promise<number> {
   return model.ready.then(({ stmt }) => new Promise<number>((resolve, reject) => {
-    hashPassword(user.password).then((password) => {
+    hashPassword(user.password).then((hashedPassword) => {
       // insert the new user into the database
       const params = [
         user.username,
-        password.hash,
+        hashedPassword,
         user.email || '',
         user.lang,
-        password.salt,
       ];
       stmt.insertUser.run(params, function callback(error) {
         if (error) {

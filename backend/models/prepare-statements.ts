@@ -29,7 +29,6 @@ interface SqlQueries {
   selectUserByName: string;
   selectUserById: string;
   selectAllUsers: string;
-  selectUserSalt: string;
   updateUser: string;
   updateUserBasic: string;
   deleteUser: string;
@@ -128,11 +127,10 @@ function getSqls(): Promise<SqlQueries> {
           insertImage: 'INSERT INTO images(photo_id, width, height, src) VALUES(?, ?, ?, ?);',
           deleteImagesByPhoto: 'DELETE FROM images WHERE photo_id = ?;',
           // users
-          insertUser: 'INSERT INTO users(username, password, email, lang, salt) VALUES(?, ?, ?, ?, ?);',
-          selectUserByName: 'SELECT id, username, salt, password FROM users WHERE username = ?',
+          insertUser: 'INSERT INTO users(username, password, email, lang) VALUES(?, ?, ?, ?);',
+          selectUserByName: 'SELECT id, username, password FROM users WHERE username = ?',
           selectUserById: 'SELECT id, username, password, email, lang, updated, created FROM users WHERE id =?;',
           selectAllUsers: 'SELECT id, username, email, lang, updated, created FROM users;',
-          selectUserSalt: 'SELECT salt FROM users WHERE id = ?;',
           updateUser: `UPDATE users
                        SET updated = (datetime("now", "utc")),
                            username = ?,

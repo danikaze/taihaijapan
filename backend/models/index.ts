@@ -206,14 +206,13 @@ function openDb(initialUser: InitialUserSettings): Promise<DbReady> {
    */
   function createInitialUser(db: sqlite3.Database): Promise<sqlite3.Database> {
     return new Promise<sqlite3.Database>((resolve, reject) => {
-      hashPassword(initialUser.password).then((password) => {
-        const sql = 'INSERT INTO users(username, password, email, lang, salt) VALUES(?, ?, ?, ?, ?);';
+      hashPassword(initialUser.password).then((hashedPassword) => {
+        const sql = 'INSERT INTO users(username, password, email, lang) VALUES(?, ?, ?, ?);';
         const params = [
           initialUser.username,
-          password.hash,
+          hashedPassword,
           initialUser.email,
           initialUser.lang,
-          password.salt,
         ];
         log.info('sqlite', 'Inserting initial user');
         db.run(sql, params, (error) => {
