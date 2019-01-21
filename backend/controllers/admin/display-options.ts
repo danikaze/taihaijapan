@@ -2,8 +2,7 @@ import { Request, Response } from 'express';
 import { Config, Size, User } from '../../../interfaces/model';
 import { getConfig } from '../../models/config/get-config';
 import { getSizes } from '../../models/gallery/get-sizes';
-import { getUsers } from '../../models/users/get-users';
-import { ServerSettings } from '../../settings';
+import { Settings } from '../../settings';
 import { I18n } from '../../utils/i18n';
 
 /**
@@ -14,7 +13,7 @@ import { I18n } from '../../utils/i18n';
  */
 export function displayOptions(
   i18n: I18n,
-  serverSettings: ServerSettings,
+  settings: Settings,
   request: Request,
   response: Response): void {
   const promises: Promise<Config | Size[] | User[]>[] = [
@@ -23,8 +22,7 @@ export function displayOptions(
     getUsers(),
   ];
 
-  Promise.all(promises).then(([config, sizes, users]) => {
-    const routeAdmin = serverSettings.adminUrl;
+    const routeAdmin = settings.server.adminUrl;
     const routeOptions = `${routeAdmin}/options`;
     const admin = {
       id: users[0].id,
