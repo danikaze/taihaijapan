@@ -8,41 +8,44 @@
   <h4 data-toggle="config-site-content">{{{t 'options.site.sectionTitle'}}}</h4>
 
   <div id="config-site-content">
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="text" id="config-site-title" name="site.title" value="{{lookup config 'site.title'}}">
-      <label class="mdl-textfield__label" for="config-site-title">{{{t 'options.site.title'}}}</label>
-    </div>
-
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="text" id="config-google-analytics" name="google.analytics" value="{{lookup config 'google.analytics'}}">
-      <label class="mdl-textfield__label" for="config-google-analytics">{{{t 'options.site.ga'}}}</label>
-    </div>
+    {{{mdlInputText id='config-site-title'
+                    name='site.title'
+                    label=(t 'options.site.title')
+                    value=(lookup config 'site.title')
+    }}}
+    {{{mdlInputText id='config-google-analytics'
+                    name='google.analytics'
+                    label=(t 'options.site.ga')
+                    value=(lookup config 'google.analytics')
+    }}}
   </div>
 </section>
 
 <section id="config-admin">
-  <h4 data-toggle="page-content">{{{t 'options.adminUser.sectionTitle'}}}</h4>
+  <h4 data-toggle="config-admin-content">{{{t 'options.adminUser.sectionTitle'}}}</h4>
 
   <input type="hidden" name="admin.id" value="{{admin.id}}" />
 
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <input class="mdl-textfield__input" type="text" id="config-admin-user" name="admin.username" value="{{admin.username}}">
-    <label class="mdl-textfield__label" for="config-admin-username">{{{t 'options.adminUser.username'}}}</label>
-  </div>
-
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <input class="mdl-textfield__input" type="text" id="config-admin-lang" name="admin.lang" value="{{admin.lang}}">
-    <label class="mdl-textfield__label" for="config-admin-lang">{{{t 'options.adminUser.language'}}}</label>
-  </div>
-
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <input class="mdl-textfield__input" type="password" id="config-admin-password" name="admin.password">
-    <label class="mdl-textfield__label" for="config-admin-password">{{{t 'options.adminUser.password'}}}</label>
-  </div>
-
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <input class="mdl-textfield__input" type="password" id="config-admin-password-confirm" name="admin.passwordConfirmation">
-    <adminUser class="mdl-textfield__label" for="config-admin-password-confirm">{{{t 'options.adminUser.passwordConfirm'}}}</label>
+  <div id="config-admin-content">
+    {{{mdlInputText id='config-admin-user'
+                    name='admin.username'
+                    label=(t 'options.adminUser.username')
+                    value=admin.username
+    }}}
+    {{{mdlInputSimpleSelect id='config-admin-lang'
+                    name='admin.lang'
+                    label=(t 'options.adminUser.language')
+                    value=admin.lang
+                    options=languages
+    }}}
+    {{{mdlInputText id='config-admin-password'
+                    name='admin.password'
+                    label=(t 'options.adminUser.password')
+    }}}
+    {{{mdlInputText id='config-admin-password-confirm'
+                    name='admin.passwordConfirmation'
+                    label=(t 'options.adminUser.passwordConfirm')
+    }}}
   </div>
 </section>
 
@@ -50,20 +53,23 @@
   <h4 data-toggle="page-admin-content">{{{t 'options.adminPage.sectionTitle'}}}</h4>
 
   <div id="page-admin-content">
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="number" min="0" id="page-admin-imagesPerPage" name="page.admin.imagesPerPage" value="{{lookup config 'page.admin.imagesPerPage'}}">
-      <label class="mdl-textfield__label" for="page-admin-imagesPerPage">{{{t 'options.adminPage.imgsPerPage'}}}</label>
-    </div>
-
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="text" id="page-admin-orderBy" name="page.admin.orderBy" pattern="(created)|(updated)|(slug)|(title)" value="{{lookup config 'page.admin.orderBy'}}">
-      <label class="mdl-textfield__label" for="page-admin-orderBy">{{{t 'options.adminPage.orderBy'}}}</label>
-    </div>
-
-    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="page-admin-reverse">
-      <input type="checkbox" value="true" id="page-admin-reverse" class="mdl-checkbox__input" name="page.admin.reverse"{{#if (lookup config 'page.admin.reverse')}} checked{{/if}}>
-      <span class="mdl-checkbox__label">{{{t 'options.adminPage.orderReverse'}}}</span>
-    </label>
+    {{{mdlInputNumber id='page-admin-imagesPerPage'
+                      name='page.admin.imagesPerPage'
+                      label=(t 'options.adminPage.imgsPerPage')
+                      value=(lookup config 'page.admin.imagesPerPage')
+                      min=0
+    }}}
+    {{{mdlInputSimpleSelect id='page-admin-orderBy'
+                    name='page.admin.orderBy'
+                    label=(t 'options.adminPage.orderBy')
+                    value=(lookup config 'page.admin.orderBy')
+                    options=(array 'created' 'updated' 'slug' 'title')
+    }}}
+    {{{mdlInputCheckbox id='page-admin-reverse'
+                        name='page.admin.reverse'
+                        label=(t 'options.adminPage.orderReverse')
+                        checked=(lookup config 'page.admin.reverse')
+    }}}
   </div>
 </section>
 
@@ -71,20 +77,23 @@
   <h4 data-toggle="page-index-content">{{{t 'options.indexPage.sectionTitle'}}}</h4>
 
   <div id="page-index-content">
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="number" min="0" id="config-page-index-maxImages" name="page.index.maxImages" value="{{lookup config 'page.index.maxImages'}}">
-      <label class="mdl-textfield__label" for="config-page-index-maxImages">{{{t 'options.indexPage.imgsPerPage'}}}</label>
-    </div>
-
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="text" id="config-controllers-index-orderBy" name="page.index.orderBy" pattern="(created)|(updated)|(slug)|(title)" value="{{lookup config 'page.index.orderBy'}}">
-      <label class="mdl-textfield__label" for="config-page-index-orderBy">{{{t 'options.indexPage.orderBy'}}}</label>
-    </div>
-
-    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-page-index-reverse">
-      <input type="checkbox" value="true" id="config-page-index-reverse" class="mdl-checkbox__input" name="page.index.reverse"{{#if (lookup config 'page.index.reverse')}} checked{{/if}}>
-      <span class="mdl-checkbox__label">{{{t 'options.indexPage.orderReverse'}}}</span>
-    </label>
+    {{{mdlInputNumber id='config-page-index-maxImages'
+                      name='page.index.maxImages'
+                      label=(t 'options.indexPage.imgsPerPage')
+                      value=(lookup config 'page.index.maxImages')
+                      min=0
+    }}}
+    {{{mdlInputSimpleSelect id='config-controllers-index-orderBy'
+                    name='page.index.orderBy'
+                    label=(t 'options.indexPage.orderBy')
+                    value=(lookup config 'page.index.orderBy')
+                    options=(array 'created' 'updated' 'slug' 'title')
+    }}}
+    {{{mdlInputCheckbox id='config-page-index-reverse'
+                        name='page.index.reverse'
+                        label=(t 'options.indexPage.orderReverse')
+                        checked=(lookup config 'page.index.reverse')
+    }}}
   </div>
 </section>
 
@@ -92,20 +101,23 @@
   <h4 data-toggle="gallery-options-content">{{{t 'options.galleryPage.sectionTitle'}}}</h4>
 
   <div id="gallery-options-content">
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="number" min="0" id="config-page-gallery-imagesPerPage" name="page.gallery.imagesPerPage" value="{{lookup config 'page.gallery.imagesPerPage'}}">
-      <label class="mdl-textfield__label" for="config-page-gallery-imagesPerPage">{{{t 'options.galleryPage.imgsPerPage'}}}</label>
-    </div>
-
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="text" id="config-page-gallery-orderBy" name="page.gallery.orderBy" pattern="(created)|(updated)|(slug)|(title)" value="{{lookup config 'page.gallery.orderBy'}}">
-      <label class="mdl-textfield__label" for="config-page-gallery-orderBy">{{{t 'options.galleryPage.orderBy'}}}</label>
-    </div>
-
-    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-page-gallery-reverse">
-      <input type="checkbox" value="true" id="config-page-gallery-reverse" class="mdl-checkbox__input" name="page.gallery.reverse"{{#if (lookup config 'page.gallery.reverse')}} checked{{/if}}>
-      <span class="mdl-checkbox__label">{{{t 'options.galleryPage.orderReverse'}}}</span>
-    </label>
+    {{{mdlInputNumber id='config-page-gallery-imagesPerPage'
+                      name='page.gallery.imagesPerPage'
+                      label=(t 'options.galleryPage.imgsPerPage')
+                      value=(lookup config 'page.gallery.imagesPerPage')
+                      min=0
+    }}}
+    {{{mdlInputSimpleSelect id='config-page-gallery-orderBy'
+                    name='page.gallery.orderBy'
+                    label=(t 'options.galleryPage.orderBy')
+                    value=(lookup config 'page.gallery.orderBy')
+                    options=(array 'created' 'updated' 'slug' 'title')
+    }}}
+    {{{mdlInputCheckbox id='config-page-gallery-reverse'
+                        name='page.gallery.reverse'
+                        label=(t 'options.galleryPage.orderReverse')
+                        checked=(lookup config 'page.gallery.reverse')
+    }}}
   </div>
 </section>
 
@@ -113,10 +125,11 @@
   <h4 data-toggle="images-options-content">{{{t 'options.imageOptions.sectionTitle'}}}</h4>
 
   <div id="images-options-content">
-    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="config-images-hiddenByDefault">
-      <input type="checkbox" value="true" id="config-images-hiddenByDefault" class="mdl-checkbox__input" name="images.hiddenByDefault"{{#if (lookup config 'images.hiddenByDefault')}} checked{{/if}}>
-      <span class="mdl-checkbox__label">{{{t 'options.imageOptions.hiddenByDefault'}}}</span>
-    </label>
+    {{{mdlInputCheckbox id='config-images-hiddenByDefault'
+                        name='images.hiddenByDefault'
+                        label=(t 'options.imageOptions.hiddenByDefault')
+                        checked=(lookup config 'images.hiddenByDefault')
+    }}}
   </div>
 </section>
 
@@ -138,24 +151,33 @@
           <tr class="thumb-size">
             <input type="hidden" name="id" value="{{this.id}}"/>
             <td class="mdl-data-table__cell--non-numeric">
-              <div class="mdl-textfield mdl-js-textfield">
-                <input class="mdl-textfield__input" type="text" id="config-sizes-label-{{@key}}" name="label" pattern="[a-zA-Z][a-zA-Z0-9_.-]?" value="{{this.label}}">
-              </div>
+              {{{mdlInputText id=(add 'config-sizes-label-' @key)
+                              name='label'
+                              pattern='[a-zA-Z][a-zA-Z0-9_.-]?'
+                              value=this.label
+              }}}
             </td>
             <td>
-              <div class="mdl-textfield mdl-js-textfield">
-                <input class="mdl-textfield__input" type="number" min="0" id="config-sizes-w-{{@key}}" name="width" value="{{this.width}}">
-              </div>
+              {{{mdlInputNumber id=(add 'config-sizes-w-' @key)
+                                name='width'
+                                value=this.width
+                                min=0
+              }}}
             </td>
             <td>
-              <div class="mdl-textfield mdl-js-textfield">
-                <input class="mdl-textfield__input" type="number" min="0" id="config-sizes-h-{{@key}}" name="height" value="{{this.height}}">
-              </div>
+              {{{mdlInputNumber id=(add 'config-sizes-h-' @key)
+                                name='height'
+                                value=this.height
+                                min=0
+              }}}
             </td>
             <td>
-              <div class="mdl-textfield mdl-js-textfield">
-                <input class="mdl-textfield__input" type="number" min="0" max="100" id="config-sizes-quality-{{@key}}" name="quality" value="{{this.quality}}">
-              </div>
+              {{{mdlInputNumber id=(add 'config-sizes-quality-' @key)
+                              name='quality'
+                              value=this.height
+                              min=0
+                              max=100
+              }}}
             </td>
           </tr>
         {{/each}}
