@@ -14,29 +14,12 @@
     </div>
 
     <div id="info-side" class="mdl-cell--8-col mdl-cell--4-col-tablet">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="new-title" name="title">
-        <label class="mdl-textfield__label" for="new-title">{{{t 'newPhoto.title'}}}</label>
-      </div>
+      {{{ mdlInputText id='new-title' name='title' label=(t 'newPhoto.title') }}}
+      {{{ mdlInputText id='new-slug' name='slug' label=(t 'newPhoto.slug') }}}
+      {{{ mdlInputText id='new-tags' name='tags' label=(t 'newPhoto.tags') }}}
+      {{{ mdlInputText id='new-keywords' name='keywords' label=(t 'newPhoto.keywords') }}}
 
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="new-slug" name="slug">
-        <label class="mdl-textfield__label" for="new-slug">{{{t 'newPhoto.slug'}}}</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="new-tags" name="tags">
-        <label class="mdl-textfield__label" for="new-tags">{{{t 'newPhoto.tags'}}}</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="new-keywords" name="keywords">
-        <label class="mdl-textfield__label" for="new-keywords">{{{t 'newPhoto.keywords'}}}</label>
-      </div>
-
-      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-        {{{t 'newPhoto.upload'}}}
-      </button>
+      {{{ mdlButton style='raised' label=(t 'newPhoto.upload') }}}
     </div>
   </form>
 </section>
