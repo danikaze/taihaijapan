@@ -11,37 +11,20 @@
     </div>
 
     <div id="edit-info-side" class="mdl-cell--8-col mdl-cell--4-col-tablet">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="edit-title" name="title">
-        <label class="mdl-textfield__label" for="edit-title">{{{t 'editDialog.title'}}}</label>
-      </div>
+      {{{ mdlInputText id='edit-title' name='title' label=(t 'editDialog.title') }}}
+      {{{ mdlInputText id='edit-slug' name='slug' label=(t 'editDialog.slug') }}}
+      {{{ mdlInputText id='edit-tags' name='tags' label=(t 'editDialog.tags') }}}
+      {{{ mdlInputText id='edit-keywords' name='keywords' label=(t 'editDialog.keywords') }}}
+      {{{ mdlInputText id='edit-title' name='title' label=(t 'editDialog.title') }}}
 
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="edit-slug" name="slug">
-        <label class="mdl-textfield__label" for="edit-slug">{{{t 'editDialog.slug'}}}</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="edit-tags" name="tags">
-        <label class="mdl-textfield__label" for="edit-tags">{{{t 'editDialog.tags'}}}</label>
-      </div>
-
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="edit-keywords" name="keywords">
-        <label class="mdl-textfield__label" for="edit-keywords">{{{t 'editDialog.keywords'}}}</label>
-      </div>
-
-      <label class="hide-button mdl-switch mdl-js-switch mdl-js-ripple-effect">
-        <input id="edit-hidden" type="checkbox" class="mdl-switch__input">
-        <span class="switch-text">{{{t 'editDialog.display'}}}</span>
-      </label>
+      {{{ mdlInputSwitch id='edit-hidden' label=(t 'editDialog.display') }}}
     </div>
   </div>
 
   <div class="mdl-dialog__actions">
-    <button id="edit-save" type="button" class="mdl-button">{{{t 'editDialog.save'}}}</button>
-    <button id="edit-cancel" type="button" class="mdl-button">{{{t 'editDialog.cancel'}}}</button>
-    <button id="edit-remove" type="button" class="mdl-button mdl-button--accent mdl-button-colored">{{{t 'editDialog.remove'}}}</button>
+    {{{ mdlButton style='action' id='edit-save' label=(t 'editDialog.save') }}}
+    {{{ mdlButton style='action' id='edit-cancel' label=(t 'editDialog.cancel') }}}
+    {{{ mdlButton style='accent' id='edit-remove' label=(t 'editDialog.remove') }}}
   </div>
 </dialog>
 
@@ -53,7 +36,7 @@
   </div>
 
   <div class="mdl-dialog__actions">
-    <button id="remove-cancel" type="button" class="mdl-button">{{{t 'removeDialog.cancel'}}}</button>
-    <button id="remove-accept" type="button" class="mdl-button mdl-button--accent mdl-button-colored">{{{t 'removeDialog.remove'}}}</button>
+    {{{ mdlButton style="action" id='remove-cancel' label=(t 'removeDialog.cancel') }}}
+    {{{ mdlButton style="accent" id='remove-accept' label=(t 'removeDialog.remove') }}}
   </div>
 </dialog>

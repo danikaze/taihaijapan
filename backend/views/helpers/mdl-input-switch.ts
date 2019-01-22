@@ -7,19 +7,19 @@ interface HelperParams {
   };
 }
 
-function mdlInputCheckbox({ hash }: HelperParams): string {
-  return `<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="${hash.id}">
+function mdlInputSwitch({ hash }: HelperParams): string {
+  return `<label class="hide-button mdl-switch mdl-js-switch mdl-js-ripple-effect">
   <input type="checkbox"
-         class="mdl-checkbox__input"
+         class="mdl-switch__input"
          value="true"
          ${hash.id && `id="${hash.id}"`}
          ${hash.name && `name="${hash.name}"`}
-         ${hash.checked && 'checked'}>
-  <span class="mdl-checkbox__label">${hash.label}</span>
+         ${hash.checked ? 'checked' : ''}>
+  <span class="switch-text">${hash.label}</span>
 </label>`;
 }
 
 export const helper = {
-  fn: mdlInputCheckbox,
+  fn: mdlInputSwitch,
   async: false,
 };

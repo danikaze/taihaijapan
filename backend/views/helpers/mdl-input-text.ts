@@ -2,7 +2,7 @@ interface HelperParams {
   hash: {
     id: string;
     name: string;
-    value: string;
+    value?: string;
     label?: string;
     pattern?: string;
   };
