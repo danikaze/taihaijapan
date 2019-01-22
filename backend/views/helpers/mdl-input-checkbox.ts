@@ -15,7 +15,7 @@ const labelClasses = {
 const inputClasses = {
   checkbox: 'mdl-checkbox__input',
   switch: 'mdl-switch__input',
-}
+};
 const spanClasses = {
   checkbox: 'mdl-checkbox__label',
   switch: 'switch-text',
