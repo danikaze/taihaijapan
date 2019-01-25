@@ -5,7 +5,7 @@ import * as requireAll from 'require-all';
 import * as EventEmitter from 'events';
 import * as hbs from 'hbs';
 
-import { PATH_HBS_I18N, PATH_HBS_VIEWS, PATH_HBS_PARTIALS, PATH_HBS_HELPERS, PATH_PUBLIC, URL_PUBLIC } from '../constants/paths';
+import { PATH_HBS_I18N, PATH_HBS_VIEWS, PATH_HBS_PARTIALS, PATH_HBS_HELPERS, PATH_PUBLIC, URL_PUBLIC, PATH_SW, URL_SW } from '../constants/paths';
 import { HTTP_CODE_404_NOT_FOUND } from '../constants/http';
 import { Config } from '../interfaces/model';
 import { LogSettings, Settings } from './settings';
@@ -67,6 +67,7 @@ export class Server extends EventEmitter {
     return new Promise<void>((resolve, reject) => {
       this.app = express();
       this.app.disable('x-powered-by');
+      this.app.use(URL_SW, express.static(PATH_SW));
       this.app.use(URL_PUBLIC, express.static(PATH_PUBLIC));
 
       this.app.use(compress());

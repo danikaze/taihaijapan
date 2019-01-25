@@ -40,7 +40,7 @@ export interface User {
 
 export interface Size {
   id: number;
-  label: Text;
+  label: string;
   width: number;
   height: number;
   quality: number;
