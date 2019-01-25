@@ -17,8 +17,9 @@
     ]
   },
   "include": [
-    "frontend/**/*.ts",
+    "frontend/**/*.ts"
   ],
   "exclude": [
+    "frontend/sw/*.ts"
   ]
 }

@@ -380,3 +380,4 @@ rules:
     # https://palantir.github.io/tslint/rules/no-implicit-dependencies/
     no-implicit-dependencies:
       - true
+      - dev

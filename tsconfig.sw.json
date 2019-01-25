@@ -10,16 +10,14 @@
     "jsx": "react",
     "removeComments": false,
     "resolveJsonModule": true,
-    "target": "es2017",
-    "outDir": "./build",
+    "target": "es5",
     "lib": [
-      "es2017",
-      "webworker"
+      "webworker",
+      "es2017"
     ]
   },
   "include": [
-    "backend/index.ts",
-    "backend/views/**/*.ts"
+    "frontend/sw/*.ts",
   ],
   "exclude": [
   ]
