@@ -8,6 +8,7 @@ import '../styles/photoswipe/skin/default-skin.scss';
 import { Size, PublicPhoto } from '../../interfaces/frontend';
 import { fitRects } from './util/fit-rects';
 import { SrcSetEmu } from './util/src-set-emu';
+import { loadSw } from './util/load-sw';
 
 interface AppWindow extends Window {
   start(sizes: Size[], photos: PublicPhoto[]): void;
@@ -88,3 +89,4 @@ function start(sizes: Size[], photos: PublicPhoto[]): void {
 }
 
 (window as AppWindow).start = start;
+loadSw('/sw.min.js');
