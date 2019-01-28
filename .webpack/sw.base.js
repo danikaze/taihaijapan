@@ -8,17 +8,17 @@ const base = require('./base');
 const { getAbsPath } = require('./utils/get-abs-path');
 const { getDateString } = require('./utils/get-date-string');
 
-const srcPath = getAbsPath('frontend/sw/__temp');
+const srcPath = getAbsPath('frontend/root/__temp');
 
 module.exports = (env) => merge(base(env), {
   // entry points
   entry: {
-    'sw': path.join(srcPath, 'index.ts'),
+    'sw': path.join(srcPath, 'sw.ts'),
   },
 
   // output file config
   output: {
-    path: getAbsPath('build/backend/public'),
+    path: getAbsPath('build/backend/public/root'),
     filename: `[name].min.js`,
   },
 

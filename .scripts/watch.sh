@@ -25,6 +25,9 @@ cp package.json build
 rsync -a --prune-empty-dirs --exclude '*.ts' --exclude 'public' --exclude '.DS_Store' backend build
 
 echo
+echo -e "${COLOR_TITLE} Building frontend code: ${COLOR_NC}"
+$RIMRAF frontend/root/__temp # delete just in case it was left, to avoid errors
+
 echo -e "${COLOR_MSG} * Packing web code...${COLOR_NC}"
 $WEBPACK --config .webpack/frontend.dev.js
 
@@ -33,6 +36,6 @@ $WORKBOX injectManifest workbox.config.js
 $WEBPACK --config .webpack/sw.dev.js
 
 echo -e "${COLOR_MSG} * Cleaning service workers...${COLOR_NC}"
-$RIMRAF frontend/sw/__temp
+$RIMRAF frontend/root/__temp
 
 wait
