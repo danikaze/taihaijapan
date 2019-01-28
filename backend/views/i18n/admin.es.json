@@ -36,7 +36,9 @@
       "options": {
         "site": {
           "sectionTitle": "Opciones del sitio web",
-          "title": "Nombre o descripción",
+          "title": "Nombre o título",
+          "shortname": "Nombre corto",
+          "description": "Descriptción",
           "ga": "Cuenta de Google Analytics"
         },
         "adminUser": {
