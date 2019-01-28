@@ -5,12 +5,12 @@ import 'es6-object-assign/auto';
 import 'es6-promise/auto';
 
 import { Size, PublicPhoto } from '../../interfaces/frontend';
+import { ListGallery } from './util/list-gallery';
+import { loadSw } from './util/load-sw';
 
 interface AppWindow extends Window {
   start(sizes: Size[], photos: PublicPhoto[], activeSlug?: string): void;
 }
-
-import { ListGallery } from './util/list-gallery';
 
 const THUMBNAIL_ID = 'thumbnails';
 const GALLERY_ID = 'gallery';
@@ -30,3 +30,4 @@ function start(sizes: Size[], photos: PublicPhoto[], activeSlug?: string): void 
 }
 
 (window as AppWindow).start = start;
+loadSw('/sw.min.js');

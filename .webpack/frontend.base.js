@@ -2,8 +2,8 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const packageJson = require('../package.json');
 const base = require('./base');
@@ -32,7 +32,7 @@ module.exports = (env) => merge(base(env), {
       // ts
       {
         test: /\.tsx?$/,
-        exclude: /node_modules/,
+        exclude: /(node_modules)|(__temp)/,
         use: {
           loader: 'ts-loader',
           options: {
@@ -50,6 +50,7 @@ module.exports = (env) => merge(base(env), {
       analyzerMode: 'static',
       openAnalyzer: false,
       reportFilename: getAbsPath('build/__info/frontend.html'),
+      excludeAssets: /__temp/,
     }),
 
     // add a header comment in each generated file
