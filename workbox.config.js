@@ -6,5 +6,5 @@ module.exports = {
     "public/img/*"
   ],
   "swSrc": "frontend/root/sw.ts",
-  "swDest": "frontend/root/__temp/sw.ts",
+  "swDest": "build/__temp/sw.ts",
 };

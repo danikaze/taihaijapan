@@ -32,7 +32,7 @@ module.exports = (env) => merge(base(env), {
       // ts
       {
         test: /\.tsx?$/,
-        exclude: /(node_modules)|(__temp)/,
+        exclude: /(node_modules)/,
         use: {
           loader: 'ts-loader',
           options: {
@@ -50,7 +50,6 @@ module.exports = (env) => merge(base(env), {
       analyzerMode: 'static',
       openAnalyzer: false,
       reportFilename: getAbsPath('build/__info/frontend.html'),
-      excludeAssets: /__temp/,
     }),
 
     // add a header comment in each generated file
