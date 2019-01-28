@@ -46,6 +46,14 @@ body {
   text-align: center;
   width: 100%;
   margin-bottom: 2em;
+
+  & > * {
+    cursor: pointer;
+  }
+}
+
+#a2hs-button {
+  display: none;
 }
 
 #thumbnails {
