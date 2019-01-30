@@ -2,13 +2,16 @@
   "restartable": "rs",
   "verbose": true,
   "watch": [
-    "backend"
+    "build"
   ],
   "ignore": [
-    "public",
-    "ctl",
+    "__info",
+    "__temp",
     "appctl",
+    "ctl",
+    "public",
     "data"
   ],
-  "ext": "js json hbs"
+  "ext": "js json hbs",
+  "delay": 3
 }

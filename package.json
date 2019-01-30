@@ -17,6 +17,7 @@
   },
   "main": "backend/index.js",
   "scripts": {
+    "start:b": "nodemon build dev.json",
     "test": "npm run lint",
     "lint": "tslint -p tsconfig.json -c tslint.yaml",
     "build": "./.scripts/build.sh",
