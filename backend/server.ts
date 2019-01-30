@@ -11,6 +11,7 @@ import { Config } from '../interfaces/model';
 import { LogSettings, Settings } from './settings';
 import { galleryControllers } from './controllers/gallery';
 import { adminControllers } from './controllers/admin';
+import { manifestController } from './controllers/manifest';
 import { log } from './utils/log';
 import { auth } from './utils/auth';
 import { I18n } from './utils/i18n';
@@ -136,6 +137,7 @@ export class Server extends EventEmitter {
     [
       adminControllers,
       galleryControllers,
+      manifestController,
     ].forEach((getControllers) => {
       const apis = getControllers(this.i18n, this.settings, config);
 

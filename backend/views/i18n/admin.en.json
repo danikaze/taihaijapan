@@ -37,6 +37,8 @@
         "site": {
           "sectionTitle": "Site options",
           "title": "Site name or title",
+          "shortname": "Site short name",
+          "description": "Site description",
           "ga": "Google Analytics account"
         },
         "adminUser": {

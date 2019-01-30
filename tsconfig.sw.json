@@ -17,7 +17,7 @@
     ]
   },
   "include": [
-    "frontend/sw/*.ts",
+    "frontend/root/*.ts",
   ],
   "exclude": [
   ]

@@ -16,7 +16,7 @@ export const PATH_HBS_PARTIALS = join(base, 'views', 'partials');
 export const PATH_HBS_HELPERS = join(base, 'views', 'helpers');
 
 export const PATH_PUBLIC = join(base, 'public');
-export const PATH_SW = join(PATH_PUBLIC, 'sw.min.js');
+export const PATH_SW = join(PATH_PUBLIC, 'root', 'sw.min.js');
 
 export const PATH_IMAGES_ORIGINAL = join(data, 'photos');
 export const PATH_IMAGES_TEMP = join(data, 'temp');

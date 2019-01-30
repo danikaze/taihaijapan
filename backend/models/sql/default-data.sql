@@ -4,6 +4,8 @@ INSERT INTO config(name, value) VALUES
   ('schema.version', '0'),
   -- global
   ('site.title', 'My photo gallery'),
+  ('site.shortname', 'Gallery'),
+  ('site.description', 'Test photo gallery description'),
   ('site.baseUrl', 'http://localhost'),
   ('google.analytics', ''),
   -- page.admin

@@ -7,6 +7,7 @@ import 'es6-promise/auto';
 import { Size, PublicPhoto } from '../../interfaces/frontend';
 import { ListGallery } from './util/list-gallery';
 import { loadSw } from './util/load-sw';
+import { a2hs } from './util/a2hs';
 
 interface AppWindow extends Window {
   start(sizes: Size[], photos: PublicPhoto[], activeSlug?: string): void;
@@ -31,3 +32,4 @@ function start(sizes: Size[], photos: PublicPhoto[], activeSlug?: string): void 
 
 (window as AppWindow).start = start;
 loadSw('/sw.min.js');
+a2hs(document.getElementById('a2hs-button'));

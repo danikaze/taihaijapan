@@ -9,6 +9,7 @@ import { Size, PublicPhoto } from '../../interfaces/frontend';
 import { fitRects } from './util/fit-rects';
 import { SrcSetEmu } from './util/src-set-emu';
 import { loadSw } from './util/load-sw';
+import { a2hs } from './util/a2hs';
 
 interface AppWindow extends Window {
   start(sizes: Size[], photos: PublicPhoto[]): void;
@@ -90,3 +91,4 @@ function start(sizes: Size[], photos: PublicPhoto[]): void {
 
 (window as AppWindow).start = start;
 loadSw('/sw.min.js');
+a2hs(document.getElementById('a2hs-button'));
