@@ -39,6 +39,7 @@
           "title": "Site name or title",
           "shortname": "Site short name",
           "description": "Site description",
+          "baseUrl": "Site base url",
           "ga": "Google Analytics account"
         },
         "adminUser": {

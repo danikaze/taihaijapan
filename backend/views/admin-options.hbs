@@ -23,6 +23,12 @@
                     label=(t 'options.site.description')
                     value=(lookup config 'site.description')
     }}}
+    {{{mdlInputText id='config-site-baseUrl'
+                    name='site.baseUrl'
+                    label=(t 'options.site.baseUrl')
+                    value=(lookup config 'site.baseUrl')
+                    pattern='^https?://.*[^/]$'
+    }}}
     {{{mdlInputText id='config-google-analytics'
                     name='google.analytics'
                     label=(t 'options.site.ga')

@@ -39,6 +39,7 @@
           "title": "Nombre o título",
           "shortname": "Nombre corto",
           "description": "Descriptción",
+          "baseUrl": "Base url",
           "ga": "Cuenta de Google Analytics"
         },
         "adminUser": {
