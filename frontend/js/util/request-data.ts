@@ -88,14 +88,9 @@ export function requestData<B = {}, T = {}>(url: string, options?: RequestDataOp
         }
       } else {
         try {
-          reject({
-            xhr,
-            error: JSON.parse(xhr.responseText),
-          });
+          reject(JSON.parse(xhr.responseText));
         } catch (e) {
-          reject({
-            xhr,
-          });
+          reject();
         }
       }
     };

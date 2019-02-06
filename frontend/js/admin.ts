@@ -3,6 +3,7 @@
  */
 import '../styles/admin.scss';
 
+import { ApiErrorResponse } from '../../interfaces/controllers';
 import { AdminPhoto, Dict } from '../../interfaces/frontend';
 import { requestData } from './util/request-data';
 import { showSnackbar } from './util/show-snackbar';
@@ -89,7 +90,7 @@ function updateData(id: number, data: { slug: string }): void {
     showSnackbar(t(i18n.photoUpdate, { slug: newData.slug }));
   }
 
-  function updateError() {
+  function updateError(response: ApiErrorResponse) {
     li.classList.remove(UPDATE_PENDING_CLASS);
     editDialog.elem.classList.remove(UPDATE_PENDING_CLASS);
 
