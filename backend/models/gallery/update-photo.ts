@@ -1,4 +1,5 @@
 import { log } from '../../utils/log';
+import { RESOURCE_NOT_FOUND_ERROR } from '../../../constants/errors';
 import { model } from '../index';
 import { getPhoto } from './get-photo';
 import { updatePhotoTags } from './update-photo-tags';
@@ -19,10 +20,14 @@ function updatePhotoBaseData(photoId: number, newData: NewPhoto): Promise<void> 
       photoId,
     ];
 
-    stmt.updatePhoto.run(data, (error) => {
+    stmt.updatePhoto.run(data, function callback(error) {
       if (error) {
         log.error('sqlite: updatePhotoBaseData', error.message);
-        reject(error);
+        throw new Error(error.message);
+      }
+
+      if (this.changes === 0) {
+        reject(RESOURCE_NOT_FOUND_ERROR);
         return;
       }
 
@@ -33,11 +38,11 @@ function updatePhotoBaseData(photoId: number, newData: NewPhoto): Promise<void> 
 
 /**
  * Update a photo with new data.
- * Resolves with the updated one.
+ * Resolves with the updated data.
+ * Rejects on error or invalid `photoId`
  */
 export function updatePhoto(photoId: number, newData: NewPhoto): Promise<Photo> {
-  return Promise.all([
-    updatePhotoBaseData(photoId, newData),
-    updatePhotoTags(photoId, newData.tags),
-  ]).then(() => getPhoto(photoId));
+  return updatePhotoBaseData(photoId, newData)
+    .then(() => updatePhotoTags(photoId, newData.tags))
+    .then(() => getPhoto(photoId));
 }
