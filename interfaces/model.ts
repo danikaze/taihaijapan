@@ -5,13 +5,11 @@
 export interface Config {
   // internal
   'schema.version': number;
-  'config.cache': number;
   // global
   'site.title': string;
   'site.realm': string;
   'google.analytics': string;
   // page.admin
-  'page.admin.route': string;
   'page.admin.imagesPerPage': number;
   'page.admin.orderBy': string;
   'page.admin.reverse': boolean;

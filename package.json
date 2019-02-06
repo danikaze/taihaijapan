@@ -84,7 +84,7 @@
     "basic-auth": "^2.0.0",
     "bcrypt": "^3.0.3",
     "body-parser": "^1.18.2",
-    "bulk-validator": "^1.0.1",
+    "bulk-validator": "^1.1.0",
     "colors": "^1.1.2",
     "compression": "^1.7.0",
     "cross-env": "^5.0.1",
