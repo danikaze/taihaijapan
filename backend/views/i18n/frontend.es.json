@@ -3,7 +3,7 @@
   "namespaces": [{
     "id": "frontend",
     "phrases": {
-      "passwordsDontMatch": "La contraseña no ha sido actualizada porque no coinciden.",
+      "passwordsDontMatch": "Los datos no se han actualizado porque las contraseñas no coinciden.",
       "optionsUpdated": "Opciones actualizadas.",
       "optionsUpdateError": "Un error ha ocurrido mientras se intentaba actualizar las opciones.",
       "actionRetry": "Reintentar.",

@@ -1,0 +1,4 @@
+export const INVALID_PARAMETERS_ERROR = 'E001';
+export const INTERNAL_ERROR = 'E002';
+export const PASSWORDS_DONT_MATCH_ERROR = 'E003';
+export const RESOURCE_NOT_FOUND_ERROR = 'E404';

@@ -3,7 +3,7 @@
   "namespaces": [{
     "id": "frontend",
     "phrases": {
-      "passwordsDontMatch": "Password not updated. They don't match.",
+      "passwordsDontMatch": "Data not updated. Passwords don't match.",
       "optionsUpdated": "Options updated.",
       "optionsUpdateError": "An error happened while trying to update the options.",
       "actionRetry": "Retry",
