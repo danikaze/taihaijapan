@@ -45,6 +45,9 @@
                     name='admin.username'
                     label=(t 'options.adminUser.username')
                     value=admin.username
+                    pattern="^[a-zA-Z]\w+$"
+                    maxLength=50
+                    errorText=(t 'options.adminUser.usernameErrorMsg')
     }}}
     {{{mdlInputSimpleSelect id='config-admin-lang'
                     name='admin.lang'
@@ -55,10 +58,12 @@
     {{{mdlInputText id='config-admin-password'
                     name='admin.password'
                     label=(t 'options.adminUser.password')
+                    password=true
     }}}
     {{{mdlInputText id='config-admin-password-confirm'
                     name='admin.passwordConfirmation'
                     label=(t 'options.adminUser.passwordConfirm')
+                    password=true
     }}}
   </div>
 </section>

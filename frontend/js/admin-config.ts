@@ -15,9 +15,17 @@ interface UserOptions {
   passwordConfirmation: string;
 }
 
+interface MdlInputElement extends HTMLInputElement {
+  MaterialTextfield: {
+    checkDirty(): void;
+    checkValidity(): void;
+  };
+}
+
 /*
  * Entry point of the Admin Options page
  */
+const MDL_INVALID_CLASS = 'is-invalid';
 const GROUP_CLOSED_CLASS = 'closed';
 const SELECTOR_USERNAME = '#config-admin input[name="admin.username"]';
 const SELECTOR_LANG = '#config-admin input[name="admin.lang"]';
@@ -144,10 +152,29 @@ function enableUpdateButton(url: string): void {
   });
 }
 
+function enablePasswordValidation(): void {
+  const pwd = document.querySelector(SELECTOR_PWD) as HTMLInputElement;
+  const pwd2 = document.querySelector(SELECTOR_PWD2) as HTMLInputElement;
+  const mdl = pwd2.parentElement as MdlInputElement;
+
+  function check() {
+    if (pwd.value !== pwd2.value) {
+      mdl.classList.add(MDL_INVALID_CLASS);
+    } else {
+      mdl.classList.remove(MDL_INVALID_CLASS);
+    }
+    mdl.MaterialTextfield.checkDirty();
+  }
+
+  pwd.addEventListener('keydown', check);
+  pwd2.addEventListener('keydown', check);
+}
+
 (window as AppWindow).run = (url, translations) => {
   originalAdminOptions = getAdminObject();
   i18n = translations;
 
   enableTogglers();
   enableUpdateButton(url);
+  enablePasswordValidation();
 };

@@ -5,13 +5,14 @@ interface HelperParams {
     value?: string;
     label?: string;
     pattern?: string;
+    password?: boolean;
   };
 }
 
 function mdlInputText({ hash }: HelperParams): string {
   return `<div class="mdl-textfield mdl-js-textfield ${hash.label ? 'mdl-textfield--floating-label' : ''}">
   <input class="mdl-textfield__input"
-         type="text"
+         type="${hash.password ? 'password' : 'text'}"
          id="${hash.id}"
          name="${hash.name}"
          value="${hash.value !== undefined ? hash.value : ''}"
