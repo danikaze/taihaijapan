@@ -23,6 +23,13 @@
                     label=(t 'options.site.description')
                     value=(lookup config 'site.description')
     }}}
+    {{{mdlInputText id='config-site-baseUrl'
+                    name='site.baseUrl'
+                    label=(t 'options.site.baseUrl')
+                    value=(lookup config 'site.baseUrl')
+                    pattern='^https?://.*[^/]$'
+                    errorText=(t 'options.site.baseUrlErrorMsg')
+    }}}
     {{{mdlInputText id='config-google-analytics'
                     name='google.analytics'
                     label=(t 'options.site.ga')
@@ -34,13 +41,14 @@
 <section id="config-admin">
   <h4 data-toggle="config-admin-content">{{{t 'options.adminUser.sectionTitle'}}}</h4>
 
-  <input type="hidden" name="admin.id" value="{{admin.id}}" />
-
   <div id="config-admin-content">
     {{{mdlInputText id='config-admin-user'
                     name='admin.username'
                     label=(t 'options.adminUser.username')
                     value=admin.username
+                    pattern="^[a-zA-Z]\w+$"
+                    maxLength=50
+                    errorText=(t 'options.adminUser.usernameErrorMsg')
     }}}
     {{{mdlInputSimpleSelect id='config-admin-lang'
                     name='admin.lang'
@@ -51,10 +59,13 @@
     {{{mdlInputText id='config-admin-password'
                     name='admin.password'
                     label=(t 'options.adminUser.password')
+                    password=true
     }}}
     {{{mdlInputText id='config-admin-password-confirm'
                     name='admin.passwordConfirmation'
                     label=(t 'options.adminUser.passwordConfirm')
+                    password=true
+                    errorText=(t 'options.adminUser.passwordConfirmErrorMsg')
     }}}
   </div>
 </section>
@@ -163,8 +174,10 @@
             <td class="mdl-data-table__cell--non-numeric">
               {{{mdlInputText id=(add 'config-sizes-label-' @key)
                               name='label'
-                              pattern='[a-zA-Z][a-zA-Z0-9_.-]?'
                               value=this.label
+                              pattern='^[a-zA-Z][-_\w]*$'
+                              maxLength=12
+                              errorText=(../t 'options.thumbnailOptions.idErrorMsg')
               }}}
             </td>
             <td>
@@ -184,9 +197,10 @@
             <td>
               {{{mdlInputNumber id=(add 'config-sizes-quality-' @key)
                               name='quality'
-                              value=this.height
-                              min=0
+                              value=this.quality
+                              min=1
                               max=100
+                              errorText=(../t 'options.thumbnailOptions.qualityErrorMsg')
               }}}
             </td>
           </tr>

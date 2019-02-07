@@ -11,13 +11,33 @@
     </div>
 
     <div id="edit-info-side" class="mdl-cell--8-col mdl-cell--4-col-tablet">
-      {{{ mdlInputText id='edit-title' name='title' label=(t 'editDialog.title') }}}
-      {{{ mdlInputText id='edit-slug' name='slug' label=(t 'editDialog.slug') }}}
-      {{{ mdlInputText id='edit-tags' name='tags' label=(t 'editDialog.tags') }}}
-      {{{ mdlInputText id='edit-keywords' name='keywords' label=(t 'editDialog.keywords') }}}
-      {{{ mdlInputText id='edit-title' name='title' label=(t 'editDialog.title') }}}
+      {{{ mdlInputText id='edit-title'
+                       name='title'
+                       label=(t 'editDialog.title')
+      }}}
+      {{{ mdlInputText id='edit-slug'
+                       name='slug'
+                       label=(t 'editDialog.slug')
+                       pattern='^[-_\w]+$'
+                       errorText=(t 'editDialog.slugErrorMsg')
+      }}}
+      {{{ mdlInputText id='edit-tags'
+                       name='tags'
+                       label=(t 'editDialog.tags')
+                       pattern='^\s*([-_\w]+\s*(,\s*[-_\w]+\s*)*)?$'
+                       errorText=(t 'editDialog.tagsErrorMsg')
+      }}}
+      {{{ mdlInputText id='edit-keywords'
+                       name='keywords'
+                       label=(t 'editDialog.keywords')
+                       pattern='^\s*(\S+\s*(,\s*\S+\s*)*)?$'
+                       errorText=(t 'editDialog.keywordsErrorMsg')
+      }}}
 
-      {{{ mdlInputCheckbox style='switch' id='edit-hidden' label=(t 'editDialog.display') }}}
+      {{{ mdlInputCheckbox style='switch'
+                           id='edit-hidden'
+                           label=(t 'editDialog.display')
+      }}}
     </div>
   </div>
 

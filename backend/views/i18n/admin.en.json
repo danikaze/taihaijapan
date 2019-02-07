@@ -11,8 +11,11 @@
       "editDialog": {
         "title": "Title or description",
         "slug": "Slug",
+        "slugErrorMsg": "Only [A-Z], \"-\", \"_\" and [0-9] starting with a letter",
         "tags": "Tags",
+        "tagsErrorMsg": "Comma separated list of only [A-Z], \"-\", \"_\" and [0-9]",
         "keywords": "Keywords",
+        "keywordsErrorMsg": "Comma separated list of words",
         "display": "Display",
         "save": "Save",
         "cancel": "Cancel",
@@ -29,8 +32,11 @@
       "newPhoto": {
         "title": "Title or description",
         "slug": "Slug",
+        "slugErrorMsg": "Only [A-Z], \"-\", \"_\" and [0-9] starting with a letter",
         "tags": "Tags",
+        "tagsErrorMsg": "Comma separated list of only [A-Z], \"-\", \"_\" and [0-9]",
         "keywords": "Keywords",
+        "keywordsErrorMsg": "Comma separated list of words",
         "upload": "Upload new photo"
       },
       "options": {
@@ -39,14 +45,18 @@
           "title": "Site name or title",
           "shortname": "Site short name",
           "description": "Site description",
+          "baseUrl": "Site base url",
+          "baseUrlErrorMsg": "https://yoursite.com (no final \"/\")",
           "ga": "Google Analytics account"
         },
         "adminUser": {
           "sectionTitle": "Admin user options",
           "username": "Username for the admin page",
+          "usernameErrorMsg": "Only [A-Z], \"-\", \"_\" and [0-9] starting with a letter",
           "language": "Language",
           "password": "Password for the admin page",
-          "passwordConfirm": "Confirm password for the admin page"
+          "passwordConfirm": "Confirm password for the admin page",
+          "passwordConfirmErrorMsg": "Passwords don't match"
         },
         "adminPage": {
           "sectionTitle": "Admin page options",
@@ -73,9 +83,11 @@
         "thumbnailOptions": {
           "sectionTitle": "Thumbnail sizes",
           "id": "Size Id",
+          "idErrorMsg": "Only [A-Z], \"-\", \"_\" and [0-9] starting with a letter",
           "width": "Width",
           "height": "Height",
-          "quality": "Quality"
+          "quality": "Quality",
+          "qualityErrorMsg": "1-100"
         }
       },
       "updateSettings": "Update settings",

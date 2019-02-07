@@ -1,25 +1,33 @@
+import { Dict } from '../../interfaces/frontend';
+import { PASSWORDS_DONT_MATCH_ERROR } from '../../constants/errors';
+import { ApiErrorResponse } from '../../interfaces/controllers';
 import { requestData } from './util/request-data';
 import { showSnackbar } from './util/show-snackbar';
-import { Dict } from '../../interfaces/frontend';
 
 interface AppWindow extends Window {
   run(url: string, i18n: Dict<string>): void;
 }
 
 interface UserOptions {
-  id: string;
   username: string;
   lang: string;
   password: string;
   passwordConfirmation: string;
 }
 
+interface MdlInputElement extends HTMLInputElement {
+  MaterialTextfield: {
+    checkDirty(): void;
+    checkValidity(): void;
+  };
+}
+
 /*
  * Entry point of the Admin Options page
  */
+const MDL_INVALID_CLASS = 'is-invalid';
 const GROUP_CLOSED_CLASS = 'closed';
 const SELECTOR_USERNAME = '#config-admin input[name="admin.username"]';
-const SELECTOR_ID = '#config-admin input[name="admin.id"]';
 const SELECTOR_LANG = '#config-admin input[name="admin.lang"]';
 const SELECTOR_PWD = '#config-admin input[name="admin.password"]';
 const SELECTOR_PWD2 = '#config-admin input[name="admin.passwordConfirmation"]';
@@ -32,8 +40,7 @@ let i18n: Dict<string>;
  * @return `true` if values from `b` are not the same as values from `b`
  */
 function equalUsers(a: UserOptions, b: UserOptions): boolean {
-  return a.id === b.id
-      && a.username === b.username
+  return a.username === b.username
       && a.lang === b.lang
       && a.password === b.password
       && a.passwordConfirmation === b.passwordConfirmation;
@@ -44,7 +51,6 @@ function equalUsers(a: UserOptions, b: UserOptions): boolean {
  */
 function getAdminObject(): UserOptions {
   return {
-    id: (document.querySelector(SELECTOR_ID) as HTMLInputElement).value,
     username: (document.querySelector(SELECTOR_USERNAME) as HTMLInputElement).value,
     lang: (document.querySelector(SELECTOR_LANG) as HTMLInputElement).value,
     password: (document.querySelector(SELECTOR_PWD) as HTMLInputElement).value,
@@ -76,9 +82,7 @@ function enableTogglers(): void {
 function updateOptions(url: string, button: HTMLButtonElement, options: { admin: UserOptions }): void {
   function updateSuccess(data) {
     button.disabled = false;
-    if (data.errors.length !== 0) {
-      showSnackbar(i18n.passwordsDontMatch);
-    } else if (equalUsers(originalAdminOptions, options.admin)) {
+    if (equalUsers(originalAdminOptions, options.admin)) {
       showSnackbar(i18n.optionsUpdated);
     } else if (location.search.indexOf('updated') !== -1){
       location.reload();
@@ -87,8 +91,14 @@ function updateOptions(url: string, button: HTMLButtonElement, options: { admin:
     }
   }
 
-  function updateError() {
+  function updateError(data: ApiErrorResponse) {
     button.disabled = false;
+
+    if (data.errors.filter((error) => error.code === PASSWORDS_DONT_MATCH_ERROR).length) {
+      showSnackbar(i18n.passwordsDontMatch);
+      return;
+    }
+
     showSnackbar(i18n.optionsUpdateError, i18n.actionRetry)
       .then(tryUpdate);
   }
@@ -142,10 +152,29 @@ function enableUpdateButton(url: string): void {
   });
 }
 
+function enablePasswordValidation(): void {
+  const pwd = document.querySelector(SELECTOR_PWD) as HTMLInputElement;
+  const pwd2 = document.querySelector(SELECTOR_PWD2) as HTMLInputElement;
+  const mdl = pwd2.parentElement as MdlInputElement;
+
+  function check() {
+    if (pwd.value !== pwd2.value) {
+      mdl.classList.add(MDL_INVALID_CLASS);
+    } else {
+      mdl.classList.remove(MDL_INVALID_CLASS);
+    }
+    mdl.MaterialTextfield.checkDirty();
+  }
+
+  pwd.addEventListener('keydown', check);
+  pwd2.addEventListener('keydown', check);
+}
+
 (window as AppWindow).run = (url, translations) => {
   originalAdminOptions = getAdminObject();
   i18n = translations;
 
   enableTogglers();
   enableUpdateButton(url);
+  enablePasswordValidation();
 };

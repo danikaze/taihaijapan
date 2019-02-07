@@ -3,13 +3,11 @@ import { TypifySchema } from '../../utils/typify';
 export const schema: TypifySchema = {
   // internal
   'schema.version': 'int',
-  'config.cache': 'int',
   // global
   'site.title': 'str',
   'site.realm': 'str',
   'google.analytics': 'str',
   // page.admin
-  'page.admin.route': 'str',
   'page.admin.imagesPerPage': 'int',
   'page.admin.orderBy': 'str',
   'page.admin.reverse': 'bool',

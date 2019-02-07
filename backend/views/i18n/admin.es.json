@@ -11,8 +11,11 @@
       "editDialog": {
         "title": "Título o descripción",
         "slug": "Slug",
+        "slugErrorMsg": "Solo [A-Z], \"-\", \"_\" y [0-9] empezando con una letra",
         "tags": "Tags",
+        "tagsErrorMsg": "Lista de [A-Z], \"-\", \"_\" and [0-9] separadas por comas",
         "keywords": "Palabras clave",
+        "keywordsErrorMsg": "Lista de palabras separadas por comas",
         "display": "Visible",
         "save": "Guardar",
         "cancel": "Cancelar",
@@ -29,8 +32,11 @@
       "newPhoto": {
         "title": "Título o descripción",
         "slug": "Slug",
+        "slugErrorMsg": "Solo [A-Z], \"-\", \"_\" y [0-9] empezando con una letra",
         "tags": "Tags",
+        "tagsErrorMsg": "Lista de [A-Z], \"-\", \"_\" and [0-9] separadas por comas",
         "keywords": "Palabras clave",
+        "keywordsErrorMsg": "Lista de palabras separadas por comas",
         "upload": "Subir nueva foto"
       },
       "options": {
@@ -39,14 +45,18 @@
           "title": "Nombre o título",
           "shortname": "Nombre corto",
           "description": "Descriptción",
+          "baseUrl": "Base url",
+          "baseUrlErrorMsg": "https://yoursite.com (sin \"/\" final)",
           "ga": "Cuenta de Google Analytics"
         },
         "adminUser": {
           "sectionTitle": "Opciones del administrador",
           "username": "Nombre de usuario",
+          "usernameErrorMsg": "Solo [A-Z], \"-\", \"_\" y [0-9] empezando con una letra",
           "language": "Idioma",
           "password": "Contraseña para la página de administración",
-          "passwordConfirm": "Confirmación de la contraseña"
+          "passwordConfirm": "Confirmación de la contraseña",
+          "passwordConfirmErrorMsg": "Las constraseñas no coinciden"
         },
         "adminPage": {
           "sectionTitle": "Opciones de la página de administración",
@@ -73,9 +83,11 @@
         "thumbnailOptions": {
           "sectionTitle": "Tamaño de las imágenes",
           "id": "Id",
+          "idErrorMsg": "Solo [A-Z], \"-\", \"_\" y [0-9] empezando con una letra",
           "width": "Ancho",
           "height": "Alto",
-          "quality": "Calidad"
+          "quality": "Calidad",
+          "qualityErrorMsg": "1-100"
         }
       },
       "updateSettings": "Actualizar opciones",

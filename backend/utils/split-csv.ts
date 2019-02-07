@@ -10,5 +10,7 @@ export function splitCsv(csv: string, separator = ','): string[] {
     return [];
   }
 
-  return csv.split(separator).map((item) => item.trim()).filter((item) => item.length > 0);
+  return csv.split(separator)
+            .map((item) => item.trim())
+            .filter((item) => item.length > 0);
 }
