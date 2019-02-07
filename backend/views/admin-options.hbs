@@ -28,6 +28,7 @@
                     label=(t 'options.site.baseUrl')
                     value=(lookup config 'site.baseUrl')
                     pattern='^https?://.*[^/]$'
+                    errorText=(t 'options.site.baseUrlErrorMsg')
     }}}
     {{{mdlInputText id='config-google-analytics'
                     name='google.analytics'
@@ -64,6 +65,7 @@
                     name='admin.passwordConfirmation'
                     label=(t 'options.adminUser.passwordConfirm')
                     password=true
+                    errorText=(t 'options.adminUser.passwordConfirmErrorMsg')
     }}}
   </div>
 </section>
@@ -172,8 +174,10 @@
             <td class="mdl-data-table__cell--non-numeric">
               {{{mdlInputText id=(add 'config-sizes-label-' @key)
                               name='label'
-                              pattern='[a-zA-Z][a-zA-Z0-9_.-]?'
                               value=this.label
+                              pattern='^[a-zA-Z][-_\w]*$'
+                              maxLength=12
+                              errorText=(../t 'options.thumbnailOptions.idErrorMsg')
               }}}
             </td>
             <td>
@@ -193,9 +197,10 @@
             <td>
               {{{mdlInputNumber id=(add 'config-sizes-quality-' @key)
                               name='quality'
-                              value=this.height
-                              min=0
+                              value=this.quality
+                              min=1
                               max=100
+                              errorText=(../t 'options.thumbnailOptions.qualityErrorMsg')
               }}}
             </td>
           </tr>

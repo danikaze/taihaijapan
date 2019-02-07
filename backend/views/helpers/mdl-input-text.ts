@@ -6,6 +6,8 @@ interface HelperParams {
     label?: string;
     pattern?: string;
     password?: boolean;
+    errorText?: string;
+    maxLength?: number;
   };
 }
 
@@ -15,9 +17,11 @@ function mdlInputText({ hash }: HelperParams): string {
          type="${hash.password ? 'password' : 'text'}"
          id="${hash.id}"
          name="${hash.name}"
-         value="${hash.value !== undefined ? hash.value : ''}"
-         ${hash.pattern !== undefined ? `pattern="${hash.pattern}"` : ''}>
+         ${hash.value !== undefined ? `value="${hash.value}"` : ''}
+         ${hash.pattern !== undefined ? `pattern="${hash.pattern}"` : ''}
+         ${hash.maxLength ? `maxlength="${hash.maxLength}"` : ''}>
   ${hash.label ? `<label class="mdl-textfield__label" for="${hash.id}">${hash.label}</label>` : ''}
+  ${hash.errorText ? `<span class="mdl-textfield__error">${hash.errorText}</span>` : ''}
 </div>`;
 }
 

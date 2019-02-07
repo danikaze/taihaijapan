@@ -14,10 +14,28 @@
     </div>
 
     <div id="info-side" class="mdl-cell--8-col mdl-cell--4-col-tablet">
-      {{{ mdlInputText id='new-title' name='title' label=(t 'newPhoto.title') }}}
-      {{{ mdlInputText id='new-slug' name='slug' label=(t 'newPhoto.slug') pattern='^[-_\w]+$' }}}
-      {{{ mdlInputText id='new-tags' name='tags' label=(t 'newPhoto.tags') pattern='^\s*([-_\w]+\s*(,\s*[-_\w]+\s*)*)?$' }}}
-      {{{ mdlInputText id='new-keywords' name='keywords' label=(t 'newPhoto.keywords') pattern='^\s*(\S+\s*(,\s*\S+\s*)*)?$' }}}
+      {{{ mdlInputText id='new-title'
+                       name='title'
+                       label=(t 'newPhoto.title')
+      }}}
+      {{{ mdlInputText id='new-slug'
+                       name='slug'
+                       label=(t 'newPhoto.slug')
+                       pattern='^[-_\w]+$'
+                       errorText=(t 'newPhoto.slugErrorMsg')
+      }}}
+      {{{ mdlInputText id='new-tags'
+                       name='tags'
+                       label=(t 'newPhoto.tags')
+                       pattern='^\s*([-_\w]+\s*(,\s*[-_\w]+\s*)*)?$'
+                       errorText=(t 'newPhoto.tagsErrorMsg')
+      }}}
+      {{{ mdlInputText id='new-keywords'
+                       name='keywords'
+                       label=(t 'newPhoto.keywords')
+                       pattern='^\s*(\S+\s*(,\s*\S+\s*)*)?$'
+                       errorText=(t 'newPhoto.keywordsErrorMsg')
+      }}}
 
       {{{ mdlButton style='raised' label=(t 'newPhoto.upload') }}}
     </div>
